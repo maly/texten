@@ -1,0 +1,77 @@
+<meta charset = utf-8>
+<script src="bones.js"></script>
+
+<script>
+
+var g = {
+	rooms: [
+		{
+			id: "r1",
+			title: "Room1",
+			desc: "Stojíš v místnosti",
+			exits: [
+				{
+					"to": "do chodby",
+					"room": "r2"
+				}
+			],
+			attrs: ["player"],
+			handlers: []
+		},
+		{
+			id: "r2",
+			title: "Room2",
+			desc: "Stojíš v chodbě",
+			exits: [				{
+					"to": "do pokoje",
+					"room": "r1"
+				}
+			],
+			attrs: [],
+			handlers: []
+		},
+	],
+	items: [
+		{
+			id: "louc-zapalena",
+			name: {N:"louč",A:"louč", AD1:"zapálenou"},
+			desc: "Řádný smolný klacek",
+			attrs: [],
+			where: "r1",
+			handlers: []
+		},
+		{
+			id: "bota-rozbita",
+			name: {N:"bota",A:"botu", AD1:"rozbitou"},
+			desc: "Škrpál",
+			attrs: [],
+			where: "r1",
+			handlers: []
+		},
+		{
+			id: "botnik",
+			name: {N:"botník",A:"botník"},
+			desc: "Police na boty",
+			attrs: ["crate"],
+			where: "r1",
+			handlers: []
+		},
+	],
+	commands: [
+		{
+			id: "cgo",
+			cmd: ["jdi ^"],
+			do: [
+					[
+						[],["E","*"]
+					]
+				]
+		}
+	],
+	subs:[]
+};
+
+
+var t = new texten(g);
+
+</script>
