@@ -52,7 +52,7 @@ var g = {
 			id: "botnik",
 			name: {N:"botník",A:"botník"},
 			desc: "Police na boty",
-			attrs: ["crate"],
+			attrs: ["crate", "nonmovable"],
 			where: "r1",
 			handlers: []
 		},
@@ -60,10 +60,22 @@ var g = {
 	commands: [
 		{
 			id: "cgo",
-			cmd: ["jdi ^"],
-			do: [
+			cmd: [["jdi","^"]],
+			does: [
 					[
 						[],["E","*"]
+					]
+				]
+		},
+		{
+			id: "ctake",
+			cmd: [["zvedni","@"],["seber","@"]],
+			does: [
+					[
+						[[["AS","$","nonmovable"]]],[[".","Nelze zvednout"],["B"]]
+					],
+					[
+						[[["AR","$","nonmovable"]]],[["P","$"]]
 					]
 				]
 		}
