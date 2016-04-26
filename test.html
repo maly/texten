@@ -49,6 +49,14 @@ var g = {
 			handlers: []
 		},
 		{
+			id: "bota",
+			name: {N:"bota",A:"botu"},
+			desc: "Adýdaska",
+			attrs: [],
+			where: "r1",
+			handlers: []
+		},
+		{
 			id: "botnik",
 			name: {N:"botník",A:"botník"},
 			desc: "Police na boty",
@@ -72,13 +80,40 @@ var g = {
 			cmd: [["zvedni","@"],["seber","@"]],
 			does: [
 					[
-						[[["AS","$","nonmovable"]]],[[".","Nelze zvednout"],["B"]]
+						[[["AS","$","nonmovable"]]],[[".","Nemůžeš zvednout $"],["B"]]
 					],
 					[
 						[[["AR","$","nonmovable"]]],[["P","$"]]
 					]
 				]
-		}
+		},
+		{
+			id: "cdrop",
+			cmd: [["polož","@"]],
+			does: [
+					[
+						[],[["D","$"]]
+					]
+				]
+		},
+		{
+			id: "cuse",
+			cmd: [["použij","@"]],
+			does: [
+					[
+						[],[["D","$"]]
+					]
+				]
+		},
+		{
+			id: "cuseon",
+			cmd: [["použij","#","na","#"]],
+			does: [
+					[
+						[],[["D","$"]]
+					]
+				]
+		},
 	],
 	subs:[]
 };
