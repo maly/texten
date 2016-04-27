@@ -42,11 +42,16 @@ var g = {
 		},
 		{
 			id: "bota-rozbita",
-			name: {N:"bota",A:"botu", AD1:"rozbitou"},
+			name: {N:"bota",A:"botu", AD1: "starou", AD2:"rozbitou"},
 			desc: "Škrpál",
 			attrs: [],
 			where: "r1",
-			handlers: []
+			handlers: {"pick":[
+				[[],[
+					[".","Smrdí"]
+					]
+				]
+			]}
 		},
 		{
 			id: "bota",
@@ -58,7 +63,7 @@ var g = {
 		},
 		{
 			id: "botnik",
-			name: {N:"botník",A:"botník"},
+			name: {N:"botník",A:"botník", G:"botníku", AD1: "starý"},
 			desc: "Police na boty",
 			attrs: ["crate", "nonmovable"],
 			where: "r1",
@@ -71,19 +76,25 @@ var g = {
 			cmd: [["jdi","^"]],
 			does: [
 					[
-						[],["E","*"]
+						[],[[".","Jdeš do"],["E","^"]]
 					]
 				]
 		},
 		{
 			id: "ctake",
-			cmd: [["zvedni","@"],["seber","@"]],
+			cmd: [["zvedni","%"],["seber","%"]],
 			does: [
 					[
 						[[["AS","$","nonmovable"]]],[[".","Nemůžeš zvednout $"],["B"]]
 					],
 					[
-						[[["AR","$","nonmovable"]]],[["P","$"]]
+						[[["C","$"]]],[[".","Vždyť máš $ u sebe!"],["B"]]
+					],
+					[
+						[[["NH","$"]]],[[".","V téhle místnosti nevidíš $"],["B"]]
+					],
+					[
+						[[["AR","$","nonmovable"]]],[["P","$"], [".","Zvedl jsi $"]]
 					]
 				]
 		},
@@ -97,8 +108,8 @@ var g = {
 				]
 		},
 		{
-			id: "cuse",
-			cmd: [["použij","@"]],
+			id: "cuseon",
+			cmd: [["použij","#","na","#"]],
 			does: [
 					[
 						[],[["D","$"]]
@@ -106,8 +117,8 @@ var g = {
 				]
 		},
 		{
-			id: "cuseon",
-			cmd: [["použij","#","na","#"]],
+			id: "cuse",
+			cmd: [["použij","@"]],
 			does: [
 					[
 						[],[["D","$"]]

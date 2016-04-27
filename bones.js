@@ -141,10 +141,24 @@ var texten = function(g) {
 			case "AS": //attribute is set for item X
 				item1 = getItemByIdCond(cond[1], params);
 				return (item1.attrs.indexOf(cond[2])!=-1);
+			case "H": //here
+				item1 = getItemByIdCond(cond[1], params);
+				return (item1.where==state.here);
+			case "C": //carry
+				item1 = getItemByIdCond(cond[1], params);
+				return (item1.where=="*");
+
+
+			case "NH": //not here
+				item1 = getItemByIdCond(cond[1], params);
+				return (item1.where!=state.here);
+			case "NC": //carry
+				item1 = getItemByIdCond(cond[1], params);
+				return (item1.where!="*");
+
 		}
 		return false;
 	};
-
 
 	//commands
 	var doCommandById = function(cid, params) {
@@ -156,13 +170,30 @@ var texten = function(g) {
 			var actions = sub[1];
 
 			var doit = evalCond(cond,params);
-			console.log(cond,doit);
+			//console.log(cond,doit);
+			if (doit) {
+				if (!doCommands(actions,params)) {clearEvents();return false;}
+			}
+		}
+		lateEvents();
+		return true;
+	};
+
+	var doHandler = function(does, params) {
+		for (var k in does) {
+			var sub = does[k];
+			var cond = sub[0];
+			var actions = sub[1];
+
+			var doit = evalCond(cond,params);
+			//console.log(cond,doit);
 			if (doit) {
 				if (!doCommands(actions,params)) return false;
 			}
 		}
 		return true;
 	};
+
 
 	var doCommands = function(action,params) {
 		if (action.length==0) return;
@@ -174,24 +205,24 @@ var texten = function(g) {
 
 	var doSingleCommand = function(cmd, params) {
 		var item, text;
-		console.log(cmd,params);
+//		console.log(cmd,params);
 		switch(cmd[0]) {
 			case ".": //print
 				text = cmd[1];
 				if (params[0]) {
 					item = getItemById(params[0]);
-					text = text.replace("$", item.name.A);
+					text = text.replace("$", readableItemName(item.name));
 				}
 				if (params[1]) {
 					item = getItemById(params[0]);
-					text = text.replace("#", item.name.A);
+					text = text.replace("#", readableItemName(item.name));
 				}
 				print(text);
 				return true;
 			case "P": //pick an item
 				item = getItemByIdCond(cmd[1], params);
 				item.where = "*";
-				event("pick", item, params);
+				event("pick", item, params, true);
 				return true;
 		}
 	};
@@ -200,32 +231,208 @@ var texten = function(g) {
 		console.log("PRINT", t);
 	};
 
-	var event = function(name,target, params) {
-		console.log("EVENT",name,target, params);
+	var eventLine = [];
+
+	var event = function(name,target, params, later) {
+		//console.log("EVENT",name,target, params);
 		if (!target.handlers) return;
 		if (!target.handlers[name]) return;
 		var cmd = target.handlers[name];
-		doCommands(cmd, params)
+		if (!later) {
+			doHandler(cmd, params);
+		} else {
+			eventLine.push([cmd,params]);
+		}
+		//
+	};
+
+	var lateEvents = function() {
+		while(eventLine.length) {
+			var e = eventLine.shift();
+			doHandler(e[0],e[1]);
+		}
+	};
+	var clearEvents = function() {
+		eventLine = [];
 	};
 
 	//-----------parser
 
+	var parserErrors = [];
+
+	var PE = function(e) {
+		parserErrors.push(e);
+	};
+
 	var lineParser = function(text) {
 		//cut by spaces
+		parserErrors = [];
 		var words = text.split(" ");
 		var cmds = parseCommand(words[0]);
+		var match = false;
 		if (cmds) {
 			words.shift();
 			for(var k in cmds){
-				syntaxMatch(cmds[k],words);
+				match = syntaxMatch(cmds[k].slice(),words);
+				if (match) break;
 			}
-		}
-
+			if (!match) PE("no such command");
+		} else PE("no such command");
+		//console.log(parserErrors);
+		if (match) return [getCommandBySignature(cmds[k]).id, match.map(function (i){return i.id;})];
+		return null;
 	};
 
-	var syntaxMatch = function(cmd, words) {
-		console.log(cmd, words);
+	var getCommandBySignature = function(signature){
+		var sig = signature.join();
+		for (var k in state.game.commands) {
+			var cx = state.game.commands[k].cmd;
+			for (var i in cx) {
+				if (cx[i].join() == sig) return state.game.commands[k];
+			}
+		}
+		return null;
 	}
+
+	var cutMatch = function(string,match) {
+		var match = sanitizeText(match);
+		var cut = sanitizeText(string).substr(0,match.length);
+		return (cut == match);
+	}
+
+	var parseItem = function(words, prior) {
+		var shody = state.game.items.map(function(i){
+			var n = i.name.A;
+			var pri = 1;
+			if (prior == "$") {//u sebe
+				if (i.where=="*") pri = 2;
+			}
+			if (prior == "@") {//here
+				if (i.where==state.here) pri = 2;
+			}
+			if (prior == "%") {//here pickable
+				if (i.where==state.here) pri = 2;
+				if (i.attrs.indexOf("nonmovable")==-1) pri++;
+				if (i.where == "*") pri = 1;
+			}
+			if (prior == "#") {//here
+				if (i.where=="*") pri = 3;
+				if (i.where==state.here) pri = 2;
+			}
+
+			if (prior[0] == "(") {//has attr
+				var attr = prior.substr(1, prior.length-2);
+				if (i.attrs.indexOf(attr)!=-1) pri = 2;
+			}
+			if (prior[0] == "{") {//has not attr
+				var attr = prior.substr(1, prior.length-2);
+				if (i.attrs.indexOf(attr)==-1) pri = 2;
+			}
+
+			if (words.length>2 && i.name.AD1 && i.name.AD2 &&
+				cutMatch(i.name.AD1,words[0]) &&
+				cutMatch(i.name.AD2,words[1]) &&
+				cutMatch(i.name.A,words[2])) return [i,3*pri];
+			if (words.length>2 && i.name.AD1 && i.name.AD2 &&
+				cutMatch(i.name.AD2,words[0]) &&
+				cutMatch(i.name.AD1,words[1]) &&
+				cutMatch(i.name.A,words[2])) return [i,3*pri];
+			if (words.length>1 && i.name.AD1 &&
+				cutMatch(i.name.AD1,words[0]) &&
+				cutMatch(i.name.A,words[1])) return [i,2*pri];
+			if (words.length>1 && i.name.AD2 &&
+				cutMatch(i.name.AD2,words[0]) &&
+				cutMatch(i.name.A,words[1])) return [i,2*pri];
+			if (cutMatch(n,words[0])) return [i,1*pri];
+			return [i,0];
+		}).filter(function(b){return b[1]>0;}).sort(function(a,b){return a[1]<b[1]});
+		//console.log("RAW SHODY",shody);
+
+		if (shody.length == 0) return null; //Nic se nenašlo
+		if (shody.length == 1) return shody; //TEN TO JE!
+
+		//prioritizace
+
+		var max = shody.reduce(function(sum,a){if (a[1]>sum)return a[1]; return sum;},0);
+		//console.log(max);
+
+		var shody2 = shody.filter(function(b){return b[1]==max;}).map(function (i){
+				if (i[0].name.AD1 && i[0].name.AD2) {i[0].big = 2;return i;}
+				if (i[0].name.AD1 || i[0].name.AD2) {i[0].big = 1;return i;}
+				i[0].big = 1;return i;
+			}).sort(function(a,b){return a[0].big>b[0].big});
+		
+		if (shody2.length == 1) return shody2; //TEN TO JE!
+		if (shody2.length == 0) return null;
+
+		if (shody2.length == 2 && shody2[0][0].big<shody2[1][0].big) return [shody2[0]]; //TEN TO JE!
+
+
+		return shody2; //nerozhodnutelné
+	}
+
+	var sIndexOf = function(haystack, needle, pos) {
+		for (var k in haystack){
+			if (k<pos) continue;
+			var n = sanitizeText(haystack[k]);
+			if (n==needle) return k;
+		}
+		return -1;
+	}
+
+	var syntaxMatch = function(cmd, words) {
+		cmd.shift();
+		//console.log(cmd, words);
+
+		if (cmd[0] == "^") {
+			//směr
+			var exits = getExitsByRoom(state.here);
+			for (var k in exits){
+				var exit = exits[k];
+				if (cutMatch(exit.to, words.join(" "))) {
+					return [{id:exit.room}];
+				}
+			}
+			return false;
+		}
+
+		//test bez wildmarks
+		var pos = 0;
+		var items = [];
+		var work = [];
+		for (var k in cmd) {
+			if (cmd[k]=="#" || cmd[k]=="$" || cmd[k]=="@" || cmd[k]=="%" || cmd[k][0]=="(" || cmd[k][0]=="{") {
+				continue;
+			}
+			var scmd = sanitizeText(cmd[k]);
+			var oldpos = pos;
+			pos = sIndexOf(words, scmd, pos);
+			//console.log("SANITE",pos, oldpos, words,scmd);
+			if (pos==-1) return false;
+			work.push(words.slice(oldpos, pos));
+			pos++;
+		}
+		if (pos<words.length) {work.push(words.slice(pos));}
+		//console.log("WORK",work);
+
+		pos = 0;
+		for (var k in cmd) {
+			if (cmd[k]=="#" || cmd[k]=="$" || cmd[k]=="@" || cmd[k]=="%" || cmd[k][0]=="(" || cmd[k][0]=="{") {
+				//console.log(cmd[k]);
+				items[pos] = parseItem(work[pos], cmd[k]);
+				if (!items[pos]) return false;
+				if (items[pos].length>1) {
+					PE("multiple matched items");
+					return false;}
+				pos++;
+				continue;
+			}
+		}
+		//console.log("MATCHES",pos,work.length);
+		items = [].concat.apply([], items);
+		//console.log("RRR", items);
+		return items.map(function(f){return f[0];});
+	};
 
 	var sanitizeText = function(text) {
 		text = text.toLowerCase();
@@ -247,6 +454,11 @@ var texten = function(g) {
 
 		return shody;
 	}
+
+
+
+//-----
+
 
     var defaultDiacriticsRemovalMap = [
         {'base':'A', 'letters':'\u0041\u24B6\uFF21\u00C0\u00C1\u00C2\u1EA6\u1EA4\u1EAA\u1EA8\u00C3\u0100\u0102\u1EB0\u1EAE\u1EB4\u1EB2\u0226\u01E0\u00C4\u01DE\u1EA2\u00C5\u01FA\u01CD\u0200\u0202\u1EA0\u1EAC\u1EB6\u1E00\u0104\u023A\u2C6F'},
@@ -363,6 +575,12 @@ var texten = function(g) {
 		roomHere: getRoomHere,
 		doCommand: doCommandById,
 		itinerary: getItinerary,
-		parse: lineParser
+		parse: lineParser,
+		parserErrors: function(){return parserErrors;},
+		parseAndDo: function(s) {
+			var c = lineParser(s);
+			if (!c) return parserErrors;
+			return doCommandById(c[0],c[1]);
+		}
 	}
 }
