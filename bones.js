@@ -6,6 +6,13 @@ var texten = function(g) {
 	var init = function(g) {
 		state = {game:g};
 		state.here = getRoomByAttr("player");
+
+		//on the fly compiler
+		for(var k in state.game.commands) {
+			if (state.game.commands[k]._cmd) {
+				state.game.commands[k].cmd = state.game.commands[k]._cmd.map(function(s){return s.split(" ");});
+			}
+		}
 	};
 
 	var getRoomByAttr = function(attr) {
@@ -68,6 +75,15 @@ var texten = function(g) {
 		if (name.AD2) out = name.AD1 + " " +name.AD2 + " " +name.A;
 		return out;
 	};
+
+	var readableItemNameG = function(name) {
+		var out = readableItemName(name);
+		if (!name.G) return out;
+		out = name.G;
+		if (name.AD1G) out = name.AD1G + " " + name.G;
+		return out;
+	};
+
 
 	//inteligentní join - a, b, c, d a e
 	var superJoin = function (arr, delimiter, last) {
@@ -161,6 +177,7 @@ var texten = function(g) {
 	};
 
 	//commands
+	var report = "";
 	var doCommandById = function(cid, params) {
 		var cmd = getCommandById(cid);
 		var does = cmd.does;
@@ -172,11 +189,13 @@ var texten = function(g) {
 			var doit = evalCond(cond,params);
 			//console.log(cond,doit);
 			if (doit) {
-				if (!doCommands(actions,params)) {clearEvents();return false;}
+				var res = doCommands(actions,params);
+				if (!res) {clearEvents();return false;}
+				if (res == "B") break;
 			}
 		}
 		lateEvents();
-		return true;
+		return report?report:true;
 	};
 
 	var doHandler = function(does, params) {
@@ -198,7 +217,9 @@ var texten = function(g) {
 	var doCommands = function(action,params) {
 		if (action.length==0) return;
 		for (var k in action) {
-			if (!doSingleCommand(action[k], params)) return false;
+			var res = doSingleCommand(action[k], params);
+			if (!res) return false;
+			if (res=="B") return "B";
 		}
 		return true;
 	};
@@ -211,10 +232,15 @@ var texten = function(g) {
 				text = cmd[1];
 				if (params[0]) {
 					item = getItemById(params[0]);
-					text = text.replace("$", readableItemName(item.name));
+					if (item) text = text.replace("$", readableItemName(item.name));
+					if (text.indexOf("^")!=-1) {
+						item = getExitsByRoom(state.here).filter(function(a){return (a.room == params[0])});
+						if (item) text = text.replace("^", item[0].to);
+					}
 				}
 				if (params[1]) {
-					item = getItemById(params[0]);
+					item = getItemById(params[1]);
+					text = text.replace("#G", readableItemNameG(item.name));
 					text = text.replace("#", readableItemName(item.name));
 				}
 				print(text);
@@ -223,6 +249,39 @@ var texten = function(g) {
 				item = getItemByIdCond(cmd[1], params);
 				item.where = "*";
 				event("pick", item, params, true);
+				return true;
+			case "E": //Exit to...
+				var room = cmd[1];
+				if (room == "^") room = params[0];
+				event("leave", state.here, params, true);
+				state.here = room;
+				event("enter", room, params, true);
+				report = "CHANGE ROOM";
+				return true;
+			case "D": //drop an item
+				item = getItemByIdCond(cmd[1], params);
+				item.where = state.here;
+				event("drop", item, params, true);
+				return true;
+			case "I": //insert an item to a crate
+				item = getItemByIdCond(cmd[1], params);
+				var crate = getItemByIdCond(cmd[2], params);
+				item.where = crate.id;
+				event("insert", item, params, true);
+				return true;
+			case "B": //insert an item to a crate
+				return "B";
+			case "UON": //insert an item to a crate
+				item = getItemByIdCond(cmd[1], params);
+				var crate = getItemByIdCond(cmd[2], params);
+				if (crate.handlers["use-"+item.id+"-on"]) {
+					doHandler(crate.handlers["use-"+item.id+"-on"],params);
+					return true;
+				}
+				print(cmd[3]);
+				return false;
+			default: 
+				console.log(cmd,params);
 				return true;
 		}
 	};
@@ -303,6 +362,7 @@ var texten = function(g) {
 	var parseItem = function(words, prior) {
 		var shody = state.game.items.map(function(i){
 			var n = i.name.A;
+			var g = i.name.G;
 			var pri = 1;
 			if (prior == "$") {//u sebe
 				if (i.where=="*") pri = 2;
@@ -328,7 +388,7 @@ var texten = function(g) {
 				var attr = prior.substr(1, prior.length-2);
 				if (i.attrs.indexOf(attr)==-1) pri = 2;
 			}
-
+			//dativ form
 			if (words.length>2 && i.name.AD1 && i.name.AD2 &&
 				cutMatch(i.name.AD1,words[0]) &&
 				cutMatch(i.name.AD2,words[1]) &&
@@ -344,6 +404,12 @@ var texten = function(g) {
 				cutMatch(i.name.AD2,words[0]) &&
 				cutMatch(i.name.A,words[1])) return [i,2*pri];
 			if (cutMatch(n,words[0])) return [i,1*pri];
+
+			//genitiv form
+			if (g) {
+				if (cutMatch(g,words[0])) return [i,1*pri];
+			}
+
 			return [i,0];
 		}).filter(function(b){return b[1]>0;}).sort(function(a,b){return a[1]<b[1]});
 		//console.log("RAW SHODY",shody);
@@ -581,6 +647,11 @@ var texten = function(g) {
 			var c = lineParser(s);
 			if (!c) return parserErrors;
 			return doCommandById(c[0],c[1]);
+		},
+		simpleRoom: function() {
+			console.log(getRoomHere());
+			console.log("Můžeš jít "+getExitsHere()+".");
+			console.log("Vidíš "+getItemsHere()+".");
 		}
 	}
 }

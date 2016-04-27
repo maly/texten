@@ -13,7 +13,12 @@ var g = {
 				{
 					"to": "do chodby",
 					"room": "r2"
-				}
+				},
+				{
+					"to": "na balkon",
+					"room": "r3"
+				},
+
 			],
 			attrs: ["player"],
 			handlers: []
@@ -30,12 +35,24 @@ var g = {
 			attrs: [],
 			handlers: []
 		},
+		{
+			id: "r3",
+			title: "Room3",
+			desc: "Stojíš na malém balkonu nad rušnou ulicí. Zábradlí vypadá docela zpuchřelé, tak bych se, být tebou, neopíral...",
+			exits: [				{
+					"to": "do pokoje",
+					"room": "r1"
+				}
+			],
+			attrs: [],
+			handlers: []
+		},
 	],
 	items: [
 		{
-			id: "louc-zapalena",
+			id: "louc",
 			name: {N:"louč",A:"louč", AD1:"zapálenou"},
-			desc: "Řádný smolný klacek",
+			desc: "Riadný smolný klacek",
 			attrs: [],
 			where: "r1",
 			handlers: []
@@ -47,11 +64,20 @@ var g = {
 			attrs: [],
 			where: "r1",
 			handlers: {"pick":[
-				[[],[
+				[
+					[],[
 					[".","Smrdí"]
 					]
 				]
 			]}
+		},
+		{
+			id: "nuz",
+			name: {N:"nůž",A:"nůž"},
+			desc: "Kudla jako cyp",
+			attrs: [],
+			where: "*",
+			handlers: []
 		},
 		{
 			id: "bota",
@@ -63,35 +89,42 @@ var g = {
 		},
 		{
 			id: "botnik",
-			name: {N:"botník",A:"botník", G:"botníku", AD1: "starý"},
+			name: {N:"botník",A:"botník", G:"botníku", AD1: "starý", AD1G: "starého"},
 			desc: "Police na boty",
 			attrs: ["crate", "nonmovable"],
 			where: "r1",
-			handlers: []
+			handlers: {"use-louc-on":[
+				[
+					[],[
+					[".","Botník hoří!"]
+					]
+				]
+			]}
 		},
 	],
 	commands: [
 		{
 			id: "cgo",
-			cmd: [["jdi","^"]],
+			_cmd: ["jdi ^"],
 			does: [
 					[
-						[],[[".","Jdeš do"],["E","^"]]
+						[],[[".","Jdeš ^"],["E","^"]]
 					]
 				]
 		},
 		{
 			id: "ctake",
-			cmd: [["zvedni","%"],["seber","%"]],
+			//cmd: [["zvedni","%"],["seber","%"]],
+			_cmd: ["zvedni %", "seber %"],
 			does: [
-					[
-						[[["AS","$","nonmovable"]]],[[".","Nemůžeš zvednout $"],["B"]]
-					],
 					[
 						[[["C","$"]]],[[".","Vždyť máš $ u sebe!"],["B"]]
 					],
 					[
-						[[["NH","$"]]],[[".","V téhle místnosti nevidíš $"],["B"]]
+						[[["NH","$"]]],[[".","V téhle místnosti nevidíš nic takového"],["B"]]
+					],
+					[
+						[[["AS","$","nonmovable"]]],[[".","Nemůžeš zvednout $"],["B"]]
 					],
 					[
 						[[["AR","$","nonmovable"]]],[["P","$"], [".","Zvedl jsi $"]]
@@ -99,30 +132,39 @@ var g = {
 				]
 		},
 		{
-			id: "cdrop",
-			cmd: [["polož","@"]],
+			id: "cinsert",
+			_cmd: ["dej $ do (crate)"],
 			does: [
 					[
-						[],[["D","$"]]
+						[],[["I","$","#"], [".","Dal jsi $ do #G"]]
+					]
+				]
+		},
+		{
+			id: "cdrop",
+			_cmd: ["polož $"],
+			does: [
+					[
+						[],[["D","$"],[".", "Položil jsi $"]]
 					]
 				]
 		},
 		{
 			id: "cuseon",
-			cmd: [["použij","#","na","#"]],
+			_cmd: ["použij # na #"],
 			does: [
 					[
-						[],[["D","$"]]
+						[],[[".","Použil jsi $ na #"],["UON","$","#", "Nic se nestalo"]]
 					]
 				]
 		},
 		{
 			id: "cuse",
-			cmd: [["použij","@"]],
+			_cmd: ["použij @"],
 			does: [
 					[
-						[],[["D","$"]]
-					]
+						[],[[".","Použil jsi $"],["U","$", "Nic se nestalo"]]
+					],
 				]
 		},
 	],
