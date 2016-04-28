@@ -6,6 +6,7 @@ var texten = function(g) {
 	var init = function(g) {
 		state = {game:g};
 		state.here = getRoomByAttr("player");
+		setPrint(_print);
 
 		//on the fly compiler
 		for(var k in state.game.commands) {
@@ -13,6 +14,12 @@ var texten = function(g) {
 				state.game.commands[k].cmd = state.game.commands[k]._cmd.map(function(s){return s.split(" ");});
 			}
 		}
+	};
+
+	var print;
+
+	var setPrint = function(cb) {
+		print = cb;
 	};
 
 	var getRoomByAttr = function(attr) {
@@ -286,7 +293,7 @@ var texten = function(g) {
 		}
 	};
 
-	var print = function(t){
+	var _print = function(t){
 		console.log("PRINT", t);
 	};
 
@@ -633,6 +640,8 @@ var texten = function(g) {
 
 	init(g);
 
+
+
 	return {
 		init: function(){init(g);},
 		log: function(){console.log(getState());},
@@ -643,15 +652,16 @@ var texten = function(g) {
 		itinerary: getItinerary,
 		parse: lineParser,
 		parserErrors: function(){return parserErrors;},
+		setPrint: setPrint,
 		parseAndDo: function(s) {
 			var c = lineParser(s);
 			if (!c) return parserErrors;
 			return doCommandById(c[0],c[1]);
 		},
 		simpleRoom: function() {
-			console.log(getRoomHere());
-			console.log("Můžeš jít "+getExitsHere()+".");
-			console.log("Vidíš "+getItemsHere()+".");
+			print(getRoomHere());
+			print("Můžeš jít "+getExitsHere()+".");
+			print("Vidíš "+getItemsHere()+".");
 		}
 	}
 }

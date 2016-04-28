@@ -1,177 +1,109 @@
 <meta charset = utf-8>
+<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+<link rel="stylesheet" href="css/stylesheet.css">
+
+<style>
+ body, input {font-family: 'hologramregular';line-height: 1.4em}
+ body {background-color: #333;color:#eee;}
+ #display{
+ 	height:400px;
+ }
+</style>
+
+<!--div id="display"></div-->
+<canvas width="640px" height="480px" id="canvas"></canvas>
+
+
+
+<form onsubmit="return doCommand()"><input type="text" id="command">
+<input type="submit" />
+</form>
+
+<script>
+var texth = 24;
+var textw = 10;
+var ctx = document.getElementById('canvas').getContext('2d');
+  ctx.font= '20px hologramregular';
+  ctx.fillStyle = '#eee';
+  ctx.textBaseline="top"; 
+
+var printAt = function(text,x,y){
+	ctx.clearRect(x*textw,y*texth,text.length*textw,texth);
+	ctx.fillText(text,x*textw,y*texth);
+}
+
+var clearRect = function(x,y,w,h) {
+	ctx.clearRect(x*textw,y*texth,w*textw,h*texth);
+}
+
+var cline = 0;
+var maxline = 20;
+
+var printLine = function(text){
+	printAt(text,0,cline);
+	cline++;
+	if (cline==maxline) scrollUp();
+}
+
+var printText = function(text){
+	var slova = text.split(" ");
+	var out = [];
+	while (slova.length) {
+		out.push(slova.shift());
+		var w = ctx.measureText(out.join(" ")).width;
+		if (w>640) {
+			//jsme přes
+			slova.unshift(out.pop());
+			printLine(out.join(" "));
+			out=[];
+		}
+	}
+	if (out.length) {
+		printLine(out.join(" "));
+	}
+}
+
+var scrollUp = function() {
+	var myImageData = ctx.getImageData(0,texth,640,480-texth);
+	ctx.clearRect(0,480-texth,640,texth);
+	ctx.putImageData(myImageData, 0,0);
+	cline--;
+}
+
+</script>
+
 <script src="bones.js"></script>
+<script src="game.js"></script>
 
 <script>
 
-var g = {
-	rooms: [
-		{
-			id: "r1",
-			title: "Room1",
-			desc: "Stojíš v místnosti",
-			exits: [
-				{
-					"to": "do chodby",
-					"room": "r2"
-				},
-				{
-					"to": "na balkon",
-					"room": "r3"
-				},
-
-			],
-			attrs: ["player"],
-			handlers: []
-		},
-		{
-			id: "r2",
-			title: "Room2",
-			desc: "Stojíš v chodbě",
-			exits: [				{
-					"to": "do pokoje",
-					"room": "r1"
-				}
-			],
-			attrs: [],
-			handlers: []
-		},
-		{
-			id: "r3",
-			title: "Room3",
-			desc: "Stojíš na malém balkonu nad rušnou ulicí. Zábradlí vypadá docela zpuchřelé, tak bych se, být tebou, neopíral...",
-			exits: [				{
-					"to": "do pokoje",
-					"room": "r1"
-				}
-			],
-			attrs: [],
-			handlers: []
-		},
-	],
-	items: [
-		{
-			id: "louc",
-			name: {N:"louč",A:"louč", AD1:"zapálenou"},
-			desc: "Riadný smolný klacek",
-			attrs: [],
-			where: "r1",
-			handlers: []
-		},
-		{
-			id: "bota-rozbita",
-			name: {N:"bota",A:"botu", AD1: "starou", AD2:"rozbitou"},
-			desc: "Škrpál",
-			attrs: [],
-			where: "r1",
-			handlers: {"pick":[
-				[
-					[],[
-					[".","Smrdí"]
-					]
-				]
-			]}
-		},
-		{
-			id: "nuz",
-			name: {N:"nůž",A:"nůž"},
-			desc: "Kudla jako cyp",
-			attrs: [],
-			where: "*",
-			handlers: []
-		},
-		{
-			id: "bota",
-			name: {N:"bota",A:"botu"},
-			desc: "Adýdaska",
-			attrs: [],
-			where: "r1",
-			handlers: []
-		},
-		{
-			id: "botnik",
-			name: {N:"botník",A:"botník", G:"botníku", AD1: "starý", AD1G: "starého"},
-			desc: "Police na boty",
-			attrs: ["crate", "nonmovable"],
-			where: "r1",
-			handlers: {"use-louc-on":[
-				[
-					[],[
-					[".","Botník hoří!"]
-					]
-				]
-			]}
-		},
-	],
-	commands: [
-		{
-			id: "cgo",
-			_cmd: ["jdi ^"],
-			does: [
-					[
-						[],[[".","Jdeš ^"],["E","^"]]
-					]
-				]
-		},
-		{
-			id: "ctake",
-			//cmd: [["zvedni","%"],["seber","%"]],
-			_cmd: ["zvedni %", "seber %"],
-			does: [
-					[
-						[[["C","$"]]],[[".","Vždyť máš $ u sebe!"],["B"]]
-					],
-					[
-						[[["NH","$"]]],[[".","V téhle místnosti nevidíš nic takového"],["B"]]
-					],
-					[
-						[[["AS","$","nonmovable"]]],[[".","Nemůžeš zvednout $"],["B"]]
-					],
-					[
-						[[["AR","$","nonmovable"]]],[["P","$"], [".","Zvedl jsi $"]]
-					]
-				]
-		},
-		{
-			id: "cinsert",
-			_cmd: ["dej $ do (crate)"],
-			does: [
-					[
-						[],[["I","$","#"], [".","Dal jsi $ do #G"]]
-					]
-				]
-		},
-		{
-			id: "cdrop",
-			_cmd: ["polož $"],
-			does: [
-					[
-						[],[["D","$"],[".", "Položil jsi $"]]
-					]
-				]
-		},
-		{
-			id: "cuseon",
-			_cmd: ["použij # na #"],
-			does: [
-					[
-						[],[[".","Použil jsi $ na #"],["UON","$","#", "Nic se nestalo"]]
-					]
-				]
-		},
-		{
-			id: "cuse",
-			_cmd: ["použij @"],
-			does: [
-					[
-						[],[[".","Použil jsi $"],["U","$", "Nic se nestalo"]]
-					],
-				]
-		},
-	],
-	subs:[]
-};
-
-
 var t = new texten(g);
+
+var out = function(text){
+	console.log(text);
+	//printLine(text);
+	$("#display").html($("#display").html()+"<br>"+text);
+}
+
+t.setPrint(out);
+
+var changeRoom = function() {
+	//$("#display").html("");
+	t.simpleRoom();
+}
+
+var doCommand = function(e) {
+	//e.preventDefault();
+	var c = $("#command").val();
+	console.log(c);
+	var hey = t.parseAndDo(c);
+	$("#command").val("");
+	if (!hey) return false;
+	if (hey == "CHANGE ROOM") changeRoom();
+
+	return false;
+}
+
+changeRoom();
 
 </script>
