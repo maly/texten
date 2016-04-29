@@ -13,7 +13,15 @@ var texten = function(g) {
 			if (state.game.commands[k]._cmd) {
 				state.game.commands[k].cmd = state.game.commands[k]._cmd.map(function(s){return s.split(" ");});
 			}
+
+			if (state.game.commands[k]._does) {
+				state.game.commands[k].does = commandCompiler(state.game.commands[k]._does);
+			}
+
 		}
+
+
+
 	};
 
 	var print;
@@ -183,9 +191,37 @@ var texten = function(g) {
 		return false;
 	};
 
+
+	///-----------Counters
+
+	var counterDec = function(cnt) {
+		if (cnt.value == 0) return;
+		cnt.value--;
+		if (cnt.value == 0 && cnt.handlers && cnt.handlers.zero) doHandler(cnt.handlers.zero,[]);	
+	}
+
+
+	///-----------TICK handler - each command does a tick
+	var doTicks = function() {
+		for(var k in state.game.items) {
+			var itemh = state.game.items[k].handlers;
+			if (itemh.tick) doHandler(itemh.tick,[]);
+		}
+
+		//cnts
+
+		for(var k in state.game.cnts) {
+			var cnt = state.game.cnts[k];
+			if (!cnt.autotick) continue;
+			if (cnt.run) counterDec(cnt);
+		}
+
+	}
+
 	//commands
 	var report = "";
 	var doCommandById = function(cid, params) {
+		report = "";
 		var cmd = getCommandById(cid);
 		var does = cmd.does;
 		for (var k in does) {
@@ -202,6 +238,7 @@ var texten = function(g) {
 			}
 		}
 		lateEvents();
+		doTicks();
 		return report?report:true;
 	};
 
@@ -252,6 +289,30 @@ var texten = function(g) {
 				}
 				print(text);
 				return true;
+			case "PI": //Print items
+				text = cmd[1] + getItinerary() + cmd[2];
+				print(text);
+				return true;
+			case "PD": //Print description
+				item = getItemByIdCond(cmd[1], params);
+				print(item.desc);
+				return true;
+
+			case "IH": //Print description
+				item = getItemByIdCond(cmd[1], params);
+				if (item.handlers[item]) {
+					doHandler(item.handlers[item],params);
+				}
+				return true;
+
+
+			case "CT": //Counter trigger
+				item = state.game.cnts[cmd[1]];
+				item.value = item.max;
+				item.run = true;
+				return true;
+
+
 			case "P": //pick an item
 				item = getItemByIdCond(cmd[1], params);
 				item.where = "*";
@@ -276,7 +337,7 @@ var texten = function(g) {
 				item.where = crate.id;
 				event("insert", item, params, true);
 				return true;
-			case "B": //insert an item to a crate
+			case "B": //Break
 				return "B";
 			case "UON": //insert an item to a crate
 				item = getItemByIdCond(cmd[1], params);
@@ -327,6 +388,8 @@ var texten = function(g) {
 	var parserErrors = [];
 
 	var PE = function(e) {
+		//console.log(e, state.game.msgs)
+		if (state.game.msgs[e]) e = state.game.msgs[e];
 		parserErrors.push(e);
 	};
 
@@ -661,7 +724,9 @@ var texten = function(g) {
 		simpleRoom: function() {
 			print(getRoomHere());
 			print("Můžeš jít "+getExitsHere()+".");
-			print("Vidíš "+getItemsHere()+".");
+			var items = getItemsHere();
+			if (items) {print("Vidíš "+items+".");}
+		else {/*print ("Není tu nic zvláštního k vidění");*/}
 		}
 	}
 }

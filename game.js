@@ -91,7 +91,7 @@ var g = {
 			handlers: {"use-louc-on":[
 				[
 					[],[
-					[".","Botník hoří!"]
+					[".","Botník hoří!"],["CT","bothor"]
 					]
 				]
 			]}
@@ -101,16 +101,23 @@ var g = {
 		{
 			id: "cgo",
 			_cmd: ["jdi ^"],
-			does: [
-					[
-						[],[[".","Jdeš ^"],["E","^"]]
-					]
-				]
+			_does: '. "Jdeš ^."; E ^',
+		},
+		{
+			id: "citinerary",
+			_cmd: ["i"],
+			_does: 'PI "Máš u sebe " "."',
+
 		},
 		{
 			id: "ctake",
 			//cmd: [["zvedni","%"],["seber","%"]],
 			_cmd: ["zvedni %", "seber %", "vezmi %"],
+			_does: 	'C $: . "Vždyť máš $ u sebe!";B ###'+
+					'NH $:. "V téhle místnosti nevidíš nic takového!";B###'+
+					'AS $ nonmovable: . "Nemůžeš zvednout $";B###'+
+					'AR $ nonmovable: P $; . "Zvedl jsi $."',
+			/*
 			does: [
 					[
 						[[["C","$"]]],[[".","Vždyť máš $ u sebe!"],["B"]]
@@ -125,6 +132,7 @@ var g = {
 						[[["AR","$","nonmovable"]]],[["P","$"], [".","Zvedl jsi $"]]
 					]
 				]
+			*/
 		},
 		{
 			id: "cinsert",
@@ -141,11 +149,7 @@ var g = {
 		{
 			id: "cdrop",
 			_cmd: ["polož $"],
-			does: [
-					[
-						[],[["D","$"],[".", "Položil jsi $"]]
-					]
-				]
+			_does: 'D $;. "Položil jsi $"'
 		},
 		{
 			id: "cuseon",
@@ -165,6 +169,32 @@ var g = {
 					],
 				]
 		},
+
+		{
+			id: "cexam",
+			_cmd: ["prozkoumej @", "prohlédni @"],
+			_does: '. "Prohlížíš si $."; PD $; IH $ examine'
+		},
+
 	],
-	subs:[]
+	subs:[],
+	cnts:{
+		"bothor": {
+			max: 4,
+			value: 4,
+			run: false,
+			autotick:true,
+			handlers: {
+				"zero": [
+							[
+								[],[[".","Botník dohořel!"]]
+						]
+					]
+			}
+		}
+	},
+	msgs: {
+		"no such command": "Nerozumím zadanému příkazu",
+		"multiple matched items": "Nejsem si úplně jist, co máš na mysli"
+	}
 };
