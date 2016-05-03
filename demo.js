@@ -11,7 +11,8 @@ var g = {
 				},
 				{
 					"to": "na balkon",
-					"room": "r3"
+					"room": "r3",
+					"attrs": ["inactive"]
 				},
 
 			],
@@ -88,13 +89,17 @@ var g = {
 			desc: "Police na boty",
 			attrs: ["crate", "nonmovable"],
 			where: "r1",
-			handlers: {"use-louc-on":[
+			_handlers: {"use-louc-on": '. "Botník hoří!"; CT bothor',
+			/*
+			[
 				[
 					[],[
 					[".","Botník hoří!"],["CT","bothor"]
 					]
 				]
-			]}
+			]
+			*/
+			}
 		},
 	],
 	commands: [
@@ -137,6 +142,9 @@ var g = {
 		{
 			id: "cinsert",
 			_cmd: ["dej $ do (crate)"],
+			_does:  'NC $: . "Nemůžeš položit $!";B###'+
+					'I $ #; . "Dal jsi $ do #G"',
+/*
 			does: [
 					[
 						[[["NC","$"]]],[[".","Nemůžeš položit $!"],["B"]]
@@ -145,6 +153,7 @@ var g = {
 						[],[["I","$","#"], [".","Dal jsi $ do #G"]]
 					]
 				]
+*/
 		},
 		{
 			id: "cdrop",
@@ -184,15 +193,12 @@ var g = {
 			value: 4,
 			run: false,
 			autotick:true,
-			handlers: {
-				"zero": [
-							[
-								[],[[".","Botník dohořel!"]]
-						]
-					]
+			_handlers: {
+				"zero": '. "Botník dohořel"; . "něco"',
 			}
 		}
 	},
+	flags:{test:false},
 	msgs: {
 		"no such command": "Nerozumím zadanému příkazu",
 		"multiple matched items": "Nejsem si úplně jist, co máš na mysli"

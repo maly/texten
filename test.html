@@ -10,14 +10,8 @@
  }
 </style>
 
-<!--div id="display"></div-->
 <canvas width="640px" height="480px" id="canvas"></canvas>
 
-
-
-<form onsubmit="return doCommand()"><input type="text" id="command">
-<input type="submit" />
-</form>
 
 <script>
 var texth = 24;
@@ -89,7 +83,7 @@ var scrollUp = function() {
 <script src="commandCompiler.js"></script>
 
 <script src="bones.js"></script>
-<script src="game.js"></script>
+<script src="demo.js"></script>
 
 <script>
 
@@ -97,8 +91,7 @@ var t = new texten(g);
 
 var out = function(text){
 	console.log(text);
-	printText(text);
-	$("#display").html($("#display").html()+"<br>"+text);
+	//printText(text);
 }
 
 t.setPrint(out);

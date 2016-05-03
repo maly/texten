@@ -20,6 +20,23 @@ var texten = function(g) {
 
 		}
 
+		for(var k in state.game.cnts) {
+			if (state.game.cnts[k]._handlers) {
+				state.game.cnts[k].handlers = {};
+				for (var i in state.game.cnts[k]._handlers) {
+					state.game.cnts[k].handlers[i] = commandCompiler(state.game.cnts[k]._handlers[i]);
+				}
+			}
+		}
+
+		for(var k in state.game.items) {
+			if (state.game.items[k]._handlers) {
+				state.game.items[k].handlers = {};
+				for (var i in state.game.items[k]._handlers) {
+					state.game.items[k].handlers[i] = commandCompiler(state.game.items[k]._handlers[i]);
+				}
+			}
+		}
 
 
 	};
@@ -124,6 +141,11 @@ var texten = function(g) {
 		return superJoin(getItemsByRoom("*").map(function(f){return readableItemName(f.name);}), ", ", " a ");
 	};
 
+	//seznam toho co je někde
+	var getItemsWhere = function(where) {
+		return superJoin(getItemsByRoom(where).map(function(f){return readableItemName(f.name);}), ", ", " a ");
+	};
+
 
 	//seznam východů
 	var getExitsHere = function() {
@@ -178,6 +200,32 @@ var texten = function(g) {
 			case "C": //carry
 				item1 = getItemByIdCond(cond[1], params);
 				return (item1.where=="*");
+			case "E": //item exists
+				item1 = getItemByIdCond(cond[1], params);
+				return (item1.where!="0");
+			case "P": //item is in room 
+				item1 = getItemByIdCond(cond[1], params);
+				return (item1.where==cond[2]);
+
+			case "F": //flag is set
+				return (state.game.flags[cond[1]]?true:false);
+
+
+			case "CZ": //counter is zero
+				item1 = state.game.cnts[cond[1]];
+				return (item1.value == 0);
+			case "CE": //counter is zero
+				item1 = state.game.cnts[cond[1]];
+				return (item1.value == cond[2]);
+			case "CG": //counter is zero
+				item1 = state.game.cnts[cond[1]];
+				return (item1.value > cond[2]);
+			case "CL": //counter is zero
+				item1 = state.game.cnts[cond[1]];
+				return (item1.value < cond[2]);
+			case "CR": //counter is zero
+				item1 = state.game.cnts[cond[1]];
+				return (item1.run);
 
 
 			case "NH": //not here
@@ -186,6 +234,32 @@ var texten = function(g) {
 			case "NC": //carry
 				item1 = getItemByIdCond(cond[1], params);
 				return (item1.where!="*");
+			case "NE": //item exists
+				item1 = getItemByIdCond(cond[1], params);
+				return (item1.where=="0");
+			case "NP": //item is in room 
+				item1 = getItemByIdCond(cond[1], params);
+				return (item1.where!=cond[2]);
+
+			case "NF": //flag is not set
+				return (state.game.flags[cond[1]]?false:true);
+
+			case "NCZ": //counter is zero
+				item1 = state.game.cnts[cond[1]];
+				return (item1.value != 0);
+			case "NCE": //counter is zero
+				item1 = state.game.cnts[cond[1]];
+				return (item1.value != cond[2]);
+			case "NCG": //counter is zero
+				item1 = state.game.cnts[cond[1]];
+				return (item1.value <= cond[2]);
+			case "NCL": //counter is zero
+				item1 = state.game.cnts[cond[1]];
+				return (item1.value >= cond[2]);
+			case "NCR": //counter is zero
+				item1 = state.game.cnts[cond[1]];
+				return (!item1.run);
+
 
 		}
 		return false;
@@ -293,12 +367,20 @@ var texten = function(g) {
 				text = cmd[1] + getItinerary() + cmd[2];
 				print(text);
 				return true;
+			case "PC": //Print items here
+				text = cmd[1] + getItemsHere() + cmd[2];
+				print(text);
+				return true;
+			case "PL": //Print items somewhere
+				text = cmd[2] + getItemsWhere(cmd[1]) + cmd[3];
+				print(text);
+				return true;
 			case "PD": //Print description
 				item = getItemByIdCond(cmd[1], params);
 				print(item.desc);
 				return true;
 
-			case "IH": //Print description
+			case "IH": //Item handler
 				item = getItemByIdCond(cmd[1], params);
 				if (item.handlers[item]) {
 					doHandler(item.handlers[item],params);
@@ -312,11 +394,99 @@ var texten = function(g) {
 				item.run = true;
 				return true;
 
+			case "CI": //Counter increment
+				item = state.game.cnts[cmd[1]];
+				item.value++;
+				if (item.value > item.max) item.value = item.max;
+				return true;
+			case "CD": //Counter decrement
+				item = state.game.cnts[cmd[1]];
+				item.value--;
+				if (item.value <0) item.value = 0;
+				return true;
+
+			case "CA": //Counter increment
+				item = state.game.cnts[cmd[1]];
+				item.value+=parseInt(cmd[2]);
+				if (item.value > item.max) item.value = item.max;
+				return true;
+			case "CS": //Counter decrement
+				item = state.game.cnts[cmd[1]];
+				item.value-=parseInt(cmd[2]);
+				if (item.value <0) item.value = 0;
+				return true;
+
+
+			case "CV": //Set counter value
+				item = state.game.cnts[cmd[1]];
+				item.value = parseInt(cmd[2]);
+				if (item.value <0) item.value = 0;
+				if (item.value > item.max) item.value = item.max;
+				return true;
+
+			case "CR": //Counter run
+				item.run = true;
+				return true;
+			case "CX": //Counter stop
+				item.run = false;
+				return true;
+
 
 			case "P": //pick an item
 				item = getItemByIdCond(cmd[1], params);
 				item.where = "*";
 				event("pick", item, params, true);
+				return true;
+
+			case "X": //exchange an item
+				item = getItemByIdCond(cmd[1], params);
+				var newItem = getItemByIdCond(cmd[2], params);
+				newItem.where = item.where;
+				item.where = "0";
+				for(var l in state.game.items) {
+					if (state.game.items[l].where == item.id) {
+						state.game.items[l].where = newItem.id
+					}
+				}
+				event("kill", item, params, true);
+				event("invoke", newItem, params, true);
+				return true;
+
+			case "EA": //Exit to room XX activate
+				var room = cmd[1];
+				if (room == "^") room = params[0];
+				var r = getRoomById(state.here);
+				for (var k in r.exits) {
+					if (r.exits[k].room == room) {
+						r.exits[k].attrs = r.exits[k].attrs.filter(function(f) {return (f!="inactive");});
+						return true
+					}
+				}
+				return false;
+
+			case "EI": //Exit to room XX inactivate
+				var room = cmd[1];
+				if (room == "^") room = params[0];
+				var r = getRoomById(state.here);
+				for (var k in r.exits) {
+					if (r.exits[k].room == room) {
+						r.exits[k].attrs.push("inactive");
+						return true;
+					}
+				}
+				return false;
+
+			case "K": //kill an item
+				item = getItemByIdCond(cmd[1], params);
+				item.where = "0";
+				event("kill", item, params, true);
+				return true;
+			case "M": //move an item
+				item = getItemByIdCond(cmd[1], params);
+				var room = cmd[1];
+				if (room == "^") room = params[0];
+				item.where = room;
+				event("invoke", item, params, true);
 				return true;
 			case "E": //Exit to...
 				var room = cmd[1];
@@ -339,7 +509,16 @@ var texten = function(g) {
 				return true;
 			case "B": //Break
 				return "B";
-			case "UON": //insert an item to a crate
+			case "U": //use item1
+				item = getItemByIdCond(cmd[1], params);
+				if (item.handlers["use"]) {
+					doHandler(item.handlers["use"],params);
+					return true;
+				}
+				print(cmd[3]);
+				return false;
+
+			case "UON": //use item1 on item2
 				item = getItemByIdCond(cmd[1], params);
 				var crate = getItemByIdCond(cmd[2], params);
 				if (crate.handlers["use-"+item.id+"-on"]) {
@@ -348,6 +527,21 @@ var texten = function(g) {
 				}
 				print(cmd[3]);
 				return false;
+
+			case "FS": //Set flag
+				var flags = state.game.flags;
+				flags[cmd[1]] = true;
+				return true;
+			case "FR": //Reset flag
+				var flags = state.game.flags;
+				flags[cmd[1]] = false;
+				return true;
+			case "FR": //Reset flag
+				var flags = state.game.flags;
+				flags[cmd[1]] = !flags[cmd[1]];
+				return true;
+
+
 			default: 
 				console.log(cmd,params);
 				return true;
