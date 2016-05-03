@@ -106,7 +106,7 @@ var g = {
 		{
 			id: "cgo",
 			_cmd: ["jdi ^"],
-			_does: '. "Jdeš ^."; E ^',
+			_does: 'print "Jdeš ^."; exit ^',
 		},
 		{
 			id: "citinerary",
