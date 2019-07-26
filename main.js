@@ -2,6 +2,9 @@ window.$ = window.jQuery = require("./node_modules/jquery/dist/jquery.min.js");
 require("./node_modules/bootstrap/dist/js/bootstrap.min");
 require("jquery-ui-dist/jquery-ui.js");
 
+//v2 - complete rework of texten and game def
+
+
 const commandCompiler = require("./commandCompiler.js");
 
 const texten = require("./bones.js");
