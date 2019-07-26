@@ -1,56 +1,63 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset=utf-8>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link href="./node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="node_modules/@fortawesome/fontawesome-free/css/all.css">
-    <link rel="stylesheet" href="css/font.css">
-    <link rel="stylesheet" href="css/style.css">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link
+      href="./node_modules/bootstrap/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="node_modules/@fortawesome/fontawesome-free/css/all.css"
+    />
+    <link rel="stylesheet" href="css/font.css" />
+    <link rel="stylesheet" href="css/style.css" />
 
     <style>
-        body,
-        input {
-            font-family: 'hologramregular';
-            line-height: 1.4em
-        }
+      body,
+      input {
+        font-family: "hologramregular";
+        line-height: 1.4em;
+      }
 
-        body {
-            background-color: #333;
-            color: #eee;
-        }
+      body {
+        background-color: #333;
+        color: #eee;
+      }
 
-        #display {
-            height: 400px;
-        }
+      #display {
+        height: 400px;
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
+  <body>
+    <video autoplay muted loop id="myVideo">
+      <source src="video/footage.mp4" type="video/mp4" />
+    </video>
+    <audio controls src="sound/johnny.mp3" class="mysound"></audio>
     <header class="masthead">
-        <div class="container h-100">
-            <div class="row h-100 align-items-center">
-                <div class="col-12 text-center rounded p-1">
-                    <h1 class="font-weight-bold biglampoon">Kauza Motýle</h1>
-                    <canvas width="650px" height="490px" id="canvas"></canvas>
-                </div>
-            </div>
+      <div class="container h-100">
+        <div class="row h-100 align-items-center">
+          <div class="col-12 text-center rounded p-1">
+            <canvas width="650px" height="490px" id="canvas"></canvas>
+          </div>
         </div>
+      </div>
     </header>
 
-    <div class=container>
-        <div class=row>
-            <div class=col-12>
-
-            </div>
-        </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-12"></div>
+      </div>
     </div>
 
-    <script src=main.js></script>
-</body>
-
+    <script src="main.js"></script>
+  </body>
 </html>
