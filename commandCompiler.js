@@ -182,3 +182,5 @@ var out = lines.map(function(f){return rule(f);});
 return out;
 
 }
+
+module.exports = commandCompiler

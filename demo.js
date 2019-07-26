@@ -204,3 +204,5 @@ var g = {
 		"multiple matched items": "Nejsem si úplně jist, co máš na mysli"
 	}
 };
+
+module.exports = g

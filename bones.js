@@ -1,3 +1,6 @@
+
+const commandCompiler = require("./commandCompiler.js");
+
 var texten = function(g) {
 
 	var game;
@@ -924,3 +927,5 @@ var texten = function(g) {
 		}
 	}
 }
+
+module.exports = texten
