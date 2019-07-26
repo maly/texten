@@ -1,0 +1,13 @@
+.masthead {
+    height: 100vh;
+    min-height: 500px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url("../img/background.jpg");
+
+}
+
+#canvas {
+    background-color: rgba(0, 0, 0, 0.8)
+}
