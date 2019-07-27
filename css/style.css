@@ -11,12 +11,17 @@
   background-color: rgba(0, 0, 0, 0.7);
 }
 
-#myVideo {
+.myVideo {
   position: fixed;
   right: 0;
   bottom: 0;
   min-width: 100%;
   min-height: 100%;
+  display: none;
+}
+
+#video1 {
+  display: block;
 }
 
 .mysound {
@@ -24,4 +29,5 @@
   position: fixed;
   right: 0;
   bottom: 0;
+  display: none;
 }
