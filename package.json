@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "parcel index.html",
-    "build": "parcel build index.html -d docs --public-url / --no-source-maps"
+    "build": "parcel build index.html -d docs --public-url /texten/ --no-source-maps"
   },
   "repository": {
     "type": "git",
@@ -33,5 +33,8 @@
     "jquery-ui-dist": "^1.12.1",
     "js": "^0.1.0",
     "popper.js": "^1.15.0"
+  },
+  "devDependencies": {
+    "cssnano": "^4.1.10"
   }
 }
