@@ -16,7 +16,7 @@ var rooms = [
         attrs: ["inactive"]
       }
     ],
-    attrs: ["player"],
+    attrs: ["player", "start"],
     handlers: []
   },
   {
@@ -43,7 +43,7 @@ var rooms = [
         room: "r1"
       }
     ],
-    attrs: ["start"],
+    attrs: [],
     handlers: []
   }
 ];
