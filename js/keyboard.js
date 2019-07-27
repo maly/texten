@@ -7,7 +7,8 @@ var eline = "> ";
 var key = function(k) {
   if (k == 13) {
     display.printLine(eline + " ");
-    if (waiter) resolver(eline.substr(2).trim());
+    waiter = eline.substr(2).trim();
+    console.log("WA", waiter);
     //doCommand(eline.substr(2).trim());
     eline = "> ";
     return;
@@ -27,13 +28,11 @@ var key = function(k) {
 };
 
 var waiter = null;
-var resolver = null;
 
-var waitForLine = async () => {
-  waiter = new Promise((resolve, reject) => {
-    resolver = resolve;
-  });
-  return waiter;
+var waitForLine = () => {
+  var line = waiter;
+  waiter = null;
+  return line;
 };
 
 module.exports = {

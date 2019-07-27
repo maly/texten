@@ -84,14 +84,30 @@ var doCommand = function(c) {
   return false;
 };
 
-keyboard.init(doCommand);
+//keyboard.init(doCommand);
 
-var cmd;
-cmd = keyboard.waitForLine();
+var tick = 0;
+var endless = () => {
+  //command handling
 
-cmd.then(q => {
-  console.log("RES", q);
-});
+  var cmd;
+  cmd = keyboard.waitForLine();
+  if (cmd) {
+    console.log("RES", cmd);
+    keyboard.key(0);
+  }
+
+  //state machine handling
+
+  //timer handling
+  tick++;
+  if (tick > 60) {
+    tick = 0;
+    //console.log("TICK");
+  }
+  requestAnimationFrame(endless);
+};
+requestAnimationFrame(endless);
 
 $(window).bind("load", function() {
   //changeRoom();
