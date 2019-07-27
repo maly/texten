@@ -2,6 +2,7 @@ window.$ = window.jQuery = require("./node_modules/jquery/dist/jquery.min.js");
 require("./node_modules/bootstrap/dist/js/bootstrap.min");
 require("jquery-ui-dist/jquery-ui.js");
 import "babel-polyfill";
+//import "/css/hologram-webfont.ttf";
 
 //v2 - complete rework of texten and game def
 
@@ -46,7 +47,6 @@ console.log(game.getItem("nuz").carry());
 
 console.log(game.cInventory());
 console.log(game.roomEnter());
-game.cEnter();
 
 // Play returns a unique Sound ID that can be passed
 // into any method on Howl to control that specific sound.
@@ -86,28 +86,127 @@ var doCommand = function(c) {
 
 //keyboard.init(doCommand);
 
+var _timers = {};
+var _timerId = 0;
+var timer = function(id, ticks) {
+  this.remain = ticks;
+  this.id = id; //_timerId++;
+  _timers[this.id] = {
+    tick: () => {
+      if (this.remain) this.remain--;
+    },
+    state: () => {
+      return this.remain;
+    }
+  };
+};
+
+var FSM = {
+  state: "begin",
+  newState(ns) {
+    FSM.state = ns;
+    FSM.states[FSM.state].start();
+  },
+  states: {
+    begin: {
+      //state 0
+      start() {
+        //$("#music1")[0].play();
+        //$("#music2")[0].pause();
+        $("#video1")[0].play();
+        $("#video2")[0].pause();
+        $("#video1").show();
+        $("#video2").hide();
+        $("#maingame").hide();
+        new timer("intro", 300);
+      },
+      test() {
+        if (_timers.intro.state() === 0) {
+          delete _timers.intro;
+          FSM.newState("titlescreen");
+        }
+      }
+    },
+    titlescreen: {
+      start() {
+        $("#introscreen").show();
+      },
+      test() {
+        if (wasEnterPressed()) {
+          FSM.newState("game0");
+        }
+      }
+    },
+    game0: {
+      start() {
+        $("#introscreen").hide();
+        $("#maingame").show();
+        $("#music2")[0].play();
+        $("#music1")[0].pause();
+        $("#music2").show();
+        $("#music1").hide();
+        $("#video2").show();
+        $("#video1").hide();
+        $("#video2")[0].play();
+        $("#video1")[0].pause();
+        keyboard.doOutput(true);
+        game.cEnter();
+        keyboard.key(0);
+      },
+      test() {}
+    }
+  }
+};
+
+var wasEnterPressed = () => {
+  if (enterFlag) {
+    enterFlag = false;
+    return true;
+  }
+  return false;
+};
+
 var tick = 0;
+var gameTime = 0;
+var enterFlag = false;
 var endless = () => {
   //command handling
 
   var cmd;
   cmd = keyboard.waitForLine();
-  if (cmd) {
+  if (cmd !== null) {
+    enterFlag = true;
     console.log("RES", cmd);
     keyboard.key(0);
   }
 
   //state machine handling
 
+  FSM.states[FSM.state].test();
+
   //timer handling
   tick++;
+  gameTime++;
   if (tick > 60) {
     tick = 0;
     //console.log("TICK");
   }
+  for (var timer in _timers) {
+    _timers[timer].tick();
+  }
+  /*
+  for (var timer of _timers) {
+    timer.tick();
+  }
+  */
   requestAnimationFrame(endless);
 };
-requestAnimationFrame(endless);
+
+var onLoad = () => {
+  display.init();
+  FSM.newState("begin");
+  requestAnimationFrame(endless);
+};
 
 $(window).bind("load", function() {
   //changeRoom();
@@ -129,3 +228,5 @@ $("body").bind("keypress", function(e) {
   keyboard.key(e.charCode);
   return false;
 });
+
+$(document).ready(onLoad);

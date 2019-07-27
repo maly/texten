@@ -1,11 +1,13 @@
 var texth = 24;
 var textw = 10;
 const padding = 5;
-var ctx = document.getElementById("canvas").getContext("2d");
-ctx.font = "20px hologramregular";
-ctx.fillStyle = "#eee";
-ctx.textBaseline = "top";
-
+var init = () => {
+  ctx = document.getElementById("canvas").getContext("2d");
+  ctx.font = "20px hologramregular";
+  ctx.fillStyle = "#eee";
+  ctx.textBaseline = "top";
+  printAt(" ", 0, cline);
+};
 var printAt = function(text, x, y) {
   ctx.clearRect(
     x * textw + padding,
@@ -80,6 +82,7 @@ var scrollUp = function() {
 };
 
 module.exports = {
+  init,
   printAt,
   printLine,
   printSameLine,

@@ -9,6 +9,10 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <link
+      href="https://fonts.googleapis.com/css?family=Raleway:800&display=swap"
+      rel="stylesheet"
+    />
+    <link
       href="./node_modules/bootstrap/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
@@ -16,25 +20,8 @@
       rel="stylesheet"
       href="node_modules/@fortawesome/fontawesome-free/css/all.css"
     />
-    <link rel="stylesheet" href="css/font.css" />
+    <link rel="stylesheet" href="css/font.css" as="style" />
     <link rel="stylesheet" href="css/style.css" />
-
-    <style>
-      body,
-      input {
-        font-family: "hologramregular";
-        line-height: 1.4em;
-      }
-
-      body {
-        background-color: #333;
-        color: #eee;
-      }
-
-      #display {
-        height: 400px;
-      }
-    </style>
   </head>
 
   <body>
@@ -46,9 +33,8 @@
     </video>
     <audio
       controls
-      autoplay
+      loop
       src="sound/coffee.mp3"
-      preload="auto"
       class="mysound"
       id="music1"
     ></audio>
@@ -60,10 +46,28 @@
       id="music2"
     ></audio>
     <header class="masthead">
-      <div class="container h-100">
+      <div class="container h-100" id="maingame">
         <div class="row h-100 align-items-center">
           <div class="col-12 text-center rounded p-1">
             <canvas width="650px" height="490px" id="canvas"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="container h-100" id="introscreen">
+        <div class="row h-100 align-items-center">
+          <div class="col-12 text-center rounded p-1">
+            <h1>Gordonova farma</h1>
+          </div>
+          <div class="col-12 text-center rounded p-1">
+            <p>
+              Cesta je dlouhá a podvečerní slunce svítí do očí. Město jsi nechal
+              daleko za sebou, to byla ještě noc... Chtělo by to sehnat nějaké
+              ubytování, ale posledních sto padesát mil nebyl jediný motel,
+              vlastně ani žádné pořádné město, jen samá pole, sem tam farma...
+            </p>
+            <p>Bohem zapomenutý kraj někde uprostřed Colorada.</p>
+            <p><em>Ale ten nocleh by to fakt chtělo...</em></p>
+            <p><small>[Stiskni ENTER]</small></p>
           </div>
         </div>
       </div>
