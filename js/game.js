@@ -57,6 +57,61 @@ var getItem = id => {
   return i;
 };
 
+const noDia = require("./diacritic.js");
+
+var getItemsBy = (name, flex) => {
+  var pname = name.split(/\s+/);
+  //console.log(pname);
+  var names = items
+    .map(q => {
+      return {
+        name: q.names.map(noDia)[flex],
+        adj: q.adjs.map(noDia)[flex],
+        id: q.id
+      };
+    })
+    .filter(q => {
+      if (pname.length === 1) if (q.name.indexOf(pname[0]) === 0) return true;
+      if (pname.length === 2)
+        if (q.adj.indexOf(pname[0]) === 0 && q.name.indexOf(pname[1]) === 0)
+          return true;
+      return false;
+    });
+  //console.log(names);
+  return names;
+};
+
+var filterItemsBy = (is, flt) => {
+  var out = is.filter(q => {
+    var id = q.id;
+    if (flt.player) {
+      if (game.items[id] !== "*") return false;
+    }
+    if (flt.here) {
+      if (game.items[id] !== game.where) return false;
+    }
+    if (flt.near) {
+      if (game.items[id] !== game.where && game.items[id] !== "*") return false;
+    }
+
+    if (flt.movable) {
+      if (getItem(id).attrs.indexOf("nonmovable") >= 0) return false;
+    }
+
+    if (flt.hasAttr) {
+      if (getItem(id).attrs.indexOf(flt.hasAttr) < 0) return false;
+    }
+    if (flt.hasNotAttr) {
+      if (getItem(id).attrs.indexOf(flt.hasNotAttr) >= 0) return false;
+    }
+    return true;
+  });
+  return out;
+};
+
+var getFilteredItemsBy = (name, flex, flt) =>
+  filterItemsBy(getItemsBy(name, flex), flt);
+
 var playerListItems = () => {
   var l = items.filter(q => game.items[q.id] === "*");
   return l;
@@ -153,6 +208,8 @@ module.exports = {
   },
   get,
   getItem,
+  getItemsBy,
+  getFilteredItemsBy,
   playerListItems,
   cInventory,
   cSee,

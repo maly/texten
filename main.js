@@ -8,6 +8,9 @@ import "babel-polyfill";
 
 const commandCompiler = require("./commandCompiler.js");
 
+const parser = require("./js/parser.js");
+window.parser = parser;
+
 const texten = require("./bones.js");
 const g = require("./demo.js");
 
@@ -29,6 +32,8 @@ var rooms = require("./game/rooms.js");
 //const items = require("./js/items.js");
 
 const lang = require("./js/language.js");
+const verbs = require("./game/commands.js");
+parser.setVerbs(verbs);
 
 game.initItems(items);
 game.initRooms(rooms);
