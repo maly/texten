@@ -1,24 +1,5 @@
 var rooms = [
-  {
-    id: "r1",
-    title: "Room1",
-    desc: "Stojíš v místnosti.",
-    ext:
-      "Je to docela malá místnost, na zemi jsou dřevěné parkety, na zdech zašlé tapety, na stropě štuk.",
-    exits: [
-      {
-        to: "do chodby",
-        room: "r2"
-      },
-      {
-        to: "na balkon",
-        room: "r3",
-        attrs: ["inactive"]
-      }
-    ],
-    attrs: ["player", "start"],
-    handlers: []
-  },
+  require("./room/r1.js"),
   {
     id: "r2",
     title: "Room2",
