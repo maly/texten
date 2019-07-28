@@ -34,6 +34,7 @@ var rooms = require("./game/rooms.js");
 //const items = require("./js/items.js");
 
 const lang = require("./js/language.js");
+window.lang = lang;
 const verbs = require("./game/commands.js");
 parser.setVerbs(verbs);
 
