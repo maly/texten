@@ -308,11 +308,17 @@ $(window).bind("load", function() {
 
 //-----
 $("body").bind("keydown", function(e) {
+  //console.log("KD", e.keyCode);
   if (e.keyCode == 8) {
     e.preventDefault();
     keyboard.key(8);
     return e;
+  } else if (e.keyCode == 38) {
+    e.preventDefault();
+    keyboard.key(7);
+    return e;
   }
+
   return e;
 });
 

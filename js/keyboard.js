@@ -5,10 +5,16 @@ var doOutput = false;
 const display = require("/js/display.js");
 
 var eline = "> ";
+var lastWaiter = null;
 var key = function(k) {
-  if (k == 13) {
+  //console.log("KK", k);
+  if (k == 7) {
+    //recall last
+    eline += lastWaiter;
+  } else if (k == 13) {
     if (doOutput) display.printLine(eline + " ");
     waiter = eline.substr(2).trim();
+    lastWaiter = eline.substr(2).trim();
     //console.log("WA", waiter);
     //doCommand(eline.substr(2).trim());
     eline = "> ";
