@@ -22,6 +22,10 @@ module.exports = {
       room: "r2"
     },
     {
+      to: "do prdele",
+      room: "rx"
+    },
+    {
       to: "na balkon",
       room: "r3",
       attrs: ["inactive"]

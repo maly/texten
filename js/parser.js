@@ -67,15 +67,21 @@ const parse = text => {
       for (var i = 0; i < q.pattern.length; i++) {
         var test = special(q.pattern[i]);
         var what = test.shift();
-        //console.log(what, test);
-        if (what === "item") {
-          q.params[i] = game.getFilteredItemsBy(
-            q.params[i],
-            parseInt(test[0]),
-            test[1]
-          );
+        console.log("what,test", what, test);
+        switch (what) {
+          case "item":
+            q.params[i] = game.getFilteredItemsBy(
+              q.params[i],
+              parseInt(test[0]),
+              test[1]
+            );
+            break;
+          case "exit":
+            q.params[i] = game.getExit(q.params[i]);
+            break;
         }
       }
+      console.log("QMAP", q);
       return q;
       //console.log(game.getFilteredItemsBy(q.params[0], 3, { player: true }));
     })

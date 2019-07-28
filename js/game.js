@@ -148,6 +148,15 @@ var exitList = () => {
   return room.exits;
 };
 
+var getExit = e => {
+  var exit = noDia(e);
+  var xl = exitList().filter(q => {
+    return noDia(q.to).indexOf(exit) >= 0;
+  });
+  console.log("XL", xl, e);
+  return xl;
+};
+
 var itemFullName = item => {
   console.log(item);
   return [
@@ -232,6 +241,7 @@ module.exports = {
   getItemsBy,
   getFilteredItemsBy,
   playerListItems,
+  getExit,
   cInventory,
   cSee,
   cExits,

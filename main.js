@@ -184,6 +184,33 @@ var doCommand = async command => {
       var par = command.params[i];
       if (par.length > 1) {
         //nejednoznačnost
+        //nejednoznačný směr
+        if (command.pattern[i] === "^") {
+          var il = par.map(q => {
+            return q.to;
+          });
+          display.printText("Máš na mysli " + lang.listToQuestion(il));
+          var ww = new Promise((r, j) => {
+            lineWaiter = r;
+          });
+          /*
+                lineWaiter = c => {
+                  console.log("Waiter", c);
+                };
+                */
+          var q = await ww;
+          var dir = game.getExit(q);
+          console.log("Směr", dir);
+          if (dir.length != 1) {
+            display.printTextRed(
+              "Musíš být asi ještě přesnější, stále nerozumím."
+            );
+            return;
+          }
+          command.params[i] = dir;
+          continue;
+        }
+        //nejednoznačný předmět
         var il = par.map(i => {
           var q = game.getItem(i.id);
           return q.adjs[3] ? q.adjs[3] + " " + q.names[3] : q.names[3];
@@ -192,14 +219,9 @@ var doCommand = async command => {
         var ww = new Promise((r, j) => {
           lineWaiter = r;
         });
-        /*
-            lineWaiter = c => {
-              console.log("Waiter", c);
-            };
-            */
         var q = await ww;
         var itm = game.getExactItem(q, par);
-        if (itm.length > 1) {
+        if (itm.length != 1) {
           display.printTextRed(
             "Musíš být asi ještě přesnější, stále nerozumím."
           );
@@ -209,7 +231,11 @@ var doCommand = async command => {
       }
     }
   }
-  console.log("COMMAND", command.id, command.params.map(q => q[0].id));
+  console.log(
+    "COMMAND",
+    command.id,
+    command.params.map(q => (q[0].id ? q[0].id : q[0].room))
+  );
 };
 
 var tick = 0;
