@@ -178,6 +178,7 @@ var cOverlook = () => {
 };
 
 var roomEnter = () => {
+  game.room = getRoom(game.where);
   var out = "";
   out += cOverlook();
   var q = cLook();
@@ -188,6 +189,12 @@ var roomEnter = () => {
   q = cSee();
   if (q) {
     out += "\n" + q;
+  }
+
+  //atmosphere
+  if (game.room.atmosphere) {
+    var as = lang.fixString(game.room.atmosphere);
+    out += "\n" + as;
   }
   return out;
 };
