@@ -2,6 +2,8 @@ window.$ = window.jQuery = require("./node_modules/jquery/dist/jquery.min.js");
 require("./node_modules/bootstrap/dist/js/bootstrap.min");
 require("jquery-ui-dist/jquery-ui.js");
 import "babel-polyfill";
+
+const nomusic = true;
 //import "/css/hologram-webfont.ttf";
 
 //v2 - complete rework of texten and game def
@@ -116,7 +118,7 @@ var FSM = {
     begin: {
       //state 0
       start() {
-        $("#music1")[0].play();
+        if (!nomusic) $("#music1")[0].play();
         $("#music1")[0].volume = 0.2;
         $("#music2")[0].pause();
         $("#video1")[0].play();
@@ -147,7 +149,7 @@ var FSM = {
       start() {
         $("#introscreen").hide();
         $("#maingame").show();
-        $("#music2")[0].play();
+        if (!nomusic) $("#music2")[0].play();
         $("#music2")[0].volume = 0.2;
         $("#music1")[0].pause();
         $("#music2").show();

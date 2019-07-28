@@ -1,3 +1,5 @@
+//var BEGIN = require("./text/begin.txt");
+
 module.exports = {
   GNAME: "Gordonova farma",
   GENTER: "Stiskni ENTER",
@@ -7,4 +9,5 @@ module.exports = {
   CANGO: "Můžeš jít ",
   HAVE: "Máš u sebe ",
   SEE: "Vidíš "
+  //BEGIN
 };
