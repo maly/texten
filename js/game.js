@@ -194,7 +194,7 @@ var roomEnter = () => {
   //atmosphere
   if (game.room.atmosphere) {
     var as = lang.fixString(game.room.atmosphere);
-    out += "\n" + as;
+    if (as) out += "\n" + as;
   }
   return out;
 };
