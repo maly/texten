@@ -179,6 +179,7 @@ var wasEnterPressed = () => {
 var tick = 0;
 var gameTime = 0;
 var enterFlag = false;
+var lineWaiter = null;
 var endless = () => {
   //command handling
 
@@ -188,14 +189,34 @@ var endless = () => {
     enterFlag = true;
     if (cmd) {
       console.log("RES", cmd);
-      var pc = parser.parse(cmd);
-      console.log(pc);
-      if (pc.length > 1) {
-        display.printTextRed("Nejsem si úplně jist, co mám udělat");
-      } else if (pc.length < 1) {
-        display.printTextRed("To nechápu, promiň");
+      if (lineWaiter) {
+        var q = lineWaiter;
+        lineWaiter = null;
+        q(cmd);
       } else {
-        //Máme command!
+        var pc = parser.parse(cmd);
+        console.log(pc);
+        if (pc.length > 1) {
+          display.printTextRed("Nejsem si úplně jist, co mám udělat");
+        } else if (pc.length < 1) {
+          display.printTextRed("To nechápu, promiň");
+        } else {
+          //Máme command!
+          var command = pc[0];
+          if (command.params) {
+            //fix params
+            var par = command.params[0];
+            if (par.length > 1) {
+              //nejednoznačnost
+              var il = par.map(q => (q.adj ? q.adj + " " + q.name : q.name));
+              display.printText("Máš na mysli " + lang.listToQuestion(il));
+              lineWaiter = c => {
+                console.log("Waiter", c);
+              };
+            }
+            console.log(par);
+          }
+        }
       }
     }
     keyboard.key(0);
