@@ -87,6 +87,7 @@ const parse = text => {
     });
 
   console.log(m);
+  return m;
 };
 
 module.exports = {

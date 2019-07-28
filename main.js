@@ -116,8 +116,9 @@ var FSM = {
     begin: {
       //state 0
       start() {
-        //$("#music1")[0].play();
-        //$("#music2")[0].pause();
+        $("#music1")[0].play();
+        $("#music1")[0].volume = 0.2;
+        $("#music2")[0].pause();
         $("#video1")[0].play();
         $("#video2")[0].pause();
         $("#video1").show();
@@ -147,6 +148,7 @@ var FSM = {
         $("#introscreen").hide();
         $("#maingame").show();
         $("#music2")[0].play();
+        $("#music2")[0].volume = 0.2;
         $("#music1")[0].pause();
         $("#music2").show();
         $("#music1").hide();
@@ -181,7 +183,18 @@ var endless = () => {
   cmd = keyboard.waitForLine();
   if (cmd !== null) {
     enterFlag = true;
-    console.log("RES", cmd);
+    if (cmd) {
+      console.log("RES", cmd);
+      var pc = parser.parse(cmd);
+      console.log(pc);
+      if (pc.length > 1) {
+        display.printTextRed("Nejsem si úplně jist, co mám udělat");
+      } else if (pc.length < 1) {
+        display.printTextRed("To nechápu, promiň");
+      } else {
+        //Máme command!
+      }
+    }
     keyboard.key(0);
   }
 
@@ -209,7 +222,8 @@ var endless = () => {
 
 var onLoad = () => {
   display.init();
-  FSM.newState("begin");
+  //FSM.newState("begin");
+  FSM.newState("game0");
   requestAnimationFrame(endless);
 };
 
