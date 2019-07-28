@@ -46,7 +46,7 @@ const commands = [
   },
   {
     id: "cuse",
-    _cmd: ["použij @3"],
+    _cmd: ["použij #3"],
     does: [[[], [[".", "Použil jsi $"], ["U", "$", "Nic se nestalo"]]]]
   },
 

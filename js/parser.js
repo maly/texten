@@ -86,7 +86,7 @@ const parse = text => {
       );
     });
 
-  console.log(m);
+  console.log("Parsed:", m);
   return m;
 };
 

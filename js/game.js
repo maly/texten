@@ -81,6 +81,19 @@ var getItemsBy = (name, flex) => {
   return names;
 };
 
+var getExactItem = (name, is) => {
+  var pname = name.split(/\s+/);
+  var i = is.filter(q => {
+    if (pname.length === 1)
+      if (!q.adj && q.name.indexOf(pname[0]) === 0) return true;
+    if (pname.length === 2)
+      if (q.adj.indexOf(pname[0]) === 0 && q.name.indexOf(pname[1]) === 0)
+        return true;
+    return false;
+  });
+  return i;
+};
+
 var filterItemsBy = (is, flt) => {
   var out = is.filter(q => {
     var id = q.id;
@@ -215,6 +228,7 @@ module.exports = {
   },
   get,
   getItem,
+  getExactItem,
   getItemsBy,
   getFilteredItemsBy,
   playerListItems,

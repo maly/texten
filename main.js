@@ -78,6 +78,7 @@ var changeRoom = function() {
   t.simpleRoom();
 };
 
+/*
 var doCommand = function(c) {
   console.log(c);
   var hey = t.parseAndDo(c);
@@ -91,7 +92,7 @@ var doCommand = function(c) {
   keyboard.key(0);
   return false;
 };
-
+*/
 //keyboard.init(doCommand);
 
 var _timers = {};
@@ -176,6 +177,41 @@ var wasEnterPressed = () => {
   return false;
 };
 
+var doCommand = async command => {
+  if (command.params) {
+    //fix params
+    for (var i = 0; i < command.params.length; i++) {
+      var par = command.params[i];
+      if (par.length > 1) {
+        //nejednoznačnost
+        var il = par.map(i => {
+          var q = game.getItem(i.id);
+          return q.adjs[3] ? q.adjs[3] + " " + q.names[3] : q.names[3];
+        });
+        display.printText("Máš na mysli " + lang.listToQuestion(il));
+        var ww = new Promise((r, j) => {
+          lineWaiter = r;
+        });
+        /*
+            lineWaiter = c => {
+              console.log("Waiter", c);
+            };
+            */
+        var q = await ww;
+        var itm = game.getExactItem(q, par);
+        if (itm.length > 1) {
+          display.printTextRed(
+            "Musíš být asi ještě přesnější, stále nerozumím."
+          );
+          return;
+        }
+        command.params[i] = itm;
+      }
+    }
+  }
+  console.log("COMMAND", command.id, command.params.map(q => q[0].id));
+};
+
 var tick = 0;
 var gameTime = 0;
 var enterFlag = false;
@@ -203,19 +239,7 @@ var endless = () => {
         } else {
           //Máme command!
           var command = pc[0];
-          if (command.params) {
-            //fix params
-            var par = command.params[0];
-            if (par.length > 1) {
-              //nejednoznačnost
-              var il = par.map(q => (q.adj ? q.adj + " " + q.name : q.name));
-              display.printText("Máš na mysli " + lang.listToQuestion(il));
-              lineWaiter = c => {
-                console.log("Waiter", c);
-              };
-            }
-            console.log(par);
-          }
+          doCommand(command);
         }
       }
     }
