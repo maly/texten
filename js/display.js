@@ -8,7 +8,7 @@ var init = () => {
   ctx.textBaseline = "top";
   printAt(" ", 0, cline);
 };
-var printAt = function(text, x, y) {
+var printAt = function (text, x, y) {
   ctx.clearRect(
     x * textw + padding,
     y * texth + padding,
@@ -18,20 +18,23 @@ var printAt = function(text, x, y) {
   ctx.fillText(text, x * textw + padding, y * texth + padding);
 };
 
-var clearRect = function(x, y, w, h) {
+var clearRect = function (x, y, w, h) {
   ctx.clearRect(x * textw, y * texth, w * textw, h * texth);
 };
 
 var cline = 0;
 var maxline = 20;
 
-var printLine = function(text) {
+
+const main = require("../main.js")
+
+var printLine = function (text) {
   printAt(text, 0, cline);
   cline++;
   if (cline == maxline) scrollUp();
 };
 
-var printSameLine = function(text) {
+var printSameLine = function (text) {
   ctx.fillStyle = "#ee4";
   printAt(text, 0, cline);
   ctx.fillStyle = "#eee";
@@ -39,7 +42,8 @@ var printSameLine = function(text) {
   //if (cline==maxline) scrollUp();
 };
 
-var printText = function(text) {
+var printText = async function (text, prevLineCount) {
+  var lineCount = prevLineCount ? prevLineCount : 0;
   var slova = text.split(" ");
   var out = [];
   while (slova.length) {
@@ -49,27 +53,49 @@ var printText = function(text) {
       //jsme přes
       slova.unshift(out.pop());
       printLine(out.join(" "));
+      lineCount++
+      if (lineCount == 10) {
+        //haveToPause
+        printSameLine("[ENTER]")
+
+        var ww = new Promise((r, j) => {
+          window.setEnterWaiter(r);
+        }) //.then(() => console.log("WAIT2"))
+        var q = await ww;
+        //keyboard.wasEnterPressed()
+        console.log("WAIT", q);
+        cline--
+
+        lineCount = 0;
+      }
+
       out = [];
     }
   }
   if (out.length) {
     printLine(out.join(" "));
+    lineCount++
   }
-};
-var printTextMultiline = t => {
-  var l = t.split("\n");
-  for (i = 0; i < l.length; i++) {
-    printText(l[i]);
-  }
+  return lineCount
 };
 
-var printTextRed = function(text) {
+var printTextMultiline = async t => {
+  var l = t.split("\n");
+  var lc = 0;
+  for (i = 0; i < l.length; i++) {
+    lc = await printText(l[i], lc);
+  }
+  console.log("return lc", lc)
+  return lc
+};
+
+var printTextRed = function (text) {
   ctx.fillStyle = "#e44";
   printText(text);
   ctx.fillStyle = "#eee";
 };
 
-var scrollUp = function() {
+var scrollUp = function () {
   var myImageData = ctx.getImageData(
     0,
     texth,
@@ -80,6 +106,13 @@ var scrollUp = function() {
   ctx.putImageData(myImageData, 0, 0);
   cline--;
 };
+
+//todo:
+/*
+cls
+správně mazat rámce
+wait for enter po tisku (printAndWait) :)
+*/
 
 module.exports = {
   init,

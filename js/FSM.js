@@ -41,6 +41,25 @@ var FSM = {
             },
             test() {
                 if (keyboard.wasEnterPressed()) {
+                    FSM.newState("intro0");
+                }
+            }
+        },
+        intro0: {
+            done: false,
+            async start() {
+                //console.log(this)
+                $("#introscreen").hide();
+                $("#maingame").show();
+                keyboard.doOutput(true);
+                var intro0 = require("../game/introText.js")
+                var n = await display.printTextMultiline(intro0)
+                //console.log("DONEPRINT")
+                this.done = true
+                keyboard.wasEnterPressed()
+            },
+            test() {
+                if (this.done) {
                     FSM.newState("game0");
                 }
             }
@@ -59,6 +78,7 @@ var FSM = {
                 $("#video2")[0].play();
                 $("#video1")[0].pause();
                 keyboard.doOutput(true);
+                keyboard.key(0);
                 game.cEnter();
                 keyboard.key(0);
             },

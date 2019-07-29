@@ -166,6 +166,7 @@ var tick = 0;
 var gameTime = 0;
 //var enterFlag = false;
 var lineWaiter = null;
+var enterWaiter = null;
 var endless = () => {
     //command handling
 
@@ -174,7 +175,11 @@ var endless = () => {
     cmd = keyboard.waitForLine();
     if (cmd !== null) {
 
-        if (cmd) {
+        if (enterWaiter) {
+            var q = enterWaiter;
+            enterWaiter = null;
+            q(cmd);
+        } else if (cmd) {
             console.log("RES", cmd);
             if (lineWaiter) {
                 var q = lineWaiter;
@@ -213,11 +218,7 @@ var endless = () => {
         //console.log("TICK");
     }
     timer.allTick()
-    /*
-    for (var timer of _timers) {
-      timer.tick();
-    }
-    */
+
     requestAnimationFrame(endless);
 };
 
@@ -256,3 +257,6 @@ $("body").bind("keypress", function (e) {
 });
 
 $(document).ready(onLoad);
+
+window.setLineWaiter = (lw) => lineWaiter = lw
+window.setEnterWaiter = (lw) => enterWaiter = lw
