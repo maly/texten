@@ -1,12 +1,13 @@
 /////editor
 
 var doCommand = null;
+var enterFlag = false;
 var doOutput = false;
 const display = require("/js/display.js");
 
 var eline = "> ";
 var lastWaiter = null;
-var key = function(k) {
+var key = function (k) {
   //console.log("KK", k);
   if (k == 7) {
     //recall last
@@ -14,6 +15,7 @@ var key = function(k) {
   } else if (k == 13) {
     if (doOutput) display.printLine(eline + " ");
     waiter = eline.substr(2).trim();
+    enterFlag = true;
     lastWaiter = eline.substr(2).trim();
     //console.log("WA", waiter);
     //doCommand(eline.substr(2).trim());
@@ -42,6 +44,13 @@ var waitForLine = () => {
   return line;
 };
 
+var wasEnterPressed = () => {
+  if (enterFlag) {
+    enterFlag = false;
+    return true;
+  }
+  return false;
+};
 module.exports = {
   init: doCommandCB => {
     doCommand = doCommandCB;
@@ -50,5 +59,6 @@ module.exports = {
   doOutput(d) {
     doOutput = d;
   },
-  waitForLine
+  waitForLine,
+  wasEnterPressed
 };

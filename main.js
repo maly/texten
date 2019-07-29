@@ -3,7 +3,7 @@ require("./node_modules/bootstrap/dist/js/bootstrap.min");
 require("jquery-ui-dist/jquery-ui.js");
 import "babel-polyfill";
 
-const nomusic = true;
+const nomusic = !true;
 //import "/css/hologram-webfont.ttf";
 
 //v2 - complete rework of texten and game def
@@ -43,8 +43,8 @@ game.initRooms(rooms);
 game.initStrings(require("./game/strings.js"));
 
 game.display(t => {
-  console.log(t);
-  display.printTextMultiline(t);
+    console.log(t);
+    display.printTextMultiline(t);
 });
 
 console.log(game.get());
@@ -73,9 +73,9 @@ var out = function(text) {
 
 t.setPrint(out);
 */
-var changeRoom = function() {
-  //$("#display").html("");
-  t.simpleRoom();
+var changeRoom = function () {
+    //$("#display").html("");
+    t.simpleRoom();
 };
 
 /*
@@ -97,235 +97,234 @@ var doCommand = function(c) {
 
 var _timers = {};
 var _timerId = 0;
-var timer = function(id, ticks) {
-  this.remain = ticks;
-  this.id = id; //_timerId++;
-  _timers[this.id] = {
-    tick: () => {
-      if (this.remain) this.remain--;
-    },
-    state: () => {
-      return this.remain;
-    }
-  };
+var timer = function (id, ticks) {
+    this.remain = ticks;
+    this.id = id; //_timerId++;
+    _timers[this.id] = {
+        tick: () => {
+            if (this.remain) this.remain--;
+        },
+        state: () => {
+            return this.remain;
+        }
+    };
 };
 
 var FSM = {
-  state: "begin",
-  newState(ns) {
-    FSM.state = ns;
-    FSM.states[FSM.state].start();
-  },
-  states: {
-    begin: {
-      //state 0
-      start() {
-        if (!nomusic) $("#music1")[0].play();
-        $("#music1")[0].volume = 0.2;
-        $("#music2")[0].pause();
-        $("#video1")[0].play();
-        $("#video2")[0].pause();
-        $("#video1").show();
-        $("#video2").hide();
-        $("#maingame").hide();
-        new timer("intro", 300);
-      },
-      test() {
-        if (_timers.intro.state() === 0) {
-          delete _timers.intro;
-          FSM.newState("titlescreen");
-        }
-      }
+    state: "begin",
+    newState(ns) {
+        FSM.state = ns;
+        FSM.states[FSM.state].start();
     },
-    titlescreen: {
-      start() {
-        $("#introscreen").show();
-      },
-      test() {
-        if (wasEnterPressed()) {
-          FSM.newState("game0");
+    states: {
+        begin: {
+            //state 0
+            start() {
+                if (!nomusic) $("#music1")[0].play();
+                $("#music1")[0].volume = 0.4;
+                $("#music2")[0].pause();
+                $("#video1")[0].play();
+                $("#video2")[0].pause();
+                $("#video1").show();
+                $("#video2").hide();
+                $("#maingame").hide();
+                new timer("intro", 300);
+            },
+            test() {
+                if (_timers.intro.state() === 0) {
+                    delete _timers.intro;
+                    FSM.newState("titlescreen");
+                }
+            }
+        },
+        titlescreen: {
+            start() {
+                $("#introscreen").show();
+            },
+            test() {
+                if (keyboard.wasEnterPressed()) {
+                    FSM.newState("game0");
+                }
+            }
+        },
+        game0: {
+            start() {
+                $("#introscreen").hide();
+                $("#maingame").show();
+                if (!nomusic) $("#music2")[0].play();
+                $("#music2")[0].volume = 0.4
+                $("#music1")[0].pause();
+                $("#music2").show();
+                $("#music1").hide();
+                $("#video2").show();
+                $("#video1").hide();
+                $("#video2")[0].play();
+                $("#video1")[0].pause();
+                keyboard.doOutput(true);
+                game.cEnter();
+                keyboard.key(0);
+            },
+            test() {}
         }
-      }
-    },
-    game0: {
-      start() {
-        $("#introscreen").hide();
-        $("#maingame").show();
-        if (!nomusic) $("#music2")[0].play();
-        $("#music2")[0].volume = 0.2;
-        $("#music1")[0].pause();
-        $("#music2").show();
-        $("#music1").hide();
-        $("#video2").show();
-        $("#video1").hide();
-        $("#video2")[0].play();
-        $("#video1")[0].pause();
-        keyboard.doOutput(true);
-        game.cEnter();
-        keyboard.key(0);
-      },
-      test() {}
     }
-  }
 };
 
-var wasEnterPressed = () => {
-  if (enterFlag) {
-    enterFlag = false;
-    return true;
-  }
-  return false;
-};
+
 
 var doCommand = async command => {
-  if (command.params) {
-    //fix params
-    for (var i = 0; i < command.params.length; i++) {
-      var par = command.params[i];
-      if (par.length > 1) {
-        //nejednoznačnost
-        //nejednoznačný směr
-        if (command.pattern[i] === "^") {
-          var il = par.map(q => {
-            return q.to;
-          });
-          display.printText("Máš na mysli " + lang.listToQuestion(il));
-          var ww = new Promise((r, j) => {
-            lineWaiter = r;
-          });
-          /*
-                lineWaiter = c => {
-                  console.log("Waiter", c);
-                };
-                */
-          var q = await ww;
-          var dir = game.getExit(q);
-          console.log("Směr", dir);
-          if (dir.length != 1) {
-            display.printTextRed(
-              "Musíš být asi ještě přesnější, stále nerozumím."
-            );
-            return;
-          }
-          command.params[i] = dir;
-          continue;
+    if (command.params) {
+        //fix params
+        for (var i = 0; i < command.params.length; i++) {
+            var par = command.params[i];
+            if (par.length > 1) {
+                //nejednoznačnost
+                //nejednoznačný směr
+                if (command.pattern[i] === "^") {
+                    var il = par.map(q => {
+                        return q.to;
+                    });
+                    display.printText("Máš na mysli " + lang.listToQuestion(il));
+                    var ww = new Promise((r, j) => {
+                        lineWaiter = r;
+                    });
+                    /*
+                          lineWaiter = c => {
+                            console.log("Waiter", c);
+                          };
+                          */
+                    var q = await ww;
+                    var dir = game.getExit(q);
+                    console.log("Směr", dir);
+                    if (dir.length != 1) {
+                        display.printTextRed(
+                            "Musíš být asi ještě přesnější, stále nerozumím."
+                        );
+                        return;
+                    }
+                    command.params[i] = dir;
+                    continue;
+                }
+                //nejednoznačný předmět
+                var il = par.map(i => {
+                    var q = game.getItem(i.id);
+                    return q.adjs[3] ? q.adjs[3] + " " + q.names[3] : q.names[3];
+                });
+                display.printText("Máš na mysli " + lang.listToQuestion(il));
+                var ww = new Promise((r, j) => {
+                    lineWaiter = r;
+                });
+                var q = await ww;
+                var itm = game.getExactItem(q, par);
+                if (itm.length != 1) {
+                    display.printTextRed(
+                        "Musíš být asi ještě přesnější, stále nerozumím."
+                    );
+                    return;
+                }
+                command.params[i] = itm;
+            }
         }
-        //nejednoznačný předmět
-        var il = par.map(i => {
-          var q = game.getItem(i.id);
-          return q.adjs[3] ? q.adjs[3] + " " + q.names[3] : q.names[3];
-        });
-        display.printText("Máš na mysli " + lang.listToQuestion(il));
-        var ww = new Promise((r, j) => {
-          lineWaiter = r;
-        });
-        var q = await ww;
-        var itm = game.getExactItem(q, par);
-        if (itm.length != 1) {
-          display.printTextRed(
-            "Musíš být asi ještě přesnější, stále nerozumím."
-          );
-          return;
-        }
-        command.params[i] = itm;
-      }
     }
-  }
-  console.log(
-    "COMMAND",
-    command.id,
-    command.params.map(q => (q[0].id ? q[0].id : q[0].room))
-  );
+    console.log(
+        "COMMAND",
+        command.id,
+        command.params.map(q => (q[0].id ? q[0].id : q[0].room))
+    );
 };
 
 var tick = 0;
 var gameTime = 0;
-var enterFlag = false;
+//var enterFlag = false;
 var lineWaiter = null;
 var endless = () => {
-  //command handling
+    //command handling
 
-  var cmd;
-  cmd = keyboard.waitForLine();
-  if (cmd !== null) {
-    enterFlag = true;
-    if (cmd) {
-      console.log("RES", cmd);
-      if (lineWaiter) {
-        var q = lineWaiter;
-        lineWaiter = null;
-        q(cmd);
-      } else {
-        var pc = parser.parse(cmd);
-        console.log(pc);
-        if (pc.length > 1) {
-          display.printTextRed("Nejsem si úplně jist, co mám udělat");
-        } else if (pc.length < 1) {
-          display.printTextRed("To nechápu, promiň");
-        } else {
-          //Máme command!
-          var command = pc[0];
-          doCommand(command);
+
+    var cmd;
+    cmd = keyboard.waitForLine();
+    if (cmd !== null) {
+
+        if (cmd) {
+            console.log("RES", cmd);
+            if (lineWaiter) {
+                var q = lineWaiter;
+                lineWaiter = null;
+                q(cmd);
+            } else {
+                var pc = parser.parse(cmd);
+                console.log(pc);
+                if (pc.length > 1) {
+                    display.printTextRed("Nejsem si úplně jist, co mám udělat");
+                } else if (pc.length < 1) {
+                    display.printTextRed("To nechápu, promiň");
+                } else {
+                    //Máme command!
+                    var command = pc[0];
+                    doCommand(command);
+                }
+            }
         }
-      }
+        keyboard.key(0);
     }
-    keyboard.key(0);
-  }
 
-  //state machine handling
 
-  FSM.states[FSM.state].test();
+    //var kbd = keyboard.getInput();
+    //console.log(kbd)
 
-  //timer handling
-  tick++;
-  gameTime++;
-  if (tick > 60) {
-    tick = 0;
-    //console.log("TICK");
-  }
-  for (var timer in _timers) {
-    _timers[timer].tick();
-  }
-  /*
-  for (var timer of _timers) {
-    timer.tick();
-  }
-  */
-  requestAnimationFrame(endless);
+    //state machine handling
+
+    FSM.states[FSM.state].test();
+
+    //timer handling
+    tick++;
+    gameTime++;
+    if (tick > 60) {
+        tick = 0;
+        //console.log("TICK");
+    }
+    for (var timer in _timers) {
+        _timers[timer].tick();
+    }
+    /*
+    for (var timer of _timers) {
+      timer.tick();
+    }
+    */
+    requestAnimationFrame(endless);
 };
 
 var onLoad = () => {
-  display.init();
-  //FSM.newState("begin");
-  FSM.newState("game0");
-  requestAnimationFrame(endless);
+    display.init();
+    FSM.newState("begin");
+    //FSM.newState("game0");
+    requestAnimationFrame(endless);
 };
 
-$(window).bind("load", function() {
-  //changeRoom();
-  keyboard.key(0);
+$(window).bind("load", function () {
+    //changeRoom();
+    keyboard.key(0);
 });
 
 //-----
-$("body").bind("keydown", function(e) {
-  //console.log("KD", e.keyCode);
-  if (e.keyCode == 8) {
-    e.preventDefault();
-    keyboard.key(8);
-    return e;
-  } else if (e.keyCode == 38) {
-    e.preventDefault();
-    keyboard.key(7);
-    return e;
-  }
+$("body").bind("keydown", function (e) {
+    //console.log("KD", e.keyCode);
+    if (e.keyCode == 8) {
+        e.preventDefault();
+        keyboard.key(8);
+        return e;
+    } else if (e.keyCode == 38) {
+        e.preventDefault();
+        keyboard.key(7);
+        return e;
+    }
 
-  return e;
+    return e;
 });
 
-$("body").bind("keypress", function(e) {
-  e.preventDefault();
-  keyboard.key(e.charCode);
-  return false;
+$("body").bind("keypress", function (e) {
+    e.preventDefault();
+    keyboard.key(e.charCode);
+    return false;
 });
 
 $(document).ready(onLoad);
