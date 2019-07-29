@@ -42,7 +42,9 @@ var initRooms = s => {
   var startRoom = rooms.filter(q => q.hasAttr("start"));
   if (startRoom.length == 1) game.where = startRoom[0].id;
   game.rooms = s.reduce((prev, curr) => {
-    prev[curr.id] = { looked: false };
+    prev[curr.id] = {
+      looked: false
+    };
     return prev;
   }, {});
 };
@@ -71,7 +73,8 @@ var getItemsBy = (name, flex) => {
       };
     })
     .filter(q => {
-      if (pname.length === 1) if (q.name.indexOf(pname[0]) === 0) return true;
+      if (pname.length === 1)
+        if (q.name.indexOf(pname[0]) === 0) return true;
       if (pname.length === 2)
         if (q.adj.indexOf(pname[0]) === 0 && q.name.indexOf(pname[1]) === 0)
           return true;
@@ -86,6 +89,7 @@ var getExactItem = (name, is) => {
   var i = is.filter(q => {
     if (pname.length === 1)
       if (!q.adj && q.name.indexOf(pname[0]) === 0) return true;
+    if (q.adj.indexOf(pname[0]) === 0) return true;
     if (pname.length === 2)
       if (q.adj.indexOf(pname[0]) === 0 && q.name.indexOf(pname[1]) === 0)
         return true;
