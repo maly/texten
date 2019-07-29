@@ -3,7 +3,7 @@ require("./node_modules/bootstrap/dist/js/bootstrap.min");
 require("jquery-ui-dist/jquery-ui.js");
 import "babel-polyfill";
 
-const nomusic = !true;
+
 //import "/css/hologram-webfont.ttf";
 
 //v2 - complete rework of texten and game def
@@ -95,81 +95,11 @@ var doCommand = function(c) {
 */
 //keyboard.init(doCommand);
 
-var _timers = {};
-var _timerId = 0;
-var timer = function (id, ticks) {
-    this.remain = ticks;
-    this.id = id; //_timerId++;
-    _timers[this.id] = {
-        tick: () => {
-            if (this.remain) this.remain--;
-        },
-        state: () => {
-            return this.remain;
-        }
-    };
-};
-
-var FSM = {
-    state: "begin",
-    newState(ns) {
-        FSM.state = ns;
-        FSM.states[FSM.state].start();
-    },
-    states: {
-        begin: {
-            //state 0
-            start() {
-                if (!nomusic) $("#music1")[0].play();
-                $("#music1")[0].volume = 0.4;
-                $("#music2")[0].pause();
-                $("#video1")[0].play();
-                $("#video2")[0].pause();
-                $("#video1").show();
-                $("#video2").hide();
-                $("#maingame").hide();
-                new timer("intro", 300);
-            },
-            test() {
-                if (_timers.intro.state() === 0) {
-                    delete _timers.intro;
-                    FSM.newState("titlescreen");
-                }
-            }
-        },
-        titlescreen: {
-            start() {
-                $("#introscreen").show();
-            },
-            test() {
-                if (keyboard.wasEnterPressed()) {
-                    FSM.newState("game0");
-                }
-            }
-        },
-        game0: {
-            start() {
-                $("#introscreen").hide();
-                $("#maingame").show();
-                if (!nomusic) $("#music2")[0].play();
-                $("#music2")[0].volume = 0.4
-                $("#music1")[0].pause();
-                $("#music2").show();
-                $("#music1").hide();
-                $("#video2").show();
-                $("#video1").hide();
-                $("#video2")[0].play();
-                $("#video1")[0].pause();
-                keyboard.doOutput(true);
-                game.cEnter();
-                keyboard.key(0);
-            },
-            test() {}
-        }
-    }
-};
 
 
+var FSM = require("./js/FSM.js")
+
+var timer = require("./js/timer.js")
 
 var doCommand = async command => {
     if (command.params) {
@@ -282,9 +212,7 @@ var endless = () => {
         tick = 0;
         //console.log("TICK");
     }
-    for (var timer in _timers) {
-        _timers[timer].tick();
-    }
+    timer.allTick()
     /*
     for (var timer of _timers) {
       timer.tick();
