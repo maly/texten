@@ -230,16 +230,18 @@ var cSee = () => {
 var cExits = () => {
   var l = exitList();
   if (l.length === 0) return strings.NOGO;
-  return strings.CANGO + lang.listToText(l.map(q => q.to));
+  return strings.CANGO + lang.listToText(l.map(q => q.to), ", nebo ");
 };
 
 var cLook = onlyFirst => {
   var room = getRoom(game.where);
   if (!room) return "";
-  //console.log(game.rooms[game.where])
+  console.log("CLOOK", game.where, game.rooms[game.where], room);
   if (onlyFirst && game.rooms[game.where].looked) return "";
+  console.log("SHOULD");
   game.rooms[game.where].looked = true;
   if (!room.ext) return "";
+  console.log("MUST");
   return room.ext;
 };
 var cOverlook = () => {
@@ -299,6 +301,13 @@ var sysExamine = pars => {
   }
 };
 
+var sysGo = pars => {
+  console.log("GO", pars);
+  game.where = pars[0];
+  disp("Jdeš " + pars[0]);
+  cEnter();
+};
+
 module.exports = {
   init,
   initItems,
@@ -325,6 +334,7 @@ module.exports = {
   cEnter,
   sysDecrate,
   sysExamine,
+  sysGo,
   err(s) {
     display.printTextRed(lang.fixString(s));
   }

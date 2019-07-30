@@ -11,13 +11,13 @@ var init = () => {
   printAt("     ", 0, cline);
 };
 
-var strings = require("../game/strings.js")
+var strings = require("../game/strings.js");
 
 var cls = () => {
   ctx.clearRect(0, 0, 650, 490);
-  cline = 0
-}
-var printAt = function (text, x, y) {
+  cline = 0;
+};
+var printAt = function(text, x, y) {
   ctx.clearRect(
     x * textw + padding,
     y * texth + padding,
@@ -27,23 +27,22 @@ var printAt = function (text, x, y) {
   ctx.fillText(text, x * textw + padding, y * texth + padding);
 };
 
-var clearRect = function (x, y, w, h) {
+var clearRect = function(x, y, w, h) {
   ctx.clearRect(x * textw + padding, y * texth + padding, w * textw, h * texth);
 };
 
 var cline = 0;
 var maxline = 20;
 
+const main = require("../main.js");
 
-const main = require("../main.js")
-
-var printLine = function (text) {
+var printLine = function(text) {
   printAt(text, 0, cline);
   cline++;
   if (cline == maxline) scrollUp();
 };
 
-var printSameLine = function (text) {
+var printSameLine = function(text) {
   ctx.fillStyle = "#ee4";
   printAt(text, 0, cline);
   ctx.fillStyle = "#eee";
@@ -51,7 +50,7 @@ var printSameLine = function (text) {
   //if (cline==maxline) scrollUp();
 };
 
-var printText = async function (text, prevLineCount) {
+var printText = async function(text, prevLineCount) {
   var lineCount = prevLineCount ? prevLineCount : 0;
   var slova = text.split(" ");
   var out = [];
@@ -62,18 +61,18 @@ var printText = async function (text, prevLineCount) {
       //jsme přes
       slova.unshift(out.pop());
       printLine(out.join(" "));
-      lineCount++
+      lineCount++;
       if (lineCount == maxLinesAtOnce) {
         //haveToPause
-        printSameLine(strings.GENTER)
+        printSameLine(strings.GENTER);
 
         var ww = new Promise((r, j) => {
           window.setEnterWaiter(r);
-        }) //.then(() => console.log("WAIT2"))
+        }); //.then(() => console.log("WAIT2"))
         var q = await ww;
         //keyboard.wasEnterPressed()
         console.log("WAIT", q);
-        cline--
+        cline--;
 
         lineCount = 0;
       }
@@ -83,40 +82,42 @@ var printText = async function (text, prevLineCount) {
   }
   if (out.length) {
     printLine(out.join(" "));
-    lineCount++
+    lineCount++;
   }
-  return lineCount
+  return lineCount;
 };
 
 var printTextMultiline = async (t, hasWait) => {
   var l = t.split("\n");
+  //console.log("PTM", l, l.length);
   var lc = 0;
   //var hasWait = false;
-  for (i = 0; i < l.length; i++) {
+  for (var i = 0; i < l.length; i++) {
+    //console.log("PL", i, l[i], lc);
     lc = await printText(l[i], lc);
   }
   if (!hasWait) return lc;
-  printSameLine(strings.GENTER)
+  printSameLine(strings.GENTER);
   var ww = new Promise((r, j) => {
     window.setEnterWaiter(r);
-  })
+  });
   var q = await ww;
-  printSameLine("         ")
-  return lc
+  printSameLine("         ");
+  return lc;
 };
 
-var printTextRed = function (text) {
+var printTextRed = function(text) {
   ctx.fillStyle = "#e44";
   printText(text);
   ctx.fillStyle = "#eee";
 };
-var printTextYellow = function (text) {
+var printTextYellow = function(text) {
   ctx.fillStyle = "#ee4";
   printText(text);
   ctx.fillStyle = "#eee";
 };
 
-var scrollUp = function () {
+var scrollUp = function() {
   var myImageData = ctx.getImageData(
     0,
     texth,

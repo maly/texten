@@ -10,7 +10,20 @@ const commands = [
   {
     id: "cgo",
     _cmd: ["jdi ^", "běž ^", "utíkej ^"],
-    _does: 'print "Jdeš ^."; exit ^'
+    _does: 'print "Jdeš ^."; exit ^',
+    _prerun(g) {},
+    _postrun(g) {},
+    _run(p, g) {
+      g.sysGo(p);
+    },
+    _noparam: {
+      type: "shuffle",
+      strings: [
+        "Nevím přesně kam jít.",
+        "Asi nechápu, kam chceš jít.",
+        "Tam nemůžeš jít."
+      ]
+    }
   },
   {
     id: "citinerary",
