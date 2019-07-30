@@ -8,23 +8,19 @@ import "babel-polyfill";
 
 //v2 - complete rework of texten and game def
 
-const commandCompiler = require("./commandCompiler.js");
+//const commandCompiler = require("./commandCompiler.js");
 
 const parser = require("./js/parser.js");
 window.parser = parser;
 
-const texten = require("./bones.js");
-const g = require("./demo.js");
+//const texten = require("./bones.js");
+//const g = require("./demo.js");
 
 const display = require("./js/display.js");
 
 const keyboard = require("./js/keyboard.js");
 
 const flex = require("./js/flexis.js");
-
-flex("bot-a,y,ě,u");
-flex("botník-,u,u");
-flex("louč-,e,i");
 
 const game = require("./js/game.js");
 game.init();
@@ -40,6 +36,7 @@ parser.setVerbs(verbs);
 
 game.initItems(items);
 game.initRooms(rooms);
+//game.initCommands(verbs);
 game.initStrings(require("./game/strings.js"));
 
 game.display(t => {
@@ -64,7 +61,7 @@ console.log(game.roomEnter());
 // Fade out the first sound and speed up the second.
 //sound.fade(1, 0, 1000, id1);
 
-var t = new texten(g);
+//var t = new texten(g);
 /*
 var out = function(text) {
   //console.log(text);
@@ -73,10 +70,6 @@ var out = function(text) {
 
 t.setPrint(out);
 */
-var changeRoom = function () {
-    //$("#display").html("");
-    t.simpleRoom();
-};
 
 /*
 var doCommand = function(c) {
@@ -155,11 +148,18 @@ var doCommand = async command => {
             }
         }
     }
+
     console.log(
         "COMMAND",
         command.id,
-        command.params.map(q => (q[0].id ? q[0].id : q[0].room))
+        command.params /*.map(q => (q[0].id ? q[0].id : q[0].room)*/
+
     );
+    var parnames = command.params.map(q => (q[0].id ? q[0].id : q[0].room));
+    var syscmd = parser.getVerbById(command.id);
+    if (syscmd._prerun) syscmd._prerun(parnames, game)
+    if (syscmd._run) syscmd._run(parnames, game)
+    if (syscmd._postrun) syscmd._postrun(parnames, game)
 };
 
 var tick = 0;
