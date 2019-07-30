@@ -1,7 +1,9 @@
 const display = require("./display.js");
-const nomusic = true;
+
 
 var timer = require("./timer.js")
+var music = require("./music.js")
+var video = require("./video.js")
 
 const keyboard = require("./keyboard.js");
 const game = require("./game.js");
@@ -18,13 +20,15 @@ var FSM = {
         begin: {
             //state 0
             start() {
-                if (!nomusic) $("#music1")[0].play();
-                $("#music1")[0].volume = 0.4;
-                $("#music2")[0].pause();
-                $("#video1")[0].play();
-                $("#video2")[0].pause();
-                $("#video1").show();
-                $("#video2").hide();
+                //if (!nomusic) $("#music1")[0].play();
+                //$("#music1")[0].volume = 0.4;
+                //$("#music2")[0].pause();
+                music.play("music1")
+                video.play("video1")
+                //$("#video1")[0].play();
+                //$("#video2")[0].pause();
+                //$("#video1").show();
+                //$("#video2").hide();
                 $("#maingame").hide();
                 introTimer = new timer.timer("intro", 300);
             },
@@ -49,11 +53,17 @@ var FSM = {
             done: false,
             async start() {
                 //console.log(this)
+
                 $("#introscreen").hide();
                 $("#maingame").show();
                 keyboard.doOutput(true);
-                var intro0 = require("../game/introText.js")
+                var intro0 = require("../game/text/introText.js")
+                var intro1 = require("../game/text/introText1.js")
                 var n = await display.printTextMultiline(intro0, true)
+                display.cls()
+                music.play("openscore")
+                video.play("openscore")
+                n = await display.printTextMultiline(intro1, true)
                 //console.log("DONEPRINT")
                 this.done = true
                 keyboard.wasEnterPressed()
@@ -69,15 +79,18 @@ var FSM = {
             start() {
                 $("#introscreen").hide();
                 $("#maingame").show();
-                if (!nomusic) $("#music2")[0].play();
-                $("#music2")[0].volume = 0.4
-                $("#music1")[0].pause();
-                $("#music2").show();
-                $("#music1").hide();
-                $("#video2").show();
-                $("#video1").hide();
-                $("#video2")[0].play();
-                $("#video1")[0].pause();
+                //if (!nomusic) $("#music2")[0].play();
+                //$("#music2")[0].volume = 0.4
+                //$("#music1")[0].pause();
+                //$("#music2").show();
+                //$("#music1").hide();
+                //music.play("music2")
+                //$("#video2").show();
+                //$("#video1").hide();
+                //$("#video2")[0].play();
+                //$("#video1")[0].pause();
+                music.play("music2")
+                video.play("video2")
                 keyboard.doOutput(true);
                 game.cEnter();
                 keyboard.key(0);
