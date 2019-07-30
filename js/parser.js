@@ -39,24 +39,46 @@ $ - item carry
 var special = s => {
   if (s[0] === "^") return ["exit"];
   if (s[0] === "%")
-    return ["item", s.length === 1 ? 3 : s[1], {
-      here: true,
-      movable: true
-    }];
-  if (s[0] === "@") return ["item", s.length === 1 ? 3 : s[1], {
-    here: true
-  }];
+    return [
+      "item",
+      s.length === 1 ? 3 : s[1],
+      {
+        here: true,
+        movable: true
+      }
+    ];
+  if (s[0] === "@")
+    return [
+      "item",
+      s.length === 1 ? 3 : s[1],
+      {
+        here: true
+      }
+    ];
   if (s[0] === "$")
-    return ["item", s.length === 1 ? 3 : s[1], {
-      player: true
-    }];
+    return [
+      "item",
+      s.length === 1 ? 3 : s[1],
+      {
+        player: true
+      }
+    ];
   if (s[0] === "&")
-    return ["item", s.length === 1 ? 4 : s[1], {
-      cratedHere: true
-    }];
-  if (s[0] === "#") return ["item", s.length === 1 ? 3 : s[1], {
-    near: true
-  }];
+    return [
+      "item",
+      s.length === 1 ? 4 : s[1],
+      {
+        cratedHere: true
+      }
+    ];
+  if (s[0] === "#")
+    return [
+      "item",
+      s.length === 1 ? 3 : s[1],
+      {
+        near: true
+      }
+    ];
 };
 
 const parse = text => {
@@ -100,7 +122,8 @@ const parse = text => {
       console.log("QMAP", q);
       return q;
       //console.log(game.getFilteredItemsBy(q.params[0], 3, { player: true }));
-    })
+    });
+  /*
     .filter(q => {
       var paramCount = q.params.map(q => q.length).reduce((p, c) => p + c, 0);
       console.log("FLT", paramCount, q.params.length)
@@ -110,18 +133,21 @@ const parse = text => {
         q.params.length
       );
     });
-
+    */
   //filter alias;
   var alias = [];
-  m = m.filter((q) => {
+  m = m.filter(q => {
     var id = q.id;
     if (alias.indexOf(id) < 0) {
       alias.push(id);
       return true;
     }
     return false;
-  })
-
+  });
+  //quick fix
+  if (m.length > 1) {
+    m = [m[0]];
+  }
   console.log("Parsed:", m);
   return m;
 };
@@ -132,8 +158,8 @@ module.exports = {
     verbs = vs;
   },
   getVerbById(vid) {
-    var v = verbs.filter((q) => q.id == vid);
-    if (!v || v.length != 1) return null
-    return v[0]
+    var v = verbs.filter(q => q.id == vid);
+    if (!v || v.length != 1) return null;
+    return v[0];
   }
 };

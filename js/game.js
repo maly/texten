@@ -27,19 +27,28 @@ var initItems = s => {
   game.items = locations;
   game.itemAttrs = s.reduce((prev, curr) => {
     prev[curr.id] = curr.attrs;
+    prev[curr.id].push("shadow");
     return prev;
-  }, {})
+  }, {});
   items = s.map(q => {
     q.names = flex(q.name);
     q.adjs = q.adj ? flex(q.adj) : ["", "", "", "", "", ""];
     q.hasAttr = a => (game.itemAttrs[q.id].indexOf(a) < 0 ? false : true);
     q.isHere = () => game.items[q.id] === game.where;
-    q.isCrate = () => (game.itemAttrs[q.id].indexOf("crate") < 0 ? false : true);
+    q.isCrate = () =>
+      game.itemAttrs[q.id].indexOf("crate") < 0 ? false : true;
     q.carry = () => game.items[q.id] === "*";
+    q.addAttr = att => {
+      if (!q.hasAttr(att)) game.itemAttrs[q.id].push(att);
+    };
+    q.removeAttr = att => {
+      console.log("RATT", att, q.id);
+      game.itemAttrs[q.id] = game.itemAttrs[q.id].filter(q => q !== att);
+    };
+
     return q;
   });
 };
-
 
 //todo roomAttrs
 var initRooms = s => {
@@ -81,8 +90,7 @@ var getItemsBy = (name, flex) => {
       };
     })
     .filter(q => {
-      if (pname.length === 1)
-        if (q.name.indexOf(pname[0]) === 0) return true;
+      if (pname.length === 1) if (q.name.indexOf(pname[0]) === 0) return true;
       if (pname.length === 2)
         if (q.adj.indexOf(pname[0]) === 0 && q.name.indexOf(pname[1]) === 0)
           return true;
@@ -109,6 +117,7 @@ var getExactItem = (name, is) => {
 var filterItemsBy = (is, flt) => {
   var out = is.filter(q => {
     var id = q.id;
+    if (game.itemAttrs[id].indexOf("shadow") >= 0) return false;
     if (flt.player) {
       if (game.items[id] !== "*") return false;
     }
@@ -120,24 +129,28 @@ var filterItemsBy = (is, flt) => {
     }
 
     if (flt.cratedHere) {
-      var cratesHere = items.filter(q => ((game.items[q.id] === "*") || (game.items[q.id] === game.where)) && q.isCrate())
+      var cratesHere = items
+        .filter(
+          q =>
+            (game.items[q.id] === "*" || game.items[q.id] === game.where) &&
+            q.isCrate()
+        )
         .map(q => q.id);
-      if (!cratesHere || cratesHere.length === 0) return false
+      if (!cratesHere || cratesHere.length === 0) return false;
       //console.log("CRATED HERE", q, cratesHere)
       if (cratesHere.indexOf(game.items[id]) < 0) return false;
       //if (game.items[id] !== game.where && game.items[id] !== "*") return false;
     }
-
 
     if (flt.movable) {
       if (!getItem(id).hasAttr("nonmovable")) return false;
     }
 
     if (flt.hasAttr) {
-      if (!getItem(id).hasAttr(flt.hasAttr)) return false;
+      if (game.itemAttrs[id].indexOf(flt.hasAttr) < 0) return false;
     }
     if (flt.hasNotAttr) {
-      if (getItem(id).attrs.indexOf(flt.hasNotAttr) >= 0) return false;
+      if (game.itemAttrs[id].indexOf(flt.hasNotAttr) >= 0) return false;
     }
     return true;
   });
@@ -157,7 +170,7 @@ var roomListItems = () => {
   return l;
 };
 
-var crateListItems = (crate) => {
+var crateListItems = crate => {
   var l = items.filter(q => game.items[q.id] === crate);
   return l;
 };
@@ -195,11 +208,12 @@ var itemFullName = item => {
   ];
 };
 
-var sysDecrate = (p) => {
-  console.log(p);
+var sysDecrate = p => {
+  console.log("DECRATE", p);
+  if (p.length === 0) return p;
   //todo: check
-  return [p[0]]
-}
+  return [p[0]];
+};
 
 var cInventory = () => {
   var l = playerListItems();
@@ -252,6 +266,11 @@ var roomEnter = () => {
     var as = lang.fixString(game.room.atmosphere);
     if (as) out += "\n" + as;
   }
+
+  //deshadow
+  items
+    .filter(q => game.items[q.id] === game.where)
+    .map(q => q.removeAttr("shadow"));
   return out;
 };
 
@@ -266,17 +285,18 @@ const display = require("./display.js");
 
 //atributy předmětů součástí game state
 
-
-var sysExamine = (pars) => {
+var sysExamine = pars => {
   var itm = getItem(pars[0]);
-  console.log(itm, pars)
-  display.printTextYellow("Zkoumáš " + itemFullName(itm)[3] + ".")
+  console.log(itm, pars);
+  display.printTextYellow("Zkoumáš " + itemFullName(itm)[3] + ".");
   disp(itm.desc);
   if (itm.isCrate()) {
     var inside = crateListItems(itm.id);
-    disp("Uvnitř je " + lang.listToText(inside.map(q => itemFullName(q)[0])))
+    disp("Uvnitř je " + lang.listToText(inside.map(q => itemFullName(q)[0])));
+    //deshadow
+    inside.map(q => q.removeAttr("shadow"));
   }
-}
+};
 
 module.exports = {
   init,
@@ -303,5 +323,8 @@ module.exports = {
   roomEnter,
   cEnter,
   sysDecrate,
-  sysExamine
+  sysExamine,
+  err(s) {
+    display.printTextRed(lang.fixString(s));
+  }
 };
