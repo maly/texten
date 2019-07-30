@@ -1,4 +1,5 @@
 const items = [
+  require("./item/auto.js"),
   {
     id: "louc",
     name: "louč-,e,i",
@@ -15,7 +16,14 @@ const items = [
     attrs: [],
     where: "r1",
     handlers: {
-      pick: [[[], [[".", "Smrdí"]]]]
+      pick: [
+        [
+          [],
+          [
+            [".", "Smrdí"]
+          ]
+        ]
+      ]
     }
   },
   {
