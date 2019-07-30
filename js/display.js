@@ -52,6 +52,10 @@ var printSameLine = function(text) {
   //if (cline==maxline) scrollUp();
 };
 
+var clearSameLine = () => {
+  ctx.clearRect(0, cline * texth + padding, 650, texth);
+};
+
 var printText = async function(text, prevLineCount) {
   var lineCount = prevLineCount ? prevLineCount : 0;
   var slova = text.split(" ");
@@ -92,6 +96,7 @@ var printText = async function(text, prevLineCount) {
 //var keyboard = require("./keyboard.js");
 
 var printTextMultiline = async (t, hasWait) => {
+  clearSameLine();
   var l = t.split("\n");
   //console.log("PTM", l, l.length);
   var lc = 0;
@@ -107,7 +112,8 @@ var printTextMultiline = async (t, hasWait) => {
     window.setEnterWaiter(r);
   });
   var q = await ww;
-  printSameLine("         ");
+  clearSameLine();
+  //printSameLine("         ");
   return lc;
 };
 

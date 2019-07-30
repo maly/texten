@@ -190,6 +190,7 @@ var endless = () => {
       q(cmd);
     } else if (cmd) {
       console.log("RES", cmd);
+
       if (lineWaiter) {
         var q = lineWaiter;
         lineWaiter = null;
@@ -206,6 +207,7 @@ var endless = () => {
           var command = pc[0];
           doCommand(command).then(() => {
             console.log("THEN");
+            game.stepTickAll();
           });
         }
       }
