@@ -1,13 +1,14 @@
 //
 
 //list items to natural language
-var listToText = s => {
+var listToText = (s, d) => {
+  if (!d) d = " a ";
   //var s = l.map(q => q.names[3]);
   var out = "";
   for (var i = 0; i < s.length; i++) {
     out += s[i];
     if (i === s.length - 1) out += ".";
-    else if (i === s.length - 2) out += " a ";
+    else if (i === s.length - 2) out += d;
     else out += ", ";
   }
   return out;
