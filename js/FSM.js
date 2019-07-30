@@ -89,8 +89,8 @@ var FSM = {
                 //$("#video1").hide();
                 //$("#video2")[0].play();
                 //$("#video1")[0].pause();
-                music.play("music2")
-                video.play("video2")
+                //music.play("music2")
+                //video.play("video2")
                 keyboard.doOutput(true);
                 game.cEnter();
                 keyboard.key(0);

@@ -1,6 +1,6 @@
 var mute = false;
 var played = null;
-const nomusic = !true;
+const nomusic = true;
 
 var stop = (id) => {
     $("audio#" + id)[0].pause();
