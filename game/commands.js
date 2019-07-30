@@ -6,8 +6,7 @@ $ - item carry
 # - here or carry
 */
 
-const commands = [
-  {
+const commands = [{
     id: "cgo",
     _cmd: ["jdi ^", "běž ^", "utíkej ^"],
     _does: 'print "Jdeš ^."; exit ^'
@@ -21,8 +20,7 @@ const commands = [
     id: "ctake",
     //cmd: [["zvedni","%"],["seber","%"]],
     _cmd: ["zvedni %3", "seber %3", "vezmi %3"],
-    _does:
-      'C $: . "Vždyť máš $ u sebe!";B ###' +
+    _does: 'C $: . "Vždyť máš $ u sebe!";B ###' +
       'NH $:. "V téhle místnosti nevidíš nic takového!";B###' +
       'AS $ nonmovable: . "Nemůžeš zvednout $";B###' +
       'AR $ nonmovable: P $; . "Zvedl jsi $."'
@@ -41,18 +39,32 @@ const commands = [
     id: "cuseon",
     _cmd: ["použij #3 na #3"],
     does: [
-      [[], [[".", "Použil jsi $ na #"], ["UON", "$", "#", "Nic se nestalo"]]]
+      [
+        [],
+        [
+          [".", "Použil jsi $ na #"],
+          ["UON", "$", "#", "Nic se nestalo"]
+        ]
+      ]
     ]
   },
   {
     id: "cuse",
     _cmd: ["použij #3"],
-    does: [[[], [[".", "Použil jsi $"], ["U", "$", "Nic se nestalo"]]]]
+    does: [
+      [
+        [],
+        [
+          [".", "Použil jsi $"],
+          ["U", "$", "Nic se nestalo"]
+        ]
+      ]
+    ]
   },
 
   {
     id: "cexam",
-    _cmd: ["prozkoumej @3", "prohlédni @"],
+    _cmd: ["prozkoumej #3", "prohlédni #"],
     _does: '. "Prohlížíš si $."; PD $; IH $ examine'
   }
 ];
