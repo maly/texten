@@ -32,11 +32,9 @@
     "jquery": "^3.4.1",
     "jquery-ui-dist": "^1.12.1",
     "js": "^0.1.0",
-    "popper.js": "^1.15.0",
-    "webpack": "^4.38.0"
+    "popper.js": "^1.15.0"
   },
   "devDependencies": {
-    "cssnano": "^4.1.10",
-    "parcel-plugin-markdown": "^0.4.2"
+    "cssnano": "^4.1.10"
   }
 }
