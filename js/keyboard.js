@@ -13,7 +13,8 @@ var key = function(k) {
     //recall last
     eline += lastWaiter;
   } else if (k == 13) {
-    if (doOutput) display.printLine(eline + " ");
+    //if (doOutput && eline.length > 2) display.clearSameLine(eline + " ");
+    //if (doOutput) display.clearSameLine(eline + " ");
     waiter = eline.substr(2).trim();
     enterFlag = true;
     lastWaiter = eline.substr(2).trim();

@@ -349,6 +349,9 @@ var sysGo = async pars => {
   await cEnter(pars[0]);
 };
 
+var music = require("./music.js");
+var video = require("./video.js");
+
 var gameObject = {
   init,
   initItems,
@@ -383,6 +386,12 @@ var gameObject = {
   startStepTick,
   dispML: async t => {
     return await display.printTextMultiline(t, true);
+  },
+  musicPlay(id) {
+    music.fadeTo(id);
+  },
+  videoPlay(id) {
+    video.play(id);
   }
 };
 

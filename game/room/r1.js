@@ -13,9 +13,11 @@ module.exports = {
   id: "r1",
   title: "Room1",
   desc: "Stojíš v místnosti.",
-  ext: "Je to docela malá místnost, na zemi jsou dřevěné parkety, na zdech zašlé tapety, na stropě štuk.",
+  ext:
+    "Je to docela malá místnost, na zemi jsou dřevěné parkety, na zdech zašlé tapety, na stropě štuk.",
   atmosphere: ATLIST,
-  exits: [{
+  exits: [
+    {
       to: "do chodby",
       room: "r2"
     },
@@ -29,6 +31,10 @@ module.exports = {
       attrs: ["inactive"]
     }
   ],
+  _enter(g) {
+    g.musicPlay("music2");
+    g.videoPlay("video2");
+  },
   attrs: ["player"],
   handlers: []
 };

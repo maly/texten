@@ -78,7 +78,7 @@ var printText = async function(text, prevLineCount) {
         var q = await ww;
         //keyboard.wasEnterPressed()
         //console.log("WAIT", q);
-        cline--;
+        //cline--;
 
         lineCount = 0;
       }
@@ -104,6 +104,7 @@ var printTextMultiline = async (t, hasWait) => {
   for (var i = 0; i < l.length; i++) {
     //console.log("PL", i, l[i], lc);
     lc = await printText(l[i], lc);
+    //cline++;
   }
   //keyboard.key(0);
   if (!hasWait) return lc;
@@ -156,5 +157,6 @@ module.exports = {
   printTextRed,
   printTextYellow,
   printTextMultiline,
+  clearSameLine,
   cls
 };
