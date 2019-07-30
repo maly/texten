@@ -1,6 +1,7 @@
 var rooms = [
   require("./room/road/r1.js"),
   require("./room/road/r2.js"),
+  require("./room/road/rstop.js"),
   require("./room/r1.js"),
   {
     id: "r2",
