@@ -225,6 +225,32 @@ var sysDecrate = p => {
   return [p[0]];
 };
 
+//
+//step ticker
+var stepTickers = {};
+var stepTickAll = () => {
+  console.log("Steptick");
+  for (var tickerId in stepTickers) {
+    var ticker = stepTickers[tickerId];
+    console.log("TIK", ticker);
+    ticker.remain--;
+    if (ticker.remain === 0) {
+      ticker.fn(gameObject);
+    }
+  }
+};
+
+//nastaví stepTicker, pokud ještě není (!)
+var startStepTick = (id, fn, tick) => {
+  if (stepTickers[id]) return;
+  stepTickers[id] = {
+    remain: tick,
+    fn: fn
+  };
+};
+
+//s tick end
+
 var cInventory = () => {
   var l = playerListItems();
   if (l.length === 0) return strings.NOCARRY;
@@ -239,7 +265,7 @@ var cSee = () => {
 
 var cExits = () => {
   var l = exitList();
-  if (l.length === 0) return strings.NOGO;
+  if (l.length === 0) return ""; // strings.NOGO;
   return strings.CANGO + lang.listToText(l.map(q => q.to), ", nebo ");
 };
 
@@ -287,12 +313,14 @@ var roomEnter = () => {
   return out;
 };
 
-var cEnter = async () => {
+var cEnter = async nroom => {
+  if (nroom) game.where = nroom;
   await disp(roomEnter());
+  if (game.room._enter) await game.room._enter(gameObject);
   window.needKey0 = true;
 };
 
-const display = require("./display.js");
+var display = require("./display.js");
 
 //todo
 //jak zviditelnit předmět v crate, aby byl jako "here"
@@ -315,13 +343,13 @@ var sysExamine = pars => {
 var sysGo = async pars => {
   console.log("GO", pars);
   var exit = getExitById(pars[0]);
-  game.where = pars[0];
-  console.log(exit);
+  //game.where = pars[0];
+  //console.log(exit);
   display.printTextYellow("Jdeš " + exit.to);
-  await cEnter();
+  await cEnter(pars[0]);
 };
 
-module.exports = {
+var gameObject = {
   init,
   initItems,
   initRooms,
@@ -350,5 +378,12 @@ module.exports = {
   sysGo,
   err(s) {
     display.printTextRed(lang.fixString(s));
+  },
+  stepTickAll,
+  startStepTick,
+  dispML: async t => {
+    return await display.printTextMultiline(t, true);
   }
 };
+
+module.exports = gameObject;
