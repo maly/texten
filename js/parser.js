@@ -125,5 +125,10 @@ module.exports = {
   parse,
   setVerbs(vs) {
     verbs = vs;
+  },
+  getVerbById(vid) {
+    var v = verbs.filter((q) => q.id == vid);
+    if (!v || v.length != 1) return null
+    return v[0]
   }
 };
