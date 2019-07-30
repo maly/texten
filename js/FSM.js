@@ -60,9 +60,10 @@ var FSM = {
         var intro1 = require("../game/text/introText1.js");
         var n = await display.printTextMultiline(intro0, true);
         display.cls();
-        n = await music.fade();
-        music.play("openscore");
+        //n = await music.fade();
+        //music.play("openscore");
         video.play("openscore");
+        music.fadeTo("openscore");
         n = await display.printTextMultiline(intro1, true);
         //console.log("DONEPRINT")
         this.done = true;
