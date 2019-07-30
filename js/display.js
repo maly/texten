@@ -110,6 +110,11 @@ var printTextRed = function (text) {
   printText(text);
   ctx.fillStyle = "#eee";
 };
+var printTextYellow = function (text) {
+  ctx.fillStyle = "#ee4";
+  printText(text);
+  ctx.fillStyle = "#eee";
+};
 
 var scrollUp = function () {
   var myImageData = ctx.getImageData(
@@ -137,6 +142,7 @@ module.exports = {
   printSameLine,
   printText,
   printTextRed,
+  printTextYellow,
   printTextMultiline,
   cls
 };

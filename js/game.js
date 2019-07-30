@@ -29,6 +29,7 @@ var initItems = s => {
     q.adjs = q.adj ? flex(q.adj) : ["", "", "", ""];
     q.hasAttr = a => (q.attrs.indexOf(a) < 0 ? false : true);
     q.isHere = () => game.items[q.id] === game.where;
+    q.isCrate = () => (q.attrs.indexOf("crate") < 0 ? false : true);
     q.carry = () => game.items[q.id] === "*";
     return q;
   });
@@ -139,6 +140,11 @@ var roomListItems = () => {
   return l;
 };
 
+var crateListItems = (crate) => {
+  var l = items.filter(q => game.items[q.id] === crate);
+  return l;
+};
+
 var getRoom = id => {
   var i = rooms.filter(q => q.id === id);
   if (i.length !== 1) return null;
@@ -162,7 +168,7 @@ var getExit = e => {
 };
 
 var itemFullName = item => {
-  console.log(item);
+  //console.log(item);
   return [
     (item.adjs[0] ? item.adjs[0] + " " : "") + item.names[0],
     (item.adjs[1] ? item.adjs[1] + " " : "") + item.names[1],
@@ -229,6 +235,22 @@ var cEnter = () => {
   disp(roomEnter());
 };
 
+const display = require("./display.js");
+
+//todo
+//jak zviditelnit předmět v crate, aby byl jako "here"
+
+var sysExamine = (pars) => {
+  var itm = getItem(pars[0]);
+  console.log(itm, pars)
+  display.printTextYellow("Zkoumáš " + itemFullName(itm)[3] + ".")
+  disp(itm.desc);
+  if (itm.isCrate()) {
+    var inside = crateListItems(itm.id);
+    disp("Uvnitř je " + lang.listToText(inside.map(q => itemFullName(q)[0])))
+  }
+}
+
 module.exports = {
   init,
   initItems,
@@ -252,5 +274,6 @@ module.exports = {
   cLook,
   cOverlook,
   roomEnter,
-  cEnter
+  cEnter,
+  sysExamine
 };

@@ -63,8 +63,24 @@ const commands = [{
   },
 
   {
+    id: "cexamin",
+    _cmd: ["prozkoumej #3 v #4"],
+    _prerun(g) {},
+    _postrun(g) {},
+    _run(p, g) {
+      console.log(p)
+      //g.sysExamine(p)
+    },
+    _does: '. "Prohlížíš si $."; PD $; IH $ examine'
+  },
+  {
     id: "cexam",
     _cmd: ["prozkoumej #3", "prohlédni #"],
+    _prerun(g) {},
+    _postrun(g) {},
+    _run(p, g) {
+      g.sysExamine(p)
+    },
     _does: '. "Prohlížíš si $."; PD $; IH $ examine'
   }
 ];

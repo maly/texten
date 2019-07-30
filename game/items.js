@@ -1,5 +1,6 @@
 const items = [
   require("./item/auto.js"),
+  require("./item/rezerva.js"),
   {
     id: "louc",
     name: "louč-,e,i",
