@@ -12,7 +12,7 @@ module.exports = {
   id: "road_r1",
   title: "Room1",
   desc: "Stojíš na kraji silnice vedle svého auta.",
-  ext: "Je pech píchnout v takové slotě, co?",
+  ext: "Je pech píchnout na takovém místě, co? Široko daleko nikde nic, jen silnice, vlevo pole, vpravo pole, v dálce je vidět nějaké silo, za polem to vypadá na nějakou krajinu rybníků, ale tam ti asi těžko někdo pomůže... Jediná civilizace bude někde vepředu.",
   atmosphere: ATLIST,
   exits: [{
     to: "po krajnici furt dopředu",

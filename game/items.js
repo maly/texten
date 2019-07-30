@@ -27,6 +27,14 @@ const items = [
     }
   },
   {
+    id: "obalka",
+    name: "obál-ka,ky,ce,ku",
+    desc: "Dopisní obálka. Odesilatel je právní kancelář Penn and Graw se sídlem v Denveru, adresátem je pan William Stewart, 1150 Merridale Road, Denver. Takže to je dopis pro tebe! Obálka je otevřená a uvnitř - prázdná! Asi tam nějaký dopis byl, ale už není.",
+    attrs: [],
+    where: "*",
+    handlers: []
+  },
+  {
     id: "nuz",
     name: "n-ůž,ože,oži",
     desc: "Kudla jako cyp",
