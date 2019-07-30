@@ -60,6 +60,7 @@ var FSM = {
             },
             test() {
                 if (this.done) {
+                    display.cls();
                     FSM.newState("game0");
                 }
             }
@@ -78,7 +79,6 @@ var FSM = {
                 $("#video2")[0].play();
                 $("#video1")[0].pause();
                 keyboard.doOutput(true);
-                keyboard.key(0);
                 game.cEnter();
                 keyboard.key(0);
             },

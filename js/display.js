@@ -7,20 +7,26 @@ var init = () => {
   ctx.font = "20px farroregular";
   ctx.fillStyle = "#eee";
   ctx.textBaseline = "top";
-  printAt(" ", 0, cline);
+  printAt(" . ", 0, cline);
+  printAt("     ", 0, cline);
 };
+
+var cls = () => {
+  ctx.clearRect(0, 0, 650, 490);
+  cline = 0
+}
 var printAt = function (text, x, y) {
   ctx.clearRect(
     x * textw + padding,
     y * texth + padding,
-    text.length * textw,
+    text.length * textw + 10,
     texth
   );
   ctx.fillText(text, x * textw + padding, y * texth + padding);
 };
 
 var clearRect = function (x, y, w, h) {
-  ctx.clearRect(x * textw, y * texth, w * textw, h * texth);
+  ctx.clearRect(x * textw + padding, y * texth + padding, w * textw, h * texth);
 };
 
 var cline = 0;
@@ -93,6 +99,7 @@ var printTextMultiline = async (t, hasWait) => {
     window.setEnterWaiter(r);
   })
   var q = await ww;
+  printSameLine("         ")
   return lc
 };
 
@@ -128,5 +135,6 @@ module.exports = {
   printSameLine,
   printText,
   printTextRed,
-  printTextMultiline
+  printTextMultiline,
+  cls
 };
