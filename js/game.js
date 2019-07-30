@@ -14,6 +14,7 @@ var strings;
 var init = g => {
   //inicializace hry
   game.items = {};
+  game.itemAttrs = {};
   game.rooms = {};
   game.where = "";
 };
@@ -24,17 +25,23 @@ var initItems = s => {
     return prev;
   }, {});
   game.items = locations;
+  game.itemAttrs = s.reduce((prev, curr) => {
+    prev[curr.id] = curr.attrs;
+    return prev;
+  }, {})
   items = s.map(q => {
     q.names = flex(q.name);
     q.adjs = q.adj ? flex(q.adj) : ["", "", "", "", "", ""];
-    q.hasAttr = a => (q.attrs.indexOf(a) < 0 ? false : true);
+    q.hasAttr = a => (game.itemAttrs[q.id].indexOf(a) < 0 ? false : true);
     q.isHere = () => game.items[q.id] === game.where;
-    q.isCrate = () => (q.attrs.indexOf("crate") < 0 ? false : true);
+    q.isCrate = () => (game.itemAttrs[q.id].indexOf("crate") < 0 ? false : true);
     q.carry = () => game.items[q.id] === "*";
     return q;
   });
 };
 
+
+//todo roomAttrs
 var initRooms = s => {
   rooms = s.map(q => {
     q.hasAttr = a => (q.attrs.indexOf(a) < 0 ? false : true);
@@ -123,11 +130,11 @@ var filterItemsBy = (is, flt) => {
 
 
     if (flt.movable) {
-      if (getItem(id).attrs.indexOf("nonmovable") >= 0) return false;
+      if (!getItem(id).hasAttr("nonmovable")) return false;
     }
 
     if (flt.hasAttr) {
-      if (getItem(id).attrs.indexOf(flt.hasAttr) < 0) return false;
+      if (!getItem(id).hasAttr(flt.hasAttr)) return false;
     }
     if (flt.hasNotAttr) {
       if (getItem(id).attrs.indexOf(flt.hasNotAttr) >= 0) return false;
@@ -256,6 +263,9 @@ const display = require("./display.js");
 
 //todo
 //jak zviditelnit předmět v crate, aby byl jako "here"
+
+//atributy předmětů součástí game state
+
 
 var sysExamine = (pars) => {
   var itm = getItem(pars[0]);
