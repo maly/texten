@@ -1,9 +1,10 @@
 var texth = 24;
 var textw = 10;
 const padding = 5;
+const maxLinesAtOnce = 13;
 var init = () => {
   ctx = document.getElementById("canvas").getContext("2d");
-  ctx.font = "20px hologramregular";
+  ctx.font = "20px farroregular";
   ctx.fillStyle = "#eee";
   ctx.textBaseline = "top";
   printAt(" ", 0, cline);
@@ -54,7 +55,7 @@ var printText = async function (text, prevLineCount) {
       slova.unshift(out.pop());
       printLine(out.join(" "));
       lineCount++
-      if (lineCount == 10) {
+      if (lineCount == maxLinesAtOnce) {
         //haveToPause
         printSameLine("[ENTER]")
 
@@ -79,13 +80,19 @@ var printText = async function (text, prevLineCount) {
   return lineCount
 };
 
-var printTextMultiline = async t => {
+var printTextMultiline = async (t, hasWait) => {
   var l = t.split("\n");
   var lc = 0;
+  //var hasWait = false;
   for (i = 0; i < l.length; i++) {
     lc = await printText(l[i], lc);
   }
-  console.log("return lc", lc)
+  if (!hasWait) return lc;
+  printSameLine("[ENTER]")
+  var ww = new Promise((r, j) => {
+    window.setEnterWaiter(r);
+  })
+  var q = await ww;
   return lc
 };
 

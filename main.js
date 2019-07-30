@@ -225,7 +225,8 @@ var endless = () => {
 var onLoad = () => {
     display.init();
     FSM.newState("begin");
-    //FSM.newState("game0");
+    //FSM.newState("titlescreen");
+    //FSM.newState("intro0");
     requestAnimationFrame(endless);
 };
 

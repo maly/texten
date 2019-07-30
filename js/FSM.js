@@ -53,7 +53,7 @@ var FSM = {
                 $("#maingame").show();
                 keyboard.doOutput(true);
                 var intro0 = require("../game/introText.js")
-                var n = await display.printTextMultiline(intro0)
+                var n = await display.printTextMultiline(intro0, true)
                 //console.log("DONEPRINT")
                 this.done = true
                 keyboard.wasEnterPressed()
