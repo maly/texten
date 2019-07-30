@@ -2,7 +2,7 @@ module.exports = {
   id: "road_r2",
   title: "Room1",
   desc: "Stojíš u silnice kdesi v zapomenuté oblasti.",
-  ext: "NUDA",
+  ext: "Za sebou vidíš svoje auto, odstavené u krajnice.",
   atmosphere: require("./atmo.js"),
   exits: [
     {
