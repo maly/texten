@@ -63,8 +63,8 @@ var FSM = {
         //n = await music.fade();
         //music.play("openscore");
         video.play("openscore");
-        music.fadeTo("openscore");
         n = await display.printTextMultiline(intro1, true);
+        music.fadeTo("openscore");
         //console.log("DONEPRINT")
         this.done = true;
         keyboard.wasEnterPressed();
