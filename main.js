@@ -43,6 +43,7 @@ game.display(t => {
   display.printTextMultiline(t);
 });
 
+/*
 console.log(game.get());
 
 console.log(game.getItem("bota").hasAttr("crate"));
@@ -51,7 +52,7 @@ console.log(game.getItem("nuz").carry());
 
 console.log(game.cInventory());
 console.log(game.roomEnter());
-
+*/
 // Play returns a unique Sound ID that can be passed
 // into any method on Howl to control that specific sound.
 //var id1 = sound.play();

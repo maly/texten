@@ -236,6 +236,7 @@ var cExits = () => {
 var cLook = onlyFirst => {
   var room = getRoom(game.where);
   if (!room) return "";
+  //console.log(game.rooms[game.where])
   if (onlyFirst && game.rooms[game.where].looked) return "";
   game.rooms[game.where].looked = true;
   if (!room.ext) return "";
@@ -251,9 +252,9 @@ var roomEnter = () => {
   game.room = getRoom(game.where);
   var out = "";
   out += cOverlook();
-  var q = cLook();
+  var q = cLook(true);
   if (q) {
-    out += " " + q;
+    out += "\n" + q;
   }
   out += "\n" + cExits();
   q = cSee();
