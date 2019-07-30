@@ -7,7 +7,7 @@ const display = require("/js/display.js");
 
 var eline = "> ";
 var lastWaiter = null;
-var key = function (k) {
+var key = function(k) {
   //console.log("KK", k);
   if (k == 7) {
     //recall last
@@ -28,6 +28,7 @@ var key = function (k) {
     }
   } else if (!k) {
     eline = "> ";
+    //console.log("KEY 0", doOutput, eline);
     if (doOutput) display.printSameLine(eline + "_ ");
   } else {
     eline += String.fromCharCode(k);

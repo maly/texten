@@ -9,7 +9,7 @@ $ - item carry
 const commands = [
   {
     id: "cgo",
-    _cmd: ["jdi ^", "běž ^", "utíkej ^"],
+    _cmd: ["jdi ^", "běž ^", "utíkej ^", "j ^"],
     _does: 'print "Jdeš ^."; exit ^',
     _prerun(g) {},
     _postrun(g) {},

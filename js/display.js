@@ -25,6 +25,7 @@ var printAt = function(text, x, y) {
     texth
   );
   ctx.fillText(text, x * textw + padding, y * texth + padding);
+  //console.log("PRTAT", text, x, y);
 };
 
 var clearRect = function(x, y, w, h) {
@@ -43,7 +44,8 @@ var printLine = function(text) {
 };
 
 var printSameLine = function(text) {
-  ctx.fillStyle = "#ee4";
+  //console.log("SAMELINE", text, cline);
+  ctx.fillStyle = "#e4e";
   printAt(text, 0, cline);
   ctx.fillStyle = "#eee";
   //cline++;
@@ -71,7 +73,7 @@ var printText = async function(text, prevLineCount) {
         }); //.then(() => console.log("WAIT2"))
         var q = await ww;
         //keyboard.wasEnterPressed()
-        console.log("WAIT", q);
+        //console.log("WAIT", q);
         cline--;
 
         lineCount = 0;
@@ -87,6 +89,8 @@ var printText = async function(text, prevLineCount) {
   return lineCount;
 };
 
+//var keyboard = require("./keyboard.js");
+
 var printTextMultiline = async (t, hasWait) => {
   var l = t.split("\n");
   //console.log("PTM", l, l.length);
@@ -96,6 +100,7 @@ var printTextMultiline = async (t, hasWait) => {
     //console.log("PL", i, l[i], lc);
     lc = await printText(l[i], lc);
   }
+  //keyboard.key(0);
   if (!hasWait) return lc;
   printSameLine(strings.GENTER);
   var ww = new Promise((r, j) => {

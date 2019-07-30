@@ -92,6 +92,8 @@ var FSM = require("./js/FSM.js");
 
 var timer = require("./js/timer.js");
 
+window.needKey0 = false;
+
 var doCommand = async command => {
   if (command.params) {
     //fix params
@@ -163,6 +165,7 @@ var doCommand = async command => {
     if (syscmd._run) syscmd._run(parnames, game);
     if (syscmd._postrun) syscmd._postrun(parnames, game);
   }
+  //keyboard.key(0);
 };
 
 var tick = 0;
@@ -172,6 +175,11 @@ var lineWaiter = null;
 var enterWaiter = null;
 var endless = () => {
   //command handling
+
+  if (window.needKey0) {
+    keyboard.key(0);
+    window.needKey0 = false;
+  }
 
   var cmd;
   cmd = keyboard.waitForLine();
@@ -196,7 +204,9 @@ var endless = () => {
         } else {
           //Máme command!
           var command = pc[0];
-          doCommand(command);
+          doCommand(command).then(() => {
+            console.log("THEN");
+          });
         }
       }
     }

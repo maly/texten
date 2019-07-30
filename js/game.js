@@ -197,6 +197,16 @@ var getExit = e => {
   return xl;
 };
 
+var getExitById = e => {
+  var xl = exitList();
+  //console.log("GEID", xl, e);
+  xl = xl.filter(q => {
+    return q.room === e;
+  });
+  //console.log(xl);
+  return xl[0];
+};
+
 var itemFullName = item => {
   //console.log(item);
   return [
@@ -277,8 +287,9 @@ var roomEnter = () => {
   return out;
 };
 
-var cEnter = () => {
-  disp(roomEnter());
+var cEnter = async () => {
+  await disp(roomEnter());
+  window.needKey0 = true;
 };
 
 const display = require("./display.js");
@@ -301,11 +312,13 @@ var sysExamine = pars => {
   }
 };
 
-var sysGo = pars => {
+var sysGo = async pars => {
   console.log("GO", pars);
+  var exit = getExitById(pars[0]);
   game.where = pars[0];
-  disp("Jdeš " + pars[0]);
-  cEnter();
+  console.log(exit);
+  display.printTextYellow("Jdeš " + exit.to);
+  await cEnter();
 };
 
 module.exports = {
