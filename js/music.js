@@ -1,6 +1,6 @@
 var mute = false;
 var played = null;
-const nomusic = !true;
+const nomusic = true;
 
 var stop = id => {
   $("audio#" + id)[0].pause();
@@ -34,7 +34,7 @@ var fadeTo = async newTune => {
   var newAudio = $("audio#" + newTune)[0];
   var audio = $("audio#" + played)[0];
   newAudio.volume = 0;
-  newAudio.play();
+  if (!nomusic) newAudio.play();
 
   var newvol = audio.volume - 0.1;
   while (newvol > 0) {
