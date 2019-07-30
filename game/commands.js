@@ -64,12 +64,13 @@ const commands = [{
 
   {
     id: "cexamin",
-    _cmd: ["prozkoumej #3 v #4"],
+    _cmd: ["prozkoumej &3 v #4"],
     _prerun(g) {},
     _postrun(g) {},
     _run(p, g) {
       console.log(p)
-      //g.sysExamine(p)
+      p = g.sysDecrate(p)
+      g.sysExamine(p)
     },
     _does: '. "Prohlížíš si $."; PD $; IH $ examine'
   },
