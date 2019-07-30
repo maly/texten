@@ -11,6 +11,8 @@ var init = () => {
   printAt("     ", 0, cline);
 };
 
+var strings = require("../game/strings.js")
+
 var cls = () => {
   ctx.clearRect(0, 0, 650, 490);
   cline = 0
@@ -63,7 +65,7 @@ var printText = async function (text, prevLineCount) {
       lineCount++
       if (lineCount == maxLinesAtOnce) {
         //haveToPause
-        printSameLine("[ENTER]")
+        printSameLine(strings.GENTER)
 
         var ww = new Promise((r, j) => {
           window.setEnterWaiter(r);
@@ -94,7 +96,7 @@ var printTextMultiline = async (t, hasWait) => {
     lc = await printText(l[i], lc);
   }
   if (!hasWait) return lc;
-  printSameLine("[ENTER]")
+  printSameLine(strings.GENTER)
   var ww = new Promise((r, j) => {
     window.setEnterWaiter(r);
   })
