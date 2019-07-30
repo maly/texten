@@ -15,8 +15,15 @@ var flex = s => {
   tvary[0] = core + postfix;
   tvary[1] = core + f[1];
   tvary[2] = core + f[2];
-  if (f.length === 3) {
+  if (f.length <= 4) {
+    //šestý pád
+    tvary[4] = tvary[0]
+  } else {
+    tvary[4] = core + f[4]
+  }
+  if (f.length <= 3) {
     tvary[3] = tvary[0];
+    tvary[4] = tvary[0];
   } else {
     tvary[3] = core + f[3];
   }
