@@ -3,7 +3,6 @@ require("./node_modules/bootstrap/dist/js/bootstrap.min");
 require("jquery-ui-dist/jquery-ui.js");
 import "babel-polyfill";
 
-
 //import "/css/hologram-webfont.ttf";
 
 //v2 - complete rework of texten and game def
@@ -40,8 +39,8 @@ game.initRooms(rooms);
 game.initStrings(require("./game/strings.js"));
 
 game.display(t => {
-    console.log(t);
-    display.printTextMultiline(t);
+  console.log(t);
+  display.printTextMultiline(t);
 });
 
 console.log(game.get());
@@ -88,78 +87,81 @@ var doCommand = function(c) {
 */
 //keyboard.init(doCommand);
 
+var FSM = require("./js/FSM.js");
 
-
-var FSM = require("./js/FSM.js")
-
-var timer = require("./js/timer.js")
+var timer = require("./js/timer.js");
 
 var doCommand = async command => {
-    if (command.params) {
-        //fix params
-        for (var i = 0; i < command.params.length; i++) {
-            var par = command.params[i];
-            if (par.length > 1) {
-                //nejednoznačnost
-                //nejednoznačný směr
-                if (command.pattern[i] === "^") {
-                    var il = par.map(q => {
-                        return q.to;
-                    });
-                    display.printText("Máš na mysli " + lang.listToQuestion(il));
-                    var ww = new Promise((r, j) => {
-                        lineWaiter = r;
-                    });
-                    /*
+  if (command.params) {
+    //fix params
+    for (var i = 0; i < command.params.length; i++) {
+      var par = command.params[i];
+      if (par.length > 1) {
+        //nejednoznačnost
+        //nejednoznačný směr
+        if (command.pattern[i] === "^") {
+          var il = par.map(q => {
+            return q.to;
+          });
+          display.printText("Máš na mysli " + lang.listToQuestion(il));
+          var ww = new Promise((r, j) => {
+            lineWaiter = r;
+          });
+          /*
                           lineWaiter = c => {
                             console.log("Waiter", c);
                           };
                           */
-                    var q = await ww;
-                    var dir = game.getExit(q);
-                    console.log("Směr", dir);
-                    if (dir.length != 1) {
-                        display.printTextRed(
-                            "Musíš být asi ještě přesnější, stále nerozumím."
-                        );
-                        return;
-                    }
-                    command.params[i] = dir;
-                    continue;
-                }
-                //nejednoznačný předmět
-                var il = par.map(i => {
-                    var q = game.getItem(i.id);
-                    return q.adjs[3] ? q.adjs[3] + " " + q.names[3] : q.names[3];
-                });
-                display.printText("Máš na mysli " + lang.listToQuestion(il));
-                var ww = new Promise((r, j) => {
-                    lineWaiter = r;
-                });
-                var q = await ww;
-                var itm = game.getExactItem(q, par);
-                if (itm.length != 1) {
-                    display.printTextRed(
-                        "Musíš být asi ještě přesnější, stále nerozumím."
-                    );
-                    return;
-                }
-                command.params[i] = itm;
-            }
+          var q = await ww;
+          var dir = game.getExit(q);
+          console.log("Směr", dir);
+          if (dir.length != 1) {
+            display.printTextRed(
+              "Musíš být asi ještě přesnější, stále nerozumím."
+            );
+            return;
+          }
+          command.params[i] = dir;
+          continue;
         }
+        //nejednoznačný předmět
+        var il = par.map(i => {
+          var q = game.getItem(i.id);
+          return q.adjs[3] ? q.adjs[3] + " " + q.names[3] : q.names[3];
+        });
+        display.printText("Máš na mysli " + lang.listToQuestion(il));
+        var ww = new Promise((r, j) => {
+          lineWaiter = r;
+        });
+        var q = await ww;
+        var itm = game.getExactItem(q, par);
+        if (itm.length != 1) {
+          display.printTextRed(
+            "Musíš být asi ještě přesnější, stále nerozumím."
+          );
+          return;
+        }
+        command.params[i] = itm;
+      }
     }
+  }
 
-    console.log(
-        "COMMAND",
-        command.id,
-        command.params /*.map(q => (q[0].id ? q[0].id : q[0].room)*/
-
-    );
-    var parnames = command.params.map(q => (q[0].id ? q[0].id : q[0].room));
-    var syscmd = parser.getVerbById(command.id);
-    if (syscmd._prerun) syscmd._prerun(parnames, game)
-    if (syscmd._run) syscmd._run(parnames, game)
-    if (syscmd._postrun) syscmd._postrun(parnames, game)
+  console.log(
+    "COMMAND",
+    command.id,
+    command.params /*.map(q => (q[0].id ? q[0].id : q[0].room)*/
+  );
+  var parnames = [];
+  if (command.params.length && command.params[0].length)
+    parnames = command.params.map(q => (q[0].id ? q[0].id : q[0].room));
+  var syscmd = parser.getVerbById(command.id);
+  if (syscmd._prerun) syscmd._prerun(parnames, game);
+  if (syscmd._noparam && parnames.length === 0) {
+    display.printTextRed(lang.fixString(syscmd._noparam));
+  } else {
+    if (syscmd._run) syscmd._run(parnames, game);
+    if (syscmd._postrun) syscmd._postrun(parnames, game);
+  }
 };
 
 var tick = 0;
@@ -168,96 +170,93 @@ var gameTime = 0;
 var lineWaiter = null;
 var enterWaiter = null;
 var endless = () => {
-    //command handling
+  //command handling
 
-
-    var cmd;
-    cmd = keyboard.waitForLine();
-    if (cmd !== null) {
-
-        if (enterWaiter) {
-            var q = enterWaiter;
-            enterWaiter = null;
-            q(cmd);
-        } else if (cmd) {
-            console.log("RES", cmd);
-            if (lineWaiter) {
-                var q = lineWaiter;
-                lineWaiter = null;
-                q(cmd);
-            } else {
-                var pc = parser.parse(cmd);
-                console.log(pc);
-                if (pc.length > 1) {
-                    display.printTextRed("Nejsem si úplně jist, co mám udělat");
-                } else if (pc.length < 1) {
-                    display.printTextRed("To nechápu, promiň");
-                } else {
-                    //Máme command!
-                    var command = pc[0];
-                    doCommand(command);
-                }
-            }
+  var cmd;
+  cmd = keyboard.waitForLine();
+  if (cmd !== null) {
+    if (enterWaiter) {
+      var q = enterWaiter;
+      enterWaiter = null;
+      q(cmd);
+    } else if (cmd) {
+      console.log("RES", cmd);
+      if (lineWaiter) {
+        var q = lineWaiter;
+        lineWaiter = null;
+        q(cmd);
+      } else {
+        var pc = parser.parse(cmd);
+        console.log(pc);
+        if (pc.length > 1) {
+          display.printTextRed("Nejsem si úplně jist, co mám udělat");
+        } else if (pc.length < 1) {
+          display.printTextRed("To nechápu, promiň");
+        } else {
+          //Máme command!
+          var command = pc[0];
+          doCommand(command);
         }
-        keyboard.key(0);
+      }
     }
+    keyboard.key(0);
+  }
 
+  //var kbd = keyboard.getInput();
+  //console.log(kbd)
 
-    //var kbd = keyboard.getInput();
-    //console.log(kbd)
+  //state machine handling
 
-    //state machine handling
+  FSM.states[FSM.state].test();
 
-    FSM.states[FSM.state].test();
+  //timer handling
+  tick++;
+  gameTime++;
+  if (tick > 60) {
+    tick = 0;
+    //console.log("TICK");
+  }
+  timer.allTick();
 
-    //timer handling
-    tick++;
-    gameTime++;
-    if (tick > 60) {
-        tick = 0;
-        //console.log("TICK");
-    }
-    timer.allTick()
-
-    requestAnimationFrame(endless);
+  requestAnimationFrame(endless);
 };
 
 var onLoad = () => {
-    display.init();
-    FSM.newState("begin");
-    //FSM.newState("titlescreen");
-    FSM.newState("intro0");
-    requestAnimationFrame(endless);
+  display.init();
+  FSM.newState("begin");
+  //FSM.newState("titlescreen");
+  FSM.newState("intro0");
+  requestAnimationFrame(endless);
 };
 
-$(window).bind("load", function () {
-    //changeRoom();
-    keyboard.key(0);
+$(window).bind("load", function() {
+  //changeRoom();
+  keyboard.key(0);
 });
 
 //-----
-$("body").bind("keydown", function (e) {
-    //console.log("KD", e.keyCode);
-    if (e.keyCode == 8) {
-        e.preventDefault();
-        keyboard.key(8);
-        return e;
-    } else if (e.keyCode == 38) {
-        e.preventDefault();
-        keyboard.key(7);
-        return e;
-    }
-
+$("body").bind("keydown", function(e) {
+  //console.log("KD", e.keyCode);
+  if (e.keyCode == 8) {
+    e.preventDefault();
+    keyboard.key(8);
     return e;
+  } else if (e.keyCode == 38) {
+    e.preventDefault();
+    keyboard.key(7);
+    return e;
+  }
+
+  return e;
 });
 
-$("body").bind("keypress", function (e) {
-    e.preventDefault();
-    keyboard.key(e.charCode);
-    return false;
+$("body").bind("keypress", function(e) {
+  e.preventDefault();
+  keyboard.key(e.charCode);
+  return false;
 });
 
 $(document).ready(onLoad);
 
-window.setLineWaiter = (lw) => lineWaiter = lw
-window.setEnterWaiter = (lw) => enterWaiter = lw
+window.setLineWaiter = lw => (lineWaiter = lw);
+window.setEnterWaiter = lw => (enterWaiter = lw);
