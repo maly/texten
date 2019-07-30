@@ -26,7 +26,7 @@ var initItems = s => {
   game.items = locations;
   items = s.map(q => {
     q.names = flex(q.name);
-    q.adjs = q.adj ? flex(q.adj) : ["", "", "", ""];
+    q.adjs = q.adj ? flex(q.adj) : ["", "", "", "", "", ""];
     q.hasAttr = a => (q.attrs.indexOf(a) < 0 ? false : true);
     q.isHere = () => game.items[q.id] === game.where;
     q.isCrate = () => (q.attrs.indexOf("crate") < 0 ? false : true);
@@ -112,6 +112,16 @@ var filterItemsBy = (is, flt) => {
       if (game.items[id] !== game.where && game.items[id] !== "*") return false;
     }
 
+    if (flt.cratedHere) {
+      var cratesHere = items.filter(q => ((game.items[q.id] === "*") || (game.items[q.id] === game.where)) && q.isCrate())
+        .map(q => q.id);
+      if (!cratesHere || cratesHere.length === 0) return false
+      //console.log("CRATED HERE", q, cratesHere)
+      if (cratesHere.indexOf(game.items[id]) < 0) return false;
+      //if (game.items[id] !== game.where && game.items[id] !== "*") return false;
+    }
+
+
     if (flt.movable) {
       if (getItem(id).attrs.indexOf("nonmovable") >= 0) return false;
     }
@@ -173,9 +183,16 @@ var itemFullName = item => {
     (item.adjs[0] ? item.adjs[0] + " " : "") + item.names[0],
     (item.adjs[1] ? item.adjs[1] + " " : "") + item.names[1],
     (item.adjs[2] ? item.adjs[2] + " " : "") + item.names[2],
-    (item.adjs[3] ? item.adjs[3] + " " : "") + item.names[3]
+    (item.adjs[3] ? item.adjs[3] + " " : "") + item.names[3],
+    (item.adjs[4] ? item.adjs[4] + " " : "") + item.names[4]
   ];
 };
+
+var sysDecrate = (p) => {
+  console.log(p);
+  //todo: check
+  return [p[0]]
+}
 
 var cInventory = () => {
   var l = playerListItems();
@@ -275,5 +292,6 @@ module.exports = {
   cOverlook,
   roomEnter,
   cEnter,
+  sysDecrate,
   sysExamine
 };
