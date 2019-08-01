@@ -1,6 +1,6 @@
 /////editor
 
-var doCommand = null;
+//var doCommand = null;
 var enterFlag = false;
 var doOutput = false;
 const display = require("/js/display.js");
@@ -54,9 +54,7 @@ var wasEnterPressed = () => {
   return false;
 };
 module.exports = {
-  init: doCommandCB => {
-    doCommand = doCommandCB;
-  },
+  init() {},
   key,
   doOutput(d) {
     doOutput = d;

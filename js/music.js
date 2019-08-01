@@ -1,4 +1,4 @@
-var mute = false;
+//var mute = false;
 var played = null;
 const nomusic = true;
 

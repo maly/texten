@@ -28,13 +28,11 @@ var listToQuestion = s => {
 
 var oneShuffle = array => array.sort(() => Math.random() - 0.5);
 var shuffle = array => {
-  for (i = 0; i < 5000; i++) {
+  for (var i = 0; i < 5000; i++) {
     array = oneShuffle(array);
     return array;
   }
 };
-
-var density = d => Math.random() < 1 / d;
 
 var lShuffle = s => {
   //zamichat a pak furt dokola

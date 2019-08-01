@@ -2,6 +2,7 @@ var texth = 24;
 var textw = 10;
 const padding = 5;
 const maxLinesAtOnce = 13;
+var ctx;
 var init = () => {
   ctx = document.getElementById("canvas").getContext("2d");
   ctx.font = "20px farroregular";
@@ -27,15 +28,15 @@ var printAt = function(text, x, y) {
   ctx.fillText(text, x * textw + padding, y * texth + padding);
   //console.log("PRTAT", text, x, y);
 };
-
+/*
 var clearRect = function(x, y, w, h) {
   ctx.clearRect(x * textw + padding, y * texth + padding, w * textw, h * texth);
 };
-
+*/
 var cline = 0;
 var maxline = 20;
 
-const main = require("../main.js");
+//const main = require("../main.js");
 
 var printLine = function(text) {
   printAt(text, 0, cline);
@@ -72,10 +73,10 @@ var printText = async function(text, prevLineCount) {
         //haveToPause
         printSameLine(strings.GENTER);
 
-        var ww = new Promise((r, j) => {
+        var ww = new Promise(r => {
           window.setEnterWaiter(r);
         }); //.then(() => console.log("WAIT2"))
-        var q = await ww;
+        await ww;
         //keyboard.wasEnterPressed()
         //console.log("WAIT", q);
         //cline--;
@@ -109,10 +110,10 @@ var printTextMultiline = async (t, hasWait) => {
   //keyboard.key(0);
   if (!hasWait) return lc;
   printSameLine(strings.GENTER);
-  var ww = new Promise((r, j) => {
+  var ww = new Promise(r => {
     window.setEnterWaiter(r);
   });
-  var q = await ww;
+  await ww;
   clearSameLine();
   //printSameLine("         ");
   return lc;

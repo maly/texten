@@ -11,7 +11,7 @@ var strings;
 
 //init
 
-var init = g => {
+var init = () => {
   //inicializace hry
   game.items = {};
   game.itemAttrs = {};
