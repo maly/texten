@@ -19,7 +19,7 @@ const display = require("./js/display.js");
 
 const keyboard = require("./js/keyboard.js");
 
-const flex = require("./js/flexis.js");
+//const flex = require("./js/flexis.js");
 
 const game = require("./js/game.js");
 game.init();
@@ -107,7 +107,7 @@ var doCommand = async command => {
                         return q.to;
                     });
                     display.printText("Máš na mysli " + lang.listToQuestion(il));
-                    var ww = new Promise((r, j) => {
+                    var ww = new Promise((r) => {
                         lineWaiter = r;
                     });
                     /*
@@ -128,15 +128,15 @@ var doCommand = async command => {
                     continue;
                 }
                 //nejednoznačný předmět
-                var il = par.map(i => {
+                var iteml = par.map(i => {
                     var q = game.getItem(i.id);
                     return q.adjs[3] ? q.adjs[3] + " " + q.names[3] : q.names[3];
                 });
-                display.printText("Máš na mysli " + lang.listToQuestion(il));
-                var ww = new Promise((r, j) => {
+                display.printText("Máš na mysli " + lang.listToQuestion(iteml));
+                var wwq = new Promise((r) => {
                     lineWaiter = r;
                 });
-                var q = await ww;
+                q = await wwq;
                 var itm = game.getExactItem(q, par);
                 if (itm.length != 1) {
                     display.printTextRed(
@@ -168,8 +168,8 @@ var doCommand = async command => {
     //keyboard.key(0);
 };
 
-var tick = 0;
-var gameTime = 0;
+//var tick = 0;
+//var gameTime = 0;
 //var enterFlag = false;
 var lineWaiter = null;
 var enterWaiter = null;
@@ -192,9 +192,9 @@ var endless = () => {
             console.log("RES", cmd);
 
             if (lineWaiter) {
-                var q = lineWaiter;
+                var lw = lineWaiter;
                 lineWaiter = null;
-                q(cmd);
+                lw(cmd);
             } else {
                 var pc = parser.parse(cmd);
                 console.log(pc);
@@ -223,12 +223,14 @@ var endless = () => {
     FSM.states[FSM.state].test();
 
     //timer handling
+    /*
     tick++;
     gameTime++;
     if (tick > 60) {
         tick = 0;
         //console.log("TICK");
     }
+    */
     timer.allTick();
 
     requestAnimationFrame(endless);
