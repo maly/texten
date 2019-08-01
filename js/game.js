@@ -392,6 +392,13 @@ var gameObject = {
   },
   videoPlay(id) {
     video.play(id);
+  },
+  async waitForEnter() {
+    display.printSameLine("     " + strings.GENTER);
+    var ww = new Promise(r => {
+      window.setEnterWaiter(r);
+    }); //.then(() => console.log("WAIT2"))
+    await ww;
   }
 };
 

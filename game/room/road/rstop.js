@@ -5,6 +5,7 @@ module.exports = {
   attrs: [],
   exits: [],
   async _enter(g) {
+    await g.waitForEnter();
     console.log("onEnter", g);
     await g.dispML(require("./stopText.js"));
     g.cEnter("r1");
