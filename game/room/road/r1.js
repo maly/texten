@@ -14,7 +14,7 @@ module.exports = {
   attrs: ["start"],
   _enter(g) {
     console.log("onEnter", g);
-    g.startStepTick("roadr1", () => g.cEnter("road_rstop"), 3);
+    g.startStepTick("roadr1", () => g.cEnter("road_rstop"), 7);
     //g.startStepCounter(()=>{g.cEnter("road_rstop")})
   },
   handlers: []

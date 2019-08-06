@@ -388,6 +388,9 @@ var gameObject = {
   sysDrop(pars) {
     require("./syscmd/drop.js")(gameObject, pars);
   },
+  sysTake(pars) {
+    require("./syscmd/take.js")(gameObject, pars);
+  },
   async sysRoomLook() {
     var out = "";
     out += cOverlook();
@@ -407,6 +410,9 @@ var gameObject = {
   },
   dropItem(i) {
     game.items[i] = game.where;
+  },
+  takeItem(i) {
+    game.items[i] = "*";
   },
   stepTickAll,
   startStepTick,

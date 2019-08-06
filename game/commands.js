@@ -53,7 +53,10 @@ const commands = [
       'C $: . "Vždyť máš $ u sebe!";B ###' +
       'NH $:. "V téhle místnosti nevidíš nic takového!";B###' +
       'AS $ nonmovable: . "Nemůžeš zvednout $";B###' +
-      'AR $ nonmovable: P $; . "Zvedl jsi $."'
+      'AR $ nonmovable: P $; . "Zvedl jsi $."',
+    _run(p, g) {
+      g.sysTake(p);
+    }
   },
   {
     id: "cinsert",
