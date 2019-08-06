@@ -3,6 +3,7 @@ var textw = 10;
 const padding = 5;
 const maxLinesAtOnce = 13;
 var ctx;
+var supress = false;
 var init = () => {
   ctx = document.getElementById("canvas").getContext("2d");
   ctx.font = "20px farroregular";
@@ -19,6 +20,7 @@ var cls = () => {
   cline = 0;
 };
 var printAt = function(text, x, y) {
+  if (supress) return;
   ctx.clearRect(
     x * textw + padding,
     y * texth + padding,
@@ -151,6 +153,9 @@ wait for enter po tisku (printAndWait) :)
 
 module.exports = {
   init,
+  noPrint(q) {
+    supress = q;
+  },
   printAt,
   printLine,
   printSameLine,

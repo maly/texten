@@ -254,6 +254,10 @@ var startStepTick = (id, fn, tick) => {
 var cInventory = () => {
   var l = playerListItems();
   if (l.length === 0) return strings.NOCARRY;
+  //console.log("INV", l);
+
+  items.filter(q => game.items[q.id] === "*").map(q => q.removeAttr("shadow"));
+
   return strings.HAVE + lang.listToText(l.map(q => itemFullName(q)[3]));
 };
 
@@ -265,7 +269,7 @@ var cSee = () => {
 
 var cExits = () => {
   var l = exitList();
-  if (l.length === 0) return ""; // strings.NOGO;
+  if (!l || l.length === 0) return ""; // strings.NOGO;
   return strings.CANGO + lang.listToText(l.map(q => q.to), ", nebo ");
 };
 
@@ -326,7 +330,7 @@ var display = require("./display.js");
 //jak zviditelnit předmět v crate, aby byl jako "here"
 
 //atributy předmětů součástí game state
-
+/*
 var sysExamine = pars => {
   var itm = getItem(pars[0]);
   console.log(itm, pars);
@@ -339,15 +343,7 @@ var sysExamine = pars => {
     inside.map(q => q.removeAttr("shadow"));
   }
 };
-
-var sysGo = async pars => {
-  console.log("GO", pars);
-  var exit = getExitById(pars[0]);
-  //game.where = pars[0];
-  //console.log(exit);
-  display.printTextYellow("Jdeš " + exit.to);
-  await cEnter(pars[0]);
-};
+*/
 
 var music = require("./music.js");
 var video = require("./video.js");
@@ -368,7 +364,10 @@ var gameObject = {
   getItemsBy,
   getFilteredItemsBy,
   playerListItems,
+  itemFullName,
+  crateListItems,
   getExit,
+  getExitById,
   cInventory,
   cSee,
   cExits,
@@ -377,15 +376,45 @@ var gameObject = {
   roomEnter,
   cEnter,
   sysDecrate,
-  sysExamine,
-  sysGo,
+  sysExamine(pars) {
+    require("./syscmd/examine.js")(gameObject, pars);
+  },
+  sysGo(pars) {
+    require("./syscmd/go.js")(gameObject, pars);
+  },
+  sysItinerary(pars) {
+    require("./syscmd/itinerary.js")(gameObject, pars);
+  },
+  sysDrop(pars) {
+    require("./syscmd/drop.js")(gameObject, pars);
+  },
+  async sysRoomLook() {
+    var out = "";
+    out += cOverlook();
+    var q = cLook(true);
+    if (q) {
+      out += "\n" + q;
+    }
+    out += "\n" + cExits();
+    q = cSee();
+    if (q) {
+      out += "\n" + q;
+    }
+    await disp(out);
+  },
   err(s) {
     display.printTextRed(lang.fixString(s));
+  },
+  dropItem(i) {
+    game.items[i] = game.where;
   },
   stepTickAll,
   startStepTick,
   dispML: async t => {
     return await display.printTextMultiline(t, true);
+  },
+  doDisp(s) {
+    disp(s);
   },
   musicPlay(id) {
     music.fadeTo(id);
@@ -394,11 +423,13 @@ var gameObject = {
     video.play(id);
   },
   async waitForEnter() {
-    display.printSameLine("     " + strings.GENTER);
+    display.printSameLine("" + strings.GENTER + "          ");
+    display.noPrint(true);
     var ww = new Promise(r => {
       window.setEnterWaiter(r);
     }); //.then(() => console.log("WAIT2"))
     await ww;
+    display.noPrint(false);
   }
 };
 

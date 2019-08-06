@@ -28,7 +28,22 @@ const commands = [
   {
     id: "citinerary",
     _cmd: ["i"],
-    _does: 'PI "Máš u sebe " "."'
+    _does: 'PI "Máš u sebe " "."',
+    _prerun(g) {},
+    _postrun(g) {},
+    _run(p, g) {
+      g.sysItinerary(p);
+    }
+  },
+  {
+    id: "croom",
+    _cmd: ["rozhlédni", "r"],
+    _does: 'PI "Máš u sebe " "."',
+    _prerun(g) {},
+    _postrun(g) {},
+    _run(p, g) {
+      g.sysRoomLook(p);
+    }
   },
   {
     id: "ctake",
@@ -48,7 +63,10 @@ const commands = [
   {
     id: "cdrop",
     _cmd: ["polož $3"],
-    _does: 'D $;. "Položil jsi $"'
+    _does: 'D $;. "Položil jsi $"',
+    _run(p, g) {
+      g.sysDrop(p);
+    }
   },
   {
     id: "cuseon",
