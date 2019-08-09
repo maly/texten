@@ -17,21 +17,15 @@ const items = [
     attrs: [],
     where: "r1",
     handlers: {
-      pick: [
-        [
-          [],
-          [
-            [".", "Smrdí"]
-          ]
-        ]
-      ]
+      pick: [[[], [[".", "Smrdí"]]]]
     }
   },
   {
     id: "obalka",
     name: "obál-ka,ky,ce,ku",
-    desc: "Dopisní obálka. Odesilatel je právní kancelář Penn and Graw se sídlem v Denveru, adresátem je pan William Stewart, 1150 Merridale Road, Denver. Takže to je dopis pro tebe! Obálka je otevřená a uvnitř - prázdná! Asi tam nějaký dopis byl, ale už není.",
-    attrs: [],
+    desc:
+      "Dopisní obálka. Odesilatel je právní kancelář Penn and Graw se sídlem v Denveru, adresátem je pan William Stewart, 1150 Merridale Road, Denver. Takže to je dopis pro tebe! Obálka je otevřená a uvnitř - prázdná! Asi tam nějaký dopis byl, ale už není.",
+    attrs: ["crate"],
     where: "*",
     handlers: []
   },

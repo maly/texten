@@ -11,7 +11,7 @@ var item = {
     ctake: "Do kapsy se ti nevejde, za sebou ho nepotáhneš... To fakt nepůjde."
   },
   actions: {
-    csitinto(itm, game, syscmd) {
+    csitinto(itm, game /*, syscmd*/) {
       game.doDisp("Sedl sis do auta.");
       game.cEnter("road_auto");
     }
