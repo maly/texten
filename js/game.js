@@ -35,6 +35,7 @@ var initItems = s => {
     q.adjs = q.adj ? flex(q.adj) : ["", "", "", "", "", ""];
     q.hasAttr = a => (game.itemAttrs[q.id].indexOf(a) < 0 ? false : true);
     q.isHere = () => game.items[q.id] === game.where;
+    q.isMovable = () => game.itemAttrs[q.id].indexOf("nonmovable") < 0;
     q.isCrate = () =>
       game.itemAttrs[q.id].indexOf("crate") < 0 ? false : true;
     q.carry = () => game.items[q.id] === "*";
@@ -45,7 +46,8 @@ var initItems = s => {
       console.log("RATT", att, q.id);
       game.itemAttrs[q.id] = game.itemAttrs[q.id].filter(q => q !== att);
     };
-
+    q.fullName = flex =>
+      q.adjs[flex] ? q.adjs[flex] + " " + q.names[flex] : q.names[flex];
     return q;
   });
 };
@@ -376,20 +378,20 @@ var gameObject = {
   roomEnter,
   cEnter,
   sysDecrate,
-  sysExamine(pars) {
-    require("./syscmd/examine.js")(gameObject, pars);
+  sysExamine(pars, cmd) {
+    require("./syscmd/examine.js")(gameObject, pars, cmd);
   },
-  sysGo(pars) {
-    require("./syscmd/go.js")(gameObject, pars);
+  sysGo(pars, cmd) {
+    require("./syscmd/go.js")(gameObject, pars, cmd);
   },
-  sysItinerary(pars) {
-    require("./syscmd/itinerary.js")(gameObject, pars);
+  sysItinerary(pars, cmd) {
+    require("./syscmd/itinerary.js")(gameObject, pars, cmd);
   },
-  sysDrop(pars) {
-    require("./syscmd/drop.js")(gameObject, pars);
+  sysDrop(pars, cmd) {
+    require("./syscmd/drop.js")(gameObject, pars, cmd);
   },
-  sysTake(pars) {
-    require("./syscmd/take.js")(gameObject, pars);
+  sysTake(pars, cmd) {
+    require("./syscmd/take.js")(gameObject, pars, cmd);
   },
   async sysRoomLook() {
     var out = "";
