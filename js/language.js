@@ -1,5 +1,5 @@
 //
-
+const md5 = require("md5");
 //list items to natural language
 var listToText = (s, d) => {
   if (!d) d = " a ";
@@ -25,6 +25,9 @@ var listToQuestion = s => {
   }
   return out;
 };
+
+//string fixes
+var savedStrings = {};
 
 var oneShuffle = array => array.sort(() => Math.random() - 0.5);
 var shuffle = array => {
@@ -84,8 +87,61 @@ var lRand = s => {
   return s.strings[idx];
 };
 
+var prepareSaved = sx => {
+  var type = "";
+  switch (sx[1].toUpperCase()) {
+    case "S":
+      type = "shuffle";
+      break;
+    case "O":
+      type = "oneshoot";
+      break;
+    case "L":
+      type = "loop";
+      break;
+    case "R":
+      type = "rand";
+      break;
+    case "T":
+      type = "last";
+      break;
+  }
+  if (!type) return sx;
+  var strings = sx
+    .substr(2)
+    .match(/\[.*?\]/g)
+    .map(q => q.substr(1, q.length - 2));
+  //console.log(sx, strings);
+  return { type, strings };
+};
+
+/*
+typy obsahu:
+
+prostý string
+seznam (objekt s typem a řetězci a denzitou)
+string s nahrazením.
+
+[S[x1][x2][x3]...] - S je fyp (S,O,L,R,T), pak jsou řetězce
+*/
+
 var fixString = s => {
-  if (typeof s === "string") return s;
+  if (typeof s === "string") {
+    //zpracování řetězců
+    var mulfix = s.match(/\[(.\[.*?\])\]/g);
+    if (!mulfix || !mulfix.length) return s; //just a simple string
+    for (var t of mulfix) {
+      var sign = md5(t);
+      if (!savedStrings[sign]) {
+        /// prepare
+        savedStrings[sign] = prepareSaved(t);
+      }
+      var out = fixString(savedStrings[sign]);
+      //console.log(savedStrings[sign]);
+      s = s.replace(t, out);
+    }
+    return s; //po všech replacementech
+  }
   //object. Asi list
 
   //probabilita
