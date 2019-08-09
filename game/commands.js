@@ -10,8 +10,8 @@ const commands = [
   {
     id: "cgo",
     _cmd: ["jdi ^", "běž ^", "utíkej ^", "j ^"],
-    _run(p, g) {
-      g.sysGo(p);
+    _run(p, g, n) {
+      g.sysGo(p, n);
     },
     _noparam:
       "[S[Nevím přesně kam jít][Asi nechápu, kam chceš jít][Tam nemůžeš jít]]."
@@ -33,6 +33,10 @@ const commands = [
   {
     id: "ctake",
     _cmd: ["zvedni %3", "seber %3", "vezmi %3"],
+    _noparam:
+      "[S[Nevidíš nic takového!][Nevím, co chceš vzít.][Vzal bych, ale kde nic není...]]",
+    _nonmovable:
+      "[S[^3 s sebou neponeseš.][^3 nemůžeš moc dobře vzít.][Snažíš se vzít #3, ale nejde to.]]",
     /*
     _does:
       'C $: . "Vždyť máš $ u sebe!";B ###' +
@@ -40,8 +44,8 @@ const commands = [
       'AS $ nonmovable: . "Nemůžeš zvednout $";B###' +
       'AR $ nonmovable: P $; . "Zvedl jsi $."',
       */
-    _run(p, g) {
-      g.sysTake(p);
+    _run(p, g, c) {
+      g.sysTake(p, c);
     }
   },
   {
