@@ -163,4 +163,30 @@ var fixString = s => {
   }
 };
 
-module.exports = { listToText, listToQuestion, fixString };
+//formátovat řetězec s palceholderem pro předmět
+
+/*
+#0, #1, #2 ... item name podle pádu
+^0, ^1 ... dtto, ale s prvním písmenem velkým
+*/
+
+var formatItem = (s, itm) => {
+  var replaces = s.match(/\#[0-9]/g);
+  if (replaces)
+    for (var t of replaces) {
+      var flex = parseInt(t[1]);
+      s = s.replace(t, itm.fullName(flex));
+    }
+
+  replaces = s.match(/\^[0-9]/g); //capitalize
+  if (replaces)
+    for (var t of replaces) {
+      var flex = parseInt(t[1]);
+      var fn = itm.fullName(flex);
+      fn = fn[0].toUpperCase() + fn.substr(1);
+      s = s.replace(t, fn);
+    }
+  return s;
+};
+
+module.exports = { listToText, listToQuestion, fixString, formatItem };
