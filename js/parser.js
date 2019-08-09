@@ -15,6 +15,7 @@ var matchPattern = (pattern, set) => {
     .map(q => (isSpecial(q) ? "(.*?)" : q.substr(0, 3) + "\\S*?"))
     .join(" ");
   p = "^" + p + "$";
+  // console.log(pattern, set, p);
   var patt = new RegExp(p);
   //match set
   //console.log(p, set);

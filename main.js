@@ -160,11 +160,15 @@ var doCommand = async command => {
   var syscmd = parser.getVerbById(command.id);
 
   //už ho mám!
+  var didSomething = false;
   if (syscmd._prerun) syscmd._prerun(parnames, game, syscmd);
   if (syscmd._noparam && parnames.length === 0) {
     display.printTextRed(lang.fixString(syscmd._noparam));
   } else {
-    if (syscmd._run) syscmd._run(parnames, game, syscmd);
+    if (syscmd._run) {
+      syscmd._run(parnames, game, syscmd);
+      didSomething = true;
+    }
 
     //vypiš předmětově specifickou akci
     if (command.params[0].length === 1) {
@@ -177,9 +181,12 @@ var doCommand = async command => {
       }
       if (itm.actions && itm.actions[command.id]) {
         itm.actions[command.id](itm, game, syscmd);
+        didSomething = true;
       }
     }
     if (syscmd._postrun) syscmd._postrun(parnames, game, syscmd);
+    if (!didSomething && syscmd._nothing)
+      display.printTextRed(lang.fixString(syscmd._nothing));
   }
   //keyboard.key(0);
 };

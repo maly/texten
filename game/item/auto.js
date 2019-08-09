@@ -9,6 +9,11 @@ var item = {
 
   strings: {
     ctake: "Do kapsy se ti nevejde, za sebou ho nepotáhneš... To fakt nepůjde."
+  },
+  actions: {
+    csitinto(itm, game, syscmd) {
+      game.doDisp("Sedl sis do auta.");
+    }
   }
 };
 

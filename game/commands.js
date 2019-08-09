@@ -101,6 +101,18 @@ const commands = [
     },
     _noparam:
       "[S[Nevím přesně co zkoumat.][Asi nechápu, co chceš zkoumat.][Nerozumím. Co chceš vykoumat?]]"
+  },
+  {
+    id: "csitinto",
+    _cmd: ["sedni si do #1", "sedni do #1", "vlez do #1"],
+    _nothing:
+      "[S[Jsou věci, do kterých si nesedneš.][Nevejdeš se tam.][To nepůjde, je mi líto]]"
+    /*
+    _run(p, g, c) {
+      //g.sysRoomLook(p,c);
+      console.log("sitinto", p, g, c);
+    }
+    */
   }
 ];
 
