@@ -16,14 +16,8 @@ const commands = [
     _run(p, g) {
       g.sysGo(p);
     },
-    _noparam: {
-      type: "shuffle",
-      strings: [
-        "Nevím přesně kam jít.",
-        "Asi nechápu, kam chceš jít.",
-        "Tam nemůžeš jít."
-      ]
-    }
+    _noparam:
+      "[S[Nevím přesně kam jít][Asi nechápu, kam chceš jít][Tam nemůžeš jít]]."
   },
   {
     id: "citinerary",
@@ -108,14 +102,8 @@ const commands = [
     _run(p, g) {
       g.sysExamine(p);
     },
-    _noparam: {
-      type: "shuffle",
-      strings: [
-        "Nevím přesně co zkoumat.",
-        "Asi nechápu, co chceš zkoumat.",
-        "Nerozumím. Co chceš vykoumat?"
-      ]
-    },
+    _noparam:
+      "[S[Nevím přesně co zkoumat.][Asi nechápu, co chceš zkoumat.][Nerozumím. Co chceš vykoumat?]]",
     _does: '. "Prohlížíš si $."; PD $; IH $ examine'
   }
 ];
