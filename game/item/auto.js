@@ -7,7 +7,9 @@ var item = {
   attrs: ["nonmovable", "crate"],
   where: "road_r1",
 
-  handlers: []
+  strings: {
+    ctake: "Do kapsy se ti nevejde, za sebou ho nepotáhneš... To fakt nepůjde."
+  }
 };
 
 module.exports = item;
