@@ -11,8 +11,8 @@ const commands = [
     id: "cgo",
     _cmd: ["jdi ^", "běž ^", "utíkej ^", "j ^"],
     _does: 'print "Jdeš ^."; exit ^',
-    _prerun(g) {},
-    _postrun(g) {},
+    //_prerun(g) {},
+    //_postrun(g) {},
     _run(p, g) {
       g.sysGo(p);
     },
