@@ -106,7 +106,8 @@ const commands = [
     id: "csitinto",
     _cmd: ["sedni si do #1", "sedni do #1", "vlez do #1"],
     _nothing:
-      "[S[Jsou věci, do kterých si nesedneš.][Nevejdeš se tam.][To nepůjde, je mi líto]]"
+      "[S[Jsou věci, do kterých si nesedneš.][Nevejdeš se tam.][To nepůjde, je mi líto]]",
+    _noparam: "[S[Do čeho že chceš sedat?][Nemí mi jasné, kam si sednout.]]"
     /*
     _run(p, g, c) {
       //g.sysRoomLook(p,c);

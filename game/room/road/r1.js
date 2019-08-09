@@ -9,6 +9,10 @@ module.exports = {
     {
       to: "po krajnici dopředu",
       room: "road_r2"
+    },
+    {
+      to: "do auta",
+      room: "road_auto"
     }
   ],
   attrs: ["start"],

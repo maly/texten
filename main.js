@@ -171,7 +171,7 @@ var doCommand = async command => {
     }
 
     //vypiš předmětově specifickou akci
-    if (command.params[0].length === 1) {
+    if (command.params[0].length === 1 && command.params[0][0].id) {
       //console.log("Q1", command.params[0], parnames);
       var itm = game.getItem(command.params[0][0].id);
       //var itm = var itm = game.getItem(pars[0]);command.params[0][0];

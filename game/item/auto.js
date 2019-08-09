@@ -13,6 +13,7 @@ var item = {
   actions: {
     csitinto(itm, game, syscmd) {
       game.doDisp("Sedl sis do auta.");
+      game.cEnter("road_auto");
     }
   }
 };
