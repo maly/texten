@@ -137,14 +137,14 @@ var doCommand = async command => {
           lineWaiter = r;
         });
         q = await wwq;
-        var itm = game.getExactItem(q, par);
-        if (itm.length != 1) {
+        var itms = game.getExactItem(q, par);
+        if (itms.length != 1) {
           display.printTextRed(
             "Musíš být asi ještě přesnější, stále nerozumím."
           );
           return;
         }
-        command.params[i] = itm;
+        command.params[i] = itms;
       }
     }
   }

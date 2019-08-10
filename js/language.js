@@ -180,9 +180,8 @@ var formatItem = (s, itm) => {
 
   replaces = s.match(/\^[0-9]/g); //capitalize
   if (replaces)
-    for (var t of replaces) {
-      var flex = parseInt(t[1]);
-      var fn = itm.fullName(flex);
+    for (t of replaces) {
+      var fn = itm.fullName(parseInt(t[1]));
       fn = fn[0].toUpperCase() + fn.substr(1);
       s = s.replace(t, fn);
     }

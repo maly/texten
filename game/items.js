@@ -53,7 +53,7 @@ const items = [
     attrs: ["crate", "nonmovable"],
     where: "r1",
     _handlers: {
-      "use-louc-on": '. "Botník hoří!"; CT bothor'
+      // "use-louc-on": '. "Botník hoří!"; CT bothor'
       /*
 			[
 				[
