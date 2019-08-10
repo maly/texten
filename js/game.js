@@ -434,6 +434,7 @@ var gameObject = {
   stepTickAll,
   startStepTick,
   dispML: async t => {
+    t = lang.fixString(t, gameObject);
     return await display.printTextMultiline(t, true);
   },
   doDisp(s) {
@@ -453,7 +454,8 @@ var gameObject = {
     }); //.then(() => console.log("WAIT2"))
     await ww;
     display.noPrint(false);
-  }
+  },
+  vars: require("./vars.js")
 };
 
 module.exports = gameObject;
