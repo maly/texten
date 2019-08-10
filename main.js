@@ -192,6 +192,8 @@ var doCommand = async command => {
     if (!didSomething && syscmd._nothing)
       display.printTextRed(lang.fixString(syscmd._nothing));
   }
+
+  game.roomAtmo();
   //keyboard.key(0);
 };
 
