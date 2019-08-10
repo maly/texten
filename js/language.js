@@ -128,9 +128,7 @@ string s nahrazením.
 var vars = require("./vars.js");
 
 var tConds = (cs, game) => {
-  var cond;
-  var pars;
-  [cond, ...pars] = cs.split(",");
+  var [cond, ...pars] = cs.split(",");
   console.log(cond, pars);
   var hasNeg = cond[0] === "!";
   if (hasNeg) {
@@ -170,8 +168,7 @@ var condString = (s, game) => {
   var conds = s.match(/\{(.*?)\}/g);
   if (!conds) return s;
   for (var condX of conds) {
-    var cond, text, els;
-    [cond, text, els] = condX.substr(1, condX.length - 2).split("|");
+    var [cond, text, els] = condX.substr(1, condX.length - 2).split("|");
     //console.log("QQ", cond, text, els);
     if (tConds(cond, game)) {
       s = s.replace(condX, text);
