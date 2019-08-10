@@ -8,6 +8,7 @@ module.exports = {
     await g.waitForEnter();
     console.log("onEnter", g);
     await g.dispML(require("./stopText.js"));
+
     g.cEnter("r1");
     //g.startStepTick("roadr1", () => g.cEnter("r1"), 3);
     //g.startStepCounter(()=>{g.cEnter("road_rstop")})

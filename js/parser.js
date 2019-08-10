@@ -31,7 +31,7 @@ var findVerb = v => verbs.filter(q => q._cmd.indexOf(v) >= 0);
 /*
 ^ - exit
 % - item here, not nonmovable
-@ - item here
+@ - item here (even crated)
 $ - item carry
 # - here or carry
 & - in crate, which is here
@@ -44,7 +44,7 @@ var special = s => {
       "item",
       s.length === 1 ? 3 : s[1],
       {
-        here: true,
+        hereOrCrated: true,
         movable: true
       }
     ];
@@ -53,7 +53,7 @@ var special = s => {
       "item",
       s.length === 1 ? 3 : s[1],
       {
-        here: true
+        hereOrCrated: true
       }
     ];
   if (s[0] === "$")

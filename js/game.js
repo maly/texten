@@ -119,6 +119,14 @@ var getExactItem = (name, is) => {
 var filterItemsBy = (is, flt) => {
   var out = is.filter(q => {
     var id = q.id;
+    var cratesHere = items
+      .filter(
+        q =>
+          (game.items[q.id] === "*" || game.items[q.id] === game.where) &&
+          q.isCrate()
+      )
+      .map(q => q.id);
+
     if (game.itemAttrs[id].indexOf("shadow") >= 0) return false;
     if (flt.player) {
       if (game.items[id] !== "*") return false;
@@ -127,25 +135,30 @@ var filterItemsBy = (is, flt) => {
       if (game.items[id] !== game.where) return false;
     }
     if (flt.near) {
-      if (game.items[id] !== game.where && game.items[id] !== "*") return false;
+      if (game.items[id] !== game.where && game.items[id] !== "*") {
+        if (!cratesHere || cratesHere.length === 0) return false;
+        if (cratesHere.indexOf(game.items[id]) < 0) return false;
+      }
     }
 
     if (flt.cratedHere) {
-      var cratesHere = items
-        .filter(
-          q =>
-            (game.items[q.id] === "*" || game.items[q.id] === game.where) &&
-            q.isCrate()
-        )
-        .map(q => q.id);
       if (!cratesHere || cratesHere.length === 0) return false;
       //console.log("CRATED HERE", q, cratesHere)
       if (cratesHere.indexOf(game.items[id]) < 0) return false;
       //if (game.items[id] !== game.where && game.items[id] !== "*") return false;
     }
 
+    if (flt.hereOrCrated) {
+      if (game.items[id] !== game.where) {
+        if (!cratesHere || cratesHere.length === 0) return false;
+        if (cratesHere.indexOf(game.items[id]) < 0) return false;
+      }
+    }
+    //console.log("FLT1", q, flt);
+
     if (flt.movable) {
-      if (!getItem(id).hasAttr("nonmovable")) return false;
+      //if (!getItem(id).hasAttr("nonmovable")) return false;
+      if (game.itemAttrs[id].indexOf("nonmovable") >= 0) return false;
     }
 
     if (flt.hasAttr) {
@@ -154,8 +167,10 @@ var filterItemsBy = (is, flt) => {
     if (flt.hasNotAttr) {
       if (game.itemAttrs[id].indexOf(flt.hasNotAttr) >= 0) return false;
     }
+    //console.log("FLT", q);
     return true;
   });
+  //console.log("QF", out);
   return out;
 };
 
