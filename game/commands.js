@@ -75,6 +75,15 @@ const commands = [
     _cmd: ["použij #3"]
     //does: [[[], [[".", "Použil jsi $"], ["U", "$", "Nic se nestalo"]]]]
   },
+  {
+    id: "cwait",
+    _cmd: ["čekej", "počkej", "nic nedělej"],
+    async _run(p, g) {
+      await g.doDisp("Čekáš...");
+    }
+
+    //does: [[[], [[".", "Použil jsi $"], ["U", "$", "Nic se nestalo"]]]]
+  },
 
   {
     id: "cexamin",
