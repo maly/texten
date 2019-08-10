@@ -11,7 +11,7 @@ Bylo chvíli ticho. Dívali jste se jeden na druhého.
 "No," povídá ten chlápek nakonec, "můžete jet se mnou. Už bude tma, tak se u mě vyspíte, něco k jídlu se taky najde, a zejtra se na to v dílně mrkneme. Co vy na to?"
 "To by bylo fajn," řekl jsi s úsměvem.
 Chlapík v náklaďáku se usmál taky. "Tak pojďte dovnitř, ať nepromoknete na kost."
-Nemusel tě dvakrát pobízet. Vlezl jsi do náklaďáku a řekl: "Díky."
+Nemusel tě dvakrát pobízet. {IC,rezerva|Hodils rezervu na korbu, v|V}lezl jsi do náklaďáku a řekl: "Díky."
 Řidič se usmál: "Jasný. To je přeci jasný..." Pak se na tebe podíval a povídá:
 "Jsem ňákej Gordon."
 `;
