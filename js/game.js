@@ -334,14 +334,33 @@ var roomEnter = () => {
   return out;
 };
 
+var roomAtmo = () => {
+  game.room = getRoom(game.where);
+  var out = "";
+
+  //atmosphere
+  if (game.room.atmosphere) {
+    var as = lang.fixString(game.room.atmosphere);
+    if (as) out += "\n" + as;
+  }
+
+  if (out) disp(out);
+};
+
 var cEnter = async nroom => {
   if (nroom) game.where = nroom;
+  game.room = getRoom(game.where);
+  if (game.room._beforeEnter) await game.room._beforeEnter(gameObject);
   await disp(roomEnter());
   if (game.room._enter) await game.room._enter(gameObject);
   window.needKey0 = true;
 };
 
 var display = require("./display.js");
+
+var condMoveItem = (itm, from, to) => {
+  if (game.items[itm] == from) game.items[itm] = to;
+};
 
 //todo
 //jak zviditelnit předmět v crate, aby byl jako "here"
@@ -391,6 +410,7 @@ var gameObject = {
   cLook,
   cOverlook,
   roomEnter,
+  roomAtmo,
   cEnter,
   sysDecrate,
   sysExamine(pars, cmd) {
@@ -408,6 +428,7 @@ var gameObject = {
   sysTake(pars, cmd) {
     require("./syscmd/take.js")(gameObject, pars, cmd);
   },
+  condMoveItem,
   async sysRoomLook() {
     var out = "";
     out += cOverlook();
@@ -439,6 +460,9 @@ var gameObject = {
   },
   doDisp(s) {
     disp(s);
+  },
+  cls() {
+    display.cls();
   },
   musicPlay(id) {
     music.fadeTo(id);

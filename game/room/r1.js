@@ -31,10 +31,6 @@ module.exports = {
       attrs: ["inactive"]
     }
   ],
-  _enter(g) {
-    g.musicPlay("music2");
-    g.videoPlay("video2");
-  },
   attrs: ["player"],
   handlers: []
 };
