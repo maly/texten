@@ -8,9 +8,12 @@ var sysExamine = (game, pars) => {
   game.doDisp(itm.desc);
   if (itm.isCrate()) {
     var inside = game.crateListItems(itm.id);
-    game.doDisp(
-      "Uvnitř je " + lang.listToText(inside.map(q => game.itemFullName(q)[0]))
-    );
+    if (inside && inside.length) {
+      game.doDisp(
+        "[R[Objevil jsi][Našel jsi][Uvnitř vidíš][Uvnitř jsi našel]] " +
+          lang.listToText(inside.map(q => game.itemFullName(q)[3]))
+      );
+    }
     //deshadow
     inside.map(q => q.removeAttr("shadow"));
   }
