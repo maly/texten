@@ -125,9 +125,69 @@ string s nahrazením.
 [S[x1][x2][x3]...] - S je fyp (S,O,L,R,T), pak jsou řetězce
 */
 
-var fixString = s => {
+var vars = require("./vars.js");
+
+var tConds = (cs, game) => {
+  var cond;
+  var pars;
+  [cond, ...pars] = cs.split(",");
+  console.log(cond, pars);
+  var hasNeg = cond[0] === "!";
+  if (hasNeg) {
+    cond = cond.substr(1);
+  }
+  var value = false;
+  switch (cond.toUpperCase()) {
+    case "VZ": //var zero
+      value = vars.getVar(pars[0]) === 0;
+      break;
+    case "VE": //var equal
+      value = vars.getVar(pars[0]) == pars[1];
+      break;
+    case "IC": //item carried
+      value = game.getItem(pars[0]).carry();
+      break;
+    case "IH": //item here
+      value = game.getItem(pars[0]).isHere();
+      break;
+  }
+  if (hasNeg) value = value ? false : true;
+  return value;
+};
+
+//Podmíněné řetězce
+/*
+
+{cond|text}
+{cond|text|else}
+
+vyhodnotí podmínku viz výše
+
+*/
+
+var condString = (s, game) => {
+  //conditioned string
+  var conds = s.match(/\{(.*?)\}/g);
+  if (!conds) return s;
+  for (var condX of conds) {
+    var cond, text, els;
+    [cond, text, els] = condX.substr(1, condX.length - 2).split("|");
+    //console.log("QQ", cond, text, els);
+    if (tConds(cond, game)) {
+      s = s.replace(condX, text);
+    } else {
+      if (els) s = s.replace(condX, els);
+      else s = s.replace(condX, "");
+    }
+  }
+  //console.log(conds);
+  return s;
+};
+
+var fixString = (s, g) => {
   if (typeof s === "string") {
     //zpracování řetězců
+    s = condString(s, g);
     var mulfix = s.match(/\[(.\[.*?\])\]/g);
     if (!mulfix || !mulfix.length) return s; //just a simple string
     for (var t of mulfix) {
