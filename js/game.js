@@ -370,7 +370,7 @@ var gameObject = {
   initItems,
   initRooms,
   display: f => {
-    disp = f;
+    disp = t => f(lang.fixString(t));
   },
   initStrings: f => {
     strings = f;
