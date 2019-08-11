@@ -503,9 +503,55 @@ var gameSave = () => {
   out.timers = timers.save();
   //steptickers
   out.stepTickers = { ...stepTickers };
+  out.timestamp = new Date().getTime();
+  return out;
+};
+var gameLoad = d => {
+  game.items = d.items;
+  game.itemAttrs = d.itemAttrs;
+  game.rooms = d.rooms;
+  stepTickers = { ...d.stepTickers };
+  gameObject.vars.load(d.vars);
+  timers.load(d.timers);
+  game.where = d.where;
+  display.cls();
+  cEnter();
+};
+
+var LZString = require("lz-string");
+
+window.gameSave = id => {
+  if (id < 1) return null;
+  if (id > 9) return null;
+  var gid = strings.GID;
+  var ls;
+  if (!window.localStorage[gid]) {
+    ls = [];
+  } else {
+    ls = JSON.parse(
+      LZString.decompressFromUTF16(window.localStorage.getItem(gid))
+    );
+  }
+  var out = gameSave();
+  ls[id - 1] = out;
+  window.localStorage.setItem(
+    gid,
+    LZString.compressToUTF16(JSON.stringify(ls))
+  );
   return out;
 };
 
-window.gameSave = gameSave;
+window.gameLoad = id => {
+  if (id < 1) return null;
+  if (id > 9) return null;
+  var gid = strings.GID;
+  if (!window.localStorage[gid]) {
+    return null;
+  }
+  var ls = JSON.parse(
+    LZString.decompressFromUTF16(window.localStorage.getItem(gid))
+  );
+  gameLoad(ls[id - 1]);
+};
 
 module.exports = gameObject;

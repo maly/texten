@@ -11,7 +11,7 @@ Nemůžeš dělat nic, jen čekat a rozhlížet se...`,
     type: "shuffle",
     strings: [
       "Už abyste byli na místě. Koupel ti fakt bodne.",
-      '"Už tam budem," huláká Gordon, aby překřičel motor, a povzbudivě se usmívá.',
+      "Gordon něco řve, aby překřičel motor, a povzbudivě se usmívá. Sice ho neslyšíš, ale pravděpodobně říká něco o tom, že tam brzo budete.",
       "Dnešek fakt stál za to..."
     ]
   },
