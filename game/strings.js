@@ -1,6 +1,7 @@
 //var BEGIN = require("./text/begin.txt");
 
 module.exports = {
+  GID: "gordon",
   GNAME: "Gordonova farma",
   GENTER: "Stiskni ENTER",
   NOSEE: "Nevidíš nic zvláštního",
