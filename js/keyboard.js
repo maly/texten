@@ -2,7 +2,7 @@
 
 //var doCommand = null;
 var enterFlag = false;
-var doOutput = false;
+window.doOutput = false;
 const display = require("/js/display.js");
 
 var eline = "> ";
@@ -25,17 +25,17 @@ var key = function(k) {
   } else if (k == 8) {
     if (eline.length > 2) {
       eline = eline.substr(0, eline.length - 1);
-      if (doOutput) display.printSameLine(eline + "_ ");
+      if (window.doOutput) display.printSameLine(eline + "_ ");
     }
   } else if (!k) {
     eline = "> ";
-    //console.log("KEY 0", doOutput, eline);
-    if (doOutput) display.printSameLine(eline + "_ ");
+    //console.log("KEY 0", window.doOutput, eline);
+    if (window.doOutput) display.printSameLine(eline + "_ ");
   } else {
     eline += String.fromCharCode(k);
   }
 
-  if (doOutput) display.printSameLine(eline + "_");
+  if (window.doOutput) display.printSameLine(eline + "_");
 };
 
 var waiter = null;
@@ -57,7 +57,7 @@ module.exports = {
   init() {},
   key,
   doOutput(d) {
-    doOutput = d;
+    window.doOutput = d;
   },
   waitForLine,
   wasEnterPressed
