@@ -5,7 +5,7 @@ const game = require("./game.js");
 
 var verblist = () => verbs.map(q => q._cmd).flat();
 
-var isSpecial = s => "^%$#@({&".indexOf(s[0]) >= 0;
+var isSpecial = s => "^%$#@({&*".indexOf(s[0]) >= 0;
 
 var matchPattern = (pattern, set) => {
   var patFix = noDia(pattern)
@@ -35,9 +35,11 @@ var findVerb = v => verbs.filter(q => q._cmd.indexOf(v) >= 0);
 $ - item carry
 # - here or carry
 & - in crate, which is here
+* - any string
 */
 
 var special = s => {
+  if (s[0] === "*") return ["string"];
   if (s[0] === "^") return ["exit"];
   if (s[0] === "%")
     return [
@@ -117,6 +119,9 @@ const parse = text => {
             break;
           case "exit":
             q.params[i] = game.getExit(q.params[i]);
+            break;
+          case "string":
+            q.params[i] = [{ room: q.params[i], type: "string" }];
             break;
         }
       }

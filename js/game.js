@@ -514,13 +514,11 @@ var gameLoad = d => {
   gameObject.vars.load(d.vars);
   timers.load(d.timers);
   game.where = d.where;
-  display.cls();
-  cEnter();
 };
 
 var LZString = require("lz-string");
 
-window.gameSave = id => {
+window.gameSave = (id, remark) => {
   if (id < 1) return null;
   if (id > 9) return null;
   var gid = strings.GID;
@@ -533,6 +531,7 @@ window.gameSave = id => {
     );
   }
   var out = gameSave();
+  out.remark = remark;
   ls[id - 1] = out;
   window.localStorage.setItem(
     gid,

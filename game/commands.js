@@ -4,9 +4,37 @@
 @ - item here
 $ - item carry
 # - here or carry
+* - any
 */
 
 const commands = [
+  {
+    id: "csave",
+    _cmd: ["save *", "ulož *"],
+    async _run(p, g, n) {
+      //g.sysGo(p, n);
+      var saveId = parseInt(p[0][0]);
+      if (window.gameSave(saveId, p[0].substr(1).trim())) {
+        await g.doDisp("Hra uložena na pozici " + saveId + ".");
+      }
+    },
+    _noparam: "Musíš zadat číslo pozice (1-9), do jaké chceš hru uložit."
+  },
+  {
+    id: "cload",
+    _cmd: ["load *", "načti *"],
+    async _run(p, g, n) {
+      //g.sysGo(p, n);
+      var saveId = parseInt(p[0][0]);
+      window.gameLoad(saveId);
+      await g.doDisp("Načetl jsi hru z pozice " + saveId + ".");
+      await g.waitForEnter();
+      g.cls();
+      g.cEnter();
+    },
+    _noparam:
+      "Musíš zadat číslo pozice (1-9), z jaké chceš hru načíst. Zkus příkaz LIST, vypíše se seznam uložených her."
+  },
   {
     id: "cgo",
     _cmd: ["jdi ^", "běž ^", "utíkej ^", "j ^"],
