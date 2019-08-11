@@ -11,11 +11,15 @@ const commands = [
   {
     id: "csave",
     _cmd: ["save *", "ulož *"],
-    async _run(p, g, n) {
+    async _run(p, g) {
       //g.sysGo(p, n);
       var saveId = parseInt(p[0][0]);
       if (window.gameSave(saveId, p[0].substr(1).trim())) {
         await g.doDisp("Hra uložena na pozici " + saveId + ".");
+      } else {
+        await g.doDisp(
+          "Musíš zadat číslo pozice (1-9), do jaké chceš hru uložit."
+        );
       }
     },
     _noparam: "Musíš zadat číslo pozice (1-9), do jaké chceš hru uložit."
@@ -23,7 +27,7 @@ const commands = [
   {
     id: "cload",
     _cmd: ["load *", "načti *"],
-    async _run(p, g, n) {
+    async _run(p, g) {
       //g.sysGo(p, n);
       var saveId = parseInt(p[0][0]);
       window.gameLoad(saveId);
