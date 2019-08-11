@@ -8,6 +8,9 @@ var timer = function(id, ticks) {
     },
     state: () => {
       return this.remain;
+    },
+    set: v => {
+      this.remain = v;
     }
   };
   this.state = () => this.remain;
@@ -21,7 +24,23 @@ var allTick = () => {
     _timers[timer].tick();
   }
 };
+
+var save = () => {
+  var out = {};
+  for (var t in _timers) {
+    out[t] = _timers[t].state();
+  }
+  return out;
+};
+var load = n => {
+  for (var t in n) {
+    if (_timers[t]) _timers[t].set(n[t]);
+  }
+};
+
 module.exports = {
   timer,
-  allTick
+  allTick,
+  save,
+  load
 };

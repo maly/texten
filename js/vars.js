@@ -8,4 +8,9 @@ var getVar = n => (vars[n] ? vars[n] : 0);
 
 var plusVar = n => setVar(n, getVar(n) + 1);
 
-module.exports = { setVar, getVar, plusVar };
+var save = () => vars;
+var load = n => {
+  vars = n;
+};
+
+module.exports = { setVar, getVar, plusVar, save, load };
