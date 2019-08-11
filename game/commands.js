@@ -85,6 +85,7 @@ const commands = [
     id: "cdrop",
     _cmd: ["polož $3"],
     //_does: 'D $;. "Položil jsi $"',
+    _noparam: "[S[Nemáš nic takového u sebe!][Nevím, co chceš položit.]]",
     _run(p, g) {
       g.sysDrop(p);
     }
