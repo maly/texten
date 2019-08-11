@@ -17,7 +17,7 @@ Nemůžeš dělat nic, jen čekat a rozhlížet se...`,
   },
   _enter(g) {
     console.log("onEnter", g);
-    g.startStepTick("rvan", () => g.cEnter("road_van_stop"), 3);
+    g.startStepTickToGo("rvan", "road_van_stop", 3);
     //g.startStepCounter(()=>{g.cEnter("road_rstop")})
   },
   handlers: []
