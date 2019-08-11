@@ -17,7 +17,7 @@ var key = function(k) {
     //if (doOutput) display.clearSameLine(eline + " ");
     waiter = eline.substr(2).trim();
     enterFlag = true;
-    lastWaiter = eline.substr(2).trim();
+    if (waiter) lastWaiter = eline.substr(2).trim();
     //console.log("WA", waiter);
     //doCommand(eline.substr(2).trim());
     eline = "> ";
