@@ -166,7 +166,7 @@ var doCommand = async command => {
     display.printTextRed(lang.fixString(syscmd._noparam));
   } else {
     if (syscmd._run) {
-      syscmd._run(parnames, game, syscmd);
+      await syscmd._run(parnames, game, syscmd);
       didSomething = true;
     }
 
@@ -194,6 +194,7 @@ var doCommand = async command => {
   }
 
   game.roomAtmo();
+  window.needKey0 = true;
   //keyboard.key(0);
 };
 
