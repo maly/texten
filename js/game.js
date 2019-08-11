@@ -252,20 +252,29 @@ var stepTickAll = () => {
     console.log("TIK", ticker);
     ticker.remain--;
     if (ticker.remain === 0) {
-      ticker.fn(gameObject);
+      //ticker.fn(gameObject);
+      if (ticker.whereToGo) {
+        cEnter(ticker.whereToGo);
+        continue;
+      }
     }
   }
 };
 
 //nastaví stepTicker, pokud ještě není (!)
-var startStepTick = (id, fn, tick) => {
+var startStepTick = (id, tick) => {
   if (stepTickers[id]) return;
   stepTickers[id] = {
-    remain: tick,
-    fn: fn
+    remain: tick
   };
 };
 
+//stepTickers, který někam jde
+
+var startStepTickToGo = (id, go, tick) => {
+  startStepTick(id, tick);
+  stepTickers[id].whereToGo = go;
+};
 //s tick end
 
 var cInventory = () => {
@@ -350,9 +359,11 @@ var roomAtmo = () => {
 var cEnter = async nroom => {
   if (nroom) game.where = nroom;
   game.room = getRoom(game.where);
+  window.doOutput = false;
   if (game.room._beforeEnter) await game.room._beforeEnter(gameObject);
   await disp(roomEnter());
   if (game.room._enter) await game.room._enter(gameObject);
+  window.doOutput = true;
   window.needKey0 = true;
 };
 
@@ -453,10 +464,11 @@ var gameObject = {
     game.items[i] = "*";
   },
   stepTickAll,
-  startStepTick,
+  startStepTickToGo,
   dispML: async t => {
     t = lang.fixString(t, gameObject);
-    return await display.printTextMultiline(t, true);
+    var n = await display.printTextMultiline(t, true);
+    return n;
   },
   doDisp(s) {
     disp(s);
@@ -481,5 +493,19 @@ var gameObject = {
   },
   vars: require("./vars.js")
 };
+
+var timers = require("./timer.js");
+
+var gameSave = () => {
+  var out = { ...game };
+  delete out.room;
+  out.vars = gameObject.vars.save();
+  out.timers = timers.save();
+  //steptickers
+  out.stepTickers = { ...stepTickers };
+  return out;
+};
+
+window.gameSave = gameSave;
 
 module.exports = gameObject;
