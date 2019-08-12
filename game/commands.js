@@ -7,6 +7,8 @@ $ - item carry
 * - any
 */
 
+const strings = require("./strings.js");
+
 const commands = [
   {
     id: "csave",
@@ -47,6 +49,13 @@ const commands = [
     },
     _noparam:
       "[S[Nevím přesně kam jít][Asi nechápu, kam chceš jít][Tam nemůžeš jít]]."
+  },
+  {
+    id: "chelp",
+    _cmd: ["pomoc", "help", "h"],
+    async _run(p, g) {
+      await g.dispML(strings.HELP);
+    }
   },
   {
     id: "citinerary",
