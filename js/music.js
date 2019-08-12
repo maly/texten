@@ -1,6 +1,7 @@
 //var mute = false;
 var played = null;
-const nomusic = true;
+const nomusic = !true;
+// (process.env.NODE_ENV === "development")
 
 var stop = id => {
   $("audio#" + id)[0].pause();

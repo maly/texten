@@ -268,9 +268,21 @@ var endless = () => {
 
 var onLoad = () => {
   display.init();
+  //FSM.newState("begin");
+  //FSM.newState("titlescreen");
+  //FSM.newState("intro0");
+  //requestAnimationFrame(endless);
+  $(".masthead div#btn a").click(onStartPressed);
+
+  $(".masthead div#btn").show();
+};
+
+var onStartPressed = () => {
+  $("#video1").show();
+  $(".masthead div#btn").hide();
   FSM.newState("begin");
   //FSM.newState("titlescreen");
-  FSM.newState("intro0");
+  //FSM.newState("intro0");
   requestAnimationFrame(endless);
 };
 
