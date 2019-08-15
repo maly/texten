@@ -1,6 +1,10 @@
 //var mute = false;
 var played = null;
-const nomusic = !true;
+
+var nomusic;
+if (process.env.NODE_ENV === "development") nomusic = true;
+if (process.env.NODE_ENV !== "development") nomusic = false;
+//const nomusic = !true;
 // (process.env.NODE_ENV === "development")
 
 var stop = id => {
@@ -78,6 +82,9 @@ var nextSong = () => {
 
 var fadeToList = (list) => {
   playlist = [...list]
+  for (var i = 0; i < 50; i++) {
+    playlist = playlist.sort(() => Math.random() - 0.5)
+  }
   console.log("PL", playlist)
   nextSong();
 }
@@ -93,5 +100,6 @@ module.exports = {
   played() {
     return played
   },
+  playlist: () => playlist
 
 };

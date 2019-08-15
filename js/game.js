@@ -511,10 +511,13 @@ var gameSave = () => {
   out.stepTickers = {
     ...stepTickers
   };
+  out.music = music.playlist();
   out.timestamp = new Date().getTime();
   return out;
 };
 var gameLoad = d => {
+  console.log(d)
+  music.fadeToList(d.music)
   game.items = d.items;
   game.itemAttrs = d.itemAttrs;
   game.rooms = d.rooms;
