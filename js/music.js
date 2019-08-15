@@ -31,7 +31,7 @@ var fade = async () => {
   return;
 };
 
-var fadeTo = async newTune => {
+var doFadeTo = async newTune => {
   var newAudio = $("audio#" + newTune)[0];
   var audio = $("audio#" + played)[0];
   newAudio.volume = 0;
@@ -48,6 +48,10 @@ var fadeTo = async newTune => {
   $("audio#" + played).hide();
   $("audio#" + newTune).show();
   played = newTune;
+  $("audio#" + newTune)[0].onended = function () {
+    console.log("ONEND", newTune, playlist)
+    nextSong();
+  };
   return;
 };
 
@@ -64,9 +68,30 @@ var play = id => {
   played = id;
 };
 
+var playlist = [];
+
+var nextSong = () => {
+  var out = playlist.shift();
+  playlist.push(out);
+  doFadeTo(out);
+}
+
+var fadeToList = (list) => {
+  playlist = [...list]
+  console.log("PL", playlist)
+  nextSong();
+}
+
+var fadeTo = (id) => fadeToList([id]);
+
 module.exports = {
   play,
   stop,
   fade,
-  fadeTo
+  fadeTo,
+  fadeToList,
+  played() {
+    return played
+  },
+
 };

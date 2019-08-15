@@ -1,105 +1,82 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <link
-      href="https://fonts.googleapis.com/css?family=Raleway:800&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="./node_modules/bootstrap/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="node_modules/@fortawesome/fontawesome-free/css/all.css"
-    />
-    <link rel="stylesheet" href="css/font.css" as="style" />
-    <link rel="stylesheet" href="css/farro.css" as="style" />
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
 
-  <body>
-    <video autoplay muted loop preload="auto" class="myVideo" id="video1">
-      <source src="video/intro.mp4" type="video/mp4" />
-    </video>
-    <video autoplay muted loop preload="auto" class="myVideo" id="video2">
-      <source src="video/footage.mp4" type="video/mp4" />
-    </video>
-    <video autoplay muted loop preload="auto" class="myVideo" id="openscore">
-      <source src="video/openscore.mp4" type="video/mp4" />
-    </video>
-    <audio
-      controls
-      loop
-      src="sound/coffee.mp3"
-      class="mysound"
-      id="music1"
-    ></audio>
-    <audio
-      controls
-      loop
-      src="sound/me.mp3"
-      class="mysound"
-      id="openscore"
-    ></audio>
-    <audio
-      controls
-      loop
-      src="sound/johnny.mp3"
-      class="mysound"
-      preload="auto"
-      id="music2"
-    ></audio>
-    <header class="masthead">
-      <div class="container h-100" id="btn">
-        <div class="row h-100 align-items-center">
-          <div class="col-12 text-center rounded p-1">
-            <a class="btn btn-lg btn-primary">
-              Spustit
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class="container h-100" id="maingame">
-        <div class="row h-100 align-items-center">
-          <div class="col-12 text-center rounded p-1">
-            <canvas width="650px" height="490px" id="canvas"></canvas>
-          </div>
-        </div>
-      </div>
-      <div class="container h-100" id="introscreen">
-        <div class="row h-100 align-items-center">
-          <div class="col-12 text-center rounded p-1">
-            <h1>Gordonova farma</h1>
-          </div>
-          <div class="col-12 text-center rounded p-1">
-            <p>
-              Cesta je dlouhá a podvečerní slunce svítí do očí. Město jsi nechal
-              daleko za sebou, to byla ještě noc... Chtělo by to sehnat nějaké
-              ubytování, ale posledních sto padesát mil nebyl jediný motel,
-              vlastně ani žádné pořádné město, jen samá pole, sem tam farma...
-            </p>
-            <p>Bohem zapomenutý kraj někde uprostřed Colorada.</p>
-            <p><em>Ale ten nocleh by to fakt chtělo...</em></p>
-            <p><small>[Stiskni ENTER]</small></p>
-          </div>
-        </div>
-      </div>
-    </header>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <link href="https://fonts.googleapis.com/css?family=Raleway:800&display=swap" rel="stylesheet" />
+  <link href="./node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="node_modules/@fortawesome/fontawesome-free/css/all.css" />
+  <link rel="stylesheet" href="css/font.css" as="style" />
+  <link rel="stylesheet" href="css/farro.css" as="style" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
 
-    <div class="container">
-      <div class="row">
-        <div class="col-12"></div>
+<body>
+  <video autoplay muted loop preload="auto" class="myVideo" id="video1">
+    <source src="video/intro.mp4" type="video/mp4" />
+  </video>
+  <video autoplay muted loop preload="auto" class="myVideo" id="video2">
+    <source src="video/footage.mp4" type="video/mp4" />
+  </video>
+  <video autoplay muted loop preload="auto" class="myVideo" id="openscore">
+    <source src="video/openscore.mp4" type="video/mp4" />
+  </video>
+  <audio controls loop src="sound/coffee.mp3" class="mysound" id="music1"></audio>
+  <audio controls loop src="sound/me.mp3" class="mysound" id="openscore"></audio>
+  <audio controls src="sound/johnny.mp3" class="mysound" preload="auto" id="music20"></audio>
+
+  <audio controls src="sound/sunshine.mp3" class="mysound" id="music21"></audio>
+  <audio controls src="sound/pretty_polly.mp3" class="mysound" id="music22"></audio>
+  <audio controls src="sound/murder.mp3" class="mysound" id="music23"></audio>
+
+
+  <header class="masthead">
+    <div class="container h-100" id="btn">
+      <div class="row h-100 align-items-center">
+        <div class="col-12 text-center rounded p-1">
+          <a class="btn btn-lg btn-primary">
+            Spustit
+          </a>
+        </div>
       </div>
     </div>
+    <div class="container h-100" id="maingame">
+      <div class="row h-100 align-items-center">
+        <div class="col-12 text-center rounded p-1">
+          <canvas width="650px" height="490px" id="canvas"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="container h-100" id="introscreen">
+      <div class="row h-100 align-items-center">
+        <div class="col-12 text-center rounded p-1">
+          <h1>Gordonova farma</h1>
+        </div>
+        <div class="col-12 text-center rounded p-1">
+          <p>
+            Cesta je dlouhá a podvečerní slunce svítí do očí. Město jsi nechal
+            daleko za sebou, to byla ještě noc... Chtělo by to sehnat nějaké
+            ubytování, ale posledních sto padesát mil nebyl jediný motel,
+            vlastně ani žádné pořádné město, jen samá pole, sem tam farma...
+          </p>
+          <p>Bohem zapomenutý kraj někde uprostřed Colorada.</p>
+          <p><em>Ale ten nocleh by to fakt chtělo...</em></p>
+          <p><small>[Stiskni ENTER]</small></p>
+        </div>
+      </div>
+    </div>
+  </header>
 
-    <script src="main.js"></script>
-  </body>
+  <div class="container">
+    <div class="row">
+      <div class="col-12"></div>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+
 </html>

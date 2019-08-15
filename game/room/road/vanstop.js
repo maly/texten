@@ -18,7 +18,8 @@ module.exports = {
     await g.dispML(txt);
     g.cls();
     await g.dispML("Zaslechl jsi, jak něco křuplo.");
-    g.musicPlay("music2");
+    //g.musicPlay("music20");
+    g.musicPlayList(["music20", "music21", "music22", "music23"]);
     g.videoPlay("video2");
     g.cls();
     await g.dispML(

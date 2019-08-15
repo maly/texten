@@ -282,17 +282,17 @@ var onStartPressed = () => {
   $(".masthead div#btn").hide();
   FSM.newState("begin");
   //FSM.newState("titlescreen");
-  //FSM.newState("intro0");
+  FSM.newState("intro0");
   requestAnimationFrame(endless);
 };
 
-$(window).bind("load", function() {
+$(window).bind("load", function () {
   //changeRoom();
   keyboard.key(0);
 });
 
 //-----
-$("body").bind("keydown", function(e) {
+$("body").bind("keydown", function (e) {
   //console.log("KD", e.keyCode);
   if (e.keyCode == 8) {
     e.preventDefault();
@@ -307,7 +307,7 @@ $("body").bind("keydown", function(e) {
   return e;
 });
 
-$("body").bind("keypress", function(e) {
+$("body").bind("keypress", function (e) {
   e.preventDefault();
   keyboard.key(e.charCode);
   return false;

@@ -92,7 +92,8 @@ var getItemsBy = (name, flex) => {
       };
     })
     .filter(q => {
-      if (pname.length === 1) if (q.name.indexOf(pname[0]) === 0) return true;
+      if (pname.length === 1)
+        if (q.name.indexOf(pname[0]) === 0) return true;
       if (pname.length === 2)
         if (q.adj.indexOf(pname[0]) === 0 && q.name.indexOf(pname[1]) === 0)
           return true;
@@ -122,8 +123,8 @@ var filterItemsBy = (is, flt) => {
     var cratesHere = items
       .filter(
         q =>
-          (game.items[q.id] === "*" || game.items[q.id] === game.where) &&
-          q.isCrate()
+        (game.items[q.id] === "*" || game.items[q.id] === game.where) &&
+        q.isCrate()
       )
       .map(q => q.id);
 
@@ -479,6 +480,9 @@ var gameObject = {
   musicPlay(id) {
     music.fadeTo(id);
   },
+  musicPlayList(id) {
+    music.fadeToList(id);
+  },
   videoPlay(id) {
     video.play(id);
   },
@@ -497,12 +501,16 @@ var gameObject = {
 var timers = require("./timer.js");
 
 var gameSave = () => {
-  var out = { ...game };
+  var out = {
+    ...game
+  };
   delete out.room;
   out.vars = gameObject.vars.save();
   out.timers = timers.save();
   //steptickers
-  out.stepTickers = { ...stepTickers };
+  out.stepTickers = {
+    ...stepTickers
+  };
   out.timestamp = new Date().getTime();
   return out;
 };
@@ -510,7 +518,9 @@ var gameLoad = d => {
   game.items = d.items;
   game.itemAttrs = d.itemAttrs;
   game.rooms = d.rooms;
-  stepTickers = { ...d.stepTickers };
+  stepTickers = {
+    ...d.stepTickers
+  };
   gameObject.vars.load(d.vars);
   timers.load(d.timers);
   game.where = d.where;
