@@ -566,4 +566,17 @@ window.gameLoad = id => {
   gameLoad(ls[id - 1]);
 };
 
+window.gameList = () => {
+  var gid = strings.GID;
+  if (!window.localStorage[gid]) {
+    return null;
+  }
+  var ls = JSON.parse(
+    LZString.decompressFromUTF16(window.localStorage.getItem(gid))
+  );
+  var list = ls.map((q, idx) => !q ? (idx + ". - - - P R Á Z D N É - - -") : (idx + ". " + new Date(q.timestamp).toLocaleString()) + " " + q.remark)
+  //console.log(list)
+};
+
+
 module.exports = gameObject;
