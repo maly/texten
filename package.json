@@ -2,11 +2,10 @@
   "name": "texten",
   "version": "1.0.0",
   "description": "",
-  "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "parcel index.html",
-    "build": "parcel build index.html -d docs/gordon --public-url /gordon/ --no-source-maps"
+    "build": "parcel build index.html --dist-dir docs/gordon --public-url /gordon/ --no-source-maps --no-optimize"
   },
   "repository": {
     "type": "git",
@@ -33,6 +32,7 @@
     "js": "^0.1.0",
     "lz-string": "^1.4.4",
     "md5": "^2.2.1",
+    "parcel": "^2.7.0",
     "parcel-bundler": "^1.12.5",
     "popper.js": "^1.15.0"
   },

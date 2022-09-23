@@ -1,0 +1,66 @@
+.masthead {
+  height: 100vh;
+  min-height: 500px;
+  background-image: url("farm.79652130.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.masthead div.container {
+  display: none;
+}
+
+#display {
+  height: 400px;
+}
+
+#hologram {
+  font-family: hologramregular;
+}
+
+#introscreen h1 {
+  color: #c00;
+  text-shadow: 5px 5px 25px #a00;
+  font-family: Raleway, sans-serif;
+  font-size: 5vw;
+  font-weight: bold;
+}
+
+#introscreen p {
+  text-shadow: 1px 1px 2px #000;
+  font-family: Raleway, sans-serif;
+  font-size: 1.6vw;
+  font-weight: regular;
+  color: #fee;
+}
+
+#introscreen p small {
+  font-size: 1vw;
+}
+
+#canvas {
+  background-color: #000000b3;
+}
+
+.myVideo {
+  min-width: 100%;
+  min-height: 100%;
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+
+.mysound {
+  opacity: .5;
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+
+#music1 {
+  display: block;
+}
+
