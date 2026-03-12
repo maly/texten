@@ -489,7 +489,7 @@ keyboard.onSubmit((input) => {
   // Atmosphere every few actions
   atmosphereTick()
 
-  handler({ params, trimmed })
+  handler({ params: params.flat(), trimmed })
 })
 
 keyboard.onRecall((text) => {
