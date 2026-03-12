@@ -302,6 +302,10 @@ $("body").bind("keydown", function (e) {
     e.preventDefault();
     keyboard.key(7);
     return e;
+  } else if (e.keyCode == 13) {
+    e.preventDefault();
+    keyboard.key(13);
+    return e;
   }
 
   return e;
