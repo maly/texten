@@ -144,7 +144,7 @@ const HANDLERS = {
     if (exit.to === "dum" && state.items["klic"]?.location !== "*") {
       p("Dveře jsou zamčené. Potřebuješ klíč.", "red"); return
     }
-    state = movePlayer(state, gameData, exit.to)
+    state = movePlayer(state, exit.to)
     // Reveal hidden exit to house if player has map
     if (exit.to === "dvur" || state.where === "dvur") {
       if (state.items["mapa"]?.location === "*") {
