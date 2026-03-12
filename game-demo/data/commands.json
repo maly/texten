@@ -15,14 +15,14 @@
   },
   {
     "id": "vezmi",
-    "patterns": ["vezmi %1", "seber %1", "zvedni %1", "chyť %1"],
+    "patterns": ["vezmi %", "seber %", "zvedni %", "chyť %"],
     "notHereMsg": "Žádný takový předmět tady není.",
     "notCarriedMsg": "",
     "unknownMsg": "Co chceš vzít?"
   },
   {
     "id": "poloz",
-    "patterns": ["polož $1", "odlož $1", "nech $1", "dej dolů $1"],
+    "patterns": ["polož $", "odlož $", "nech $", "dej dolů $"],
     "notHereMsg": "",
     "notCarriedMsg": "To u sebe nemáš.",
     "unknownMsg": "Co chceš položit?"
@@ -30,11 +30,11 @@
   {
     "id": "prozkoumej",
     "patterns": [
-      "prozkoumej @1",
-      "podívej se na @1",
-      "prohlédni @1",
-      "pohlédni na @1",
-      "co je @1"
+      "prozkoumej #",
+      "podívej se na #",
+      "prohlédni #",
+      "pohlédni na #",
+      "co je #"
     ],
     "notHereMsg": "Žádný takový předmět tady není.",
     "notCarriedMsg": "",
@@ -62,28 +62,28 @@
   },
   {
     "id": "otevri",
-    "patterns": ["otevři @1", "prohledej @1", "odkryj @1"],
+    "patterns": ["otevři @", "prohledej @", "odkryj @"],
     "notHereMsg": "Žádný takový předmět tady není.",
     "notCarriedMsg": "",
     "unknownMsg": "Co chceš otevřít?"
   },
   {
     "id": "vezmi_z",
-    "patterns": ["vezmi &1", "vytáhni &1", "sáhni pro &1"],
+    "patterns": ["vezmi &", "vytáhni &", "sáhni pro &"],
     "notHereMsg": "Nic takového v bedně není.",
     "notCarriedMsg": "",
     "unknownMsg": "Co chceš vytáhnout z bedny?"
   },
   {
     "id": "dej",
-    "patterns": ["dej $1 *", "předej $1 *", "odevzdej $1 *"],
+    "patterns": ["dej $ *", "předej $ *", "odevzdej $ *"],
     "notHereMsg": "Tady nikdo takový není.",
     "notCarriedMsg": "To u sebe nemáš.",
     "unknownMsg": "Komu chceš co dát?"
   },
   {
     "id": "pouzij",
-    "patterns": ["použij $1", "použij $1 na @2", "otevři $1 na @2"],
+    "patterns": ["použij $", "použij $ na @", "otevři $ na @"],
     "notHereMsg": "Žádný takový předmět tady není.",
     "notCarriedMsg": "To u sebe nemáš.",
     "unknownMsg": "Co chceš použít?"

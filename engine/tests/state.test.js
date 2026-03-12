@@ -126,11 +126,13 @@ describe("createState()", () => {
     expect(state.items["car"]).toBe("garage")
   })
 
-  it("all items get shadow attr added", () => {
+  it("room items get shadow attr; inventory and crate items do not", () => {
     const state = createState(makeGameData())
-    expect(state.itemAttrs["knife"]).toContain("shadow")
-    expect(state.itemAttrs["table"]).toContain("shadow")
-    expect(state.itemAttrs["key"]).toContain("shadow")
+    expect(state.itemAttrs["knife"]).toContain("shadow")       // in kitchen → shadow
+    expect(state.itemAttrs["table"]).toContain("shadow")       // in kitchen → shadow
+    expect(state.itemAttrs["car"]).toContain("shadow")         // in garage → shadow
+    expect(state.itemAttrs["key"]).not.toContain("shadow")     // in * (inventory) → no shadow
+    expect(state.itemAttrs["screwdriver"]).not.toContain("shadow") // in box (crate) → no shadow
   })
 
   it("original item attrs preserved alongside shadow", () => {
@@ -328,10 +330,11 @@ describe("movePlayer()", () => {
     expect(hasAttr(newState, "car", "shadow")).toBe(true) // car is in garage
   })
 
-  it("inventory items keep shadow on move (shadow removed separately)", () => {
+  it("inventory items never get shadow (no shadow to remove)", () => {
     const state = createState(makeGameData())
+    expect(hasAttr(state, "key", "shadow")).toBe(false) // key in * → no shadow from start
     const newState = movePlayer(state, "kitchen")
-    expect(hasAttr(newState, "key", "shadow")).toBe(true) // key (*) unaffected
+    expect(hasAttr(newState, "key", "shadow")).toBe(false) // still no shadow after move
   })
 
   it("returns new state (original where unchanged)", () => {

@@ -37,7 +37,14 @@ export const createState = (gameData) => {
       gameData.items.map((i) => [i.id, i.location ?? ""])
     ),
     itemAttrs: Object.fromEntries(
-      gameData.items.map((i) => [i.id, [...(i.attrs ?? []), "shadow"]])
+      gameData.items.map((i) => {
+        const attrs = [...(i.attrs ?? [])]
+        // Add shadow to room items only; crate contents and inventory items
+        // are already hidden by their container or not in any room.
+        const crateIds = new Set(gameData.items.filter((c) => c.attrs?.includes("crate")).map((c) => c.id))
+        if (i.location !== "*" && !crateIds.has(i.location)) attrs.push("shadow")
+        return [i.id, attrs]
+      })
     ),
     rooms: Object.fromEntries(
       gameData.rooms.map((r) => [r.id, { looked: false }])

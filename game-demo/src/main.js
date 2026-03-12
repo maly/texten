@@ -267,7 +267,8 @@ const HANDLERS = {
     if (getNpcLocation(npcState, npcDef.id) !== state.where) {
       p("Tady nikdo takový není.", "red"); return
     }
-    state = takeItem(state, itemParam.itemId)
+    // Remove from player inventory (location → npc id, not "*")
+    state = { ...state, items: { ...state.items, [itemParam.itemId]: npcDef.id } }
     npcState = giveItemToNpc(npcState, npcDef.id, itemParam.itemId)
     const itemName = nom(item(itemParam.itemId)?.name) || itemParam.itemId
 
