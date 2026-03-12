@@ -4,6 +4,7 @@
 //   NPC (schedule/dialog/inventory/mood), timer, save/load
 
 import { createDisplay }    from "../../engine/src/display.js"
+import { noDia }            from "../../engine/src/language.js"
 import { createKeyboard }   from "../../engine/src/keyboard.js"
 import { createFSM }        from "../../engine/src/fsm.js"
 import { createTimerSystem } from "../../engine/src/timer.js"
@@ -206,11 +207,13 @@ const HANDLERS = {
   },
 
   mluv({ params }) {
-    // #N params: NPCs or items near player
-    const nearItems = params.filter((p) => p.type === "item")
-    if (nearItems.length === 0) { p("S kým chceš mluvit?", "red"); return }
-    const npcId = nearItems[0].id
-    const npcDef = npc(npcId)
+    // * param: raw string — match against NPC names
+    const raw = params.find((p) => p.type === "string")
+    if (!raw) { p("S kým chceš mluvit?", "red"); return }
+    const input = noDia(raw.value.toLowerCase())
+    const npcDef = gameData.npcs.find((n) => noDia(n.name.toLowerCase()).startsWith(input.split(/\s+/).pop()))
+    if (!npcDef) { p("Nikoho takového tady nevidím.", "red"); return }
+    const npcId = npcDef.id
     if (!npcDef || !npcDef.dialogs || Object.keys(npcDef.dialogs).length === 0) {
       p("Tato postava s tebou nechce mluvit.", "red"); return
     }

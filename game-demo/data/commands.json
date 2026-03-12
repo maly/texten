@@ -50,11 +50,11 @@
   {
     "id": "mluv",
     "patterns": [
-      "mluv s #1",
-      "hovor s #1",
-      "promluv s #1",
-      "osloví #1",
-      "řekni #1"
+      "mluv s *",
+      "hovor s *",
+      "promluv s *",
+      "osloví *",
+      "řekni *"
     ],
     "notHereMsg": "Tady nikdo takový není.",
     "notCarriedMsg": "",
