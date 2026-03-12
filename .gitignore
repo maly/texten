@@ -2,3 +2,5 @@ node_modules
 dist
 .cacheeditor/dist
 editor/node_modules
+game-demo/dist
+game-demo/node_modules

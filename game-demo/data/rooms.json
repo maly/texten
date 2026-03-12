@@ -1,0 +1,97 @@
+[
+  {
+    "id": "dvur",
+    "title": "Dvůr",
+    "desc": "Sluncem zalitý dvůr před farmou. Na jihu stojí stodola, na severu je zahrada. Dveře do domu jsou na západě.",
+    "ext": "Dorazil jsi na farmu Gordona Freemana. Vzduch voní senem a čerstvou zemí. Tohle je dvůr — centrum celé farmy. Rozhlédni se pořádně.",
+    "exits": [
+      { "label": "do stodoly", "to": "stodola" },
+      { "label": "do zahrady", "to": "zahrada" },
+      { "label": "do domu", "to": "dum", "hidden": true }
+    ],
+    "attrs": ["start"],
+    "atmosphere": {
+      "type": "shuffle",
+      "density": 3,
+      "strings": [
+        "Kohout někde zakokrhá.",
+        "Vítr šumí v korunách stromů.",
+        "Slyšíš vzdálené bučení.",
+        "Vrabci hopsají po zemi.",
+        "Oblak přejede přes slunce — chvíli je stín."
+      ]
+    }
+  },
+  {
+    "id": "stodola",
+    "title": "Stodola",
+    "desc": "Prostorná stodola plná sena. V rohu stojí velká dřevěná bedna. Východ na dvůr, na severu vedou vrata na pole.",
+    "ext": "",
+    "exits": [
+      { "label": "na dvůr", "to": "dvur" },
+      { "label": "na pole", "to": "pole" }
+    ],
+    "attrs": [],
+    "atmosphere": {
+      "type": "shuffle",
+      "density": 5,
+      "strings": [
+        "Voní to senem a starým dřevem.",
+        "Kdesi šustí myš.",
+        "Trám skřípe pod tíhou střechy.",
+        "Světlo proniká skulinami ve stěnách."
+      ]
+    }
+  },
+  {
+    "id": "zahrada",
+    "title": "Zahrada",
+    "desc": "Zarostlá zahrada se starým jabloňovým sadem. Červená jablka se lesknou na slunci. Cesta vede zpět na dvůr.",
+    "ext": "",
+    "exits": [
+      { "label": "na dvůr", "to": "dvur" }
+    ],
+    "attrs": [],
+    "atmosphere": {
+      "type": "shuffle",
+      "density": 4,
+      "strings": [
+        "Bzučí včely.",
+        "Padá jablko ze stromu — ne to tvoje.",
+        "Vítr prohýbá větve jabloní.",
+        "Motýl sedí na plotu."
+      ]
+    }
+  },
+  {
+    "id": "pole",
+    "title": "Pole",
+    "desc": "Rozsáhlé obilné pole za stodolou. Klasy se vlní ve větru. Cesta vede zpět do stodoly.",
+    "ext": "",
+    "exits": [
+      { "label": "do stodoly", "to": "stodola" }
+    ],
+    "attrs": [],
+    "atmosphere": {
+      "type": "shuffle",
+      "density": 6,
+      "strings": [
+        "Vítr přehání oblak.",
+        "Vrána přelétá nad polem.",
+        "Klasy šumí.",
+        "Slunce praží."
+      ]
+    }
+  },
+  {
+    "id": "dum",
+    "title": "Dům",
+    "desc": "Útulný farmářský dům. Na stole leží stará lampa. Dveře vedou zpět na dvůr.",
+    "ext": "Dveře se otevřely. Uvnitř je příjemný chlad a ticho.",
+    "exits": [
+      { "label": "na dvůr", "to": "dvur" }
+    ],
+    "attrs": ["dark"],
+    "atmosphere": null
+  }
+]

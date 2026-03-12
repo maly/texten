@@ -1,0 +1,75 @@
+[
+  {
+    "id": "gordon",
+    "name": "Gordon",
+    "desc": "Vysoký farmář s pracovitýma rukama. Vypadá přátelsky.",
+    "location": "stodola",
+    "state": "friendly",
+    "inventory": ["dopis"],
+    "schedule": [
+      { "tick": 0,  "location": "stodola" },
+      { "tick": 5,  "location": "pole" },
+      { "tick": 10, "location": "stodola" }
+    ],
+    "dialogs": {
+      "start": {
+        "text": "Ahoj, cizinče! Co tě sem přivádí?",
+        "choices": [
+          { "text": "Hledám práci na farmě.", "next": "prace" },
+          { "text": "Jen se procházím.", "next": "prochazka" },
+          { "text": "Máš pro mě něco?", "next": "dar" },
+          { "text": "Nashledanou.", "next": null }
+        ]
+      },
+      "prace": {
+        "text": "Práce je tady vždycky dost! Nejdřív by sis ale měl prohlédnout farmu. A nezapomeň na bednu ve stodole — tam máme osivo.",
+        "choices": [
+          { "text": "Dobře, podívám se.", "next": "rada" },
+          { "text": "A co dům?", "next": "dum" }
+        ]
+      },
+      "prochazka": {
+        "text": "Jasně, rozhlédni se. Zahrada je krásná teď na jaře. Ale pozor — dům je zavřený na klíč.",
+        "choices": [
+          { "text": "Kde je klíč?", "next": "klic" },
+          { "text": "Díky, jdu se podívat.", "next": null }
+        ]
+      },
+      "dar": {
+        "text": "Hm, nemám nic... ledaže bys mi přinesl jedno z těch červených jablek ze zahrady. Za to bych ti dal dopis.",
+        "choices": [
+          { "text": "Dobře, přinesu ti jablko.", "next": null },
+          { "text": "To mě nezajímá.", "next": null }
+        ]
+      },
+      "klic": {
+        "text": "Klíč jsem odložil někde na dvoře. Určitě ho najdeš, jen se dobře podívej.",
+        "choices": [
+          { "text": "Díky za tip.", "next": null }
+        ]
+      },
+      "dum": {
+        "text": "Dům je skrytý — dveře jsou zamaskované jako zeď. Potřebuješ klíč a vědět, kde hledat.",
+        "choices": [
+          { "text": "Zajímavé...", "next": "rada" }
+        ]
+      },
+      "rada": {
+        "text": "Ještě jedna rada: na mapě jsou zaznačena všechna místa. Mrkni na ni.",
+        "choices": [
+          { "text": "Díky, Gordone.", "next": "konec" }
+        ]
+      },
+      "daroval": {
+        "text": "Jablko! Výborně, přesně takové jsem chtěl. Tady máš ten dopis — přišel pro tebe.",
+        "choices": [
+          { "text": "Díky moc!", "next": null }
+        ]
+      },
+      "konec": {
+        "text": "Hodně štěstí na farmě!",
+        "choices": []
+      }
+    }
+  }
+]

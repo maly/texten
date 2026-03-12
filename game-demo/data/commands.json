@@ -1,0 +1,112 @@
+[
+  {
+    "id": "pohled",
+    "patterns": ["pohleď", "rozhlédni se", "kde jsem", "r"],
+    "notHereMsg": "",
+    "notCarriedMsg": "",
+    "unknownMsg": ""
+  },
+  {
+    "id": "jdi",
+    "patterns": ["jdi ^", "choď ^", "vejdi ^", "jděme ^", "běž ^"],
+    "notHereMsg": "Tudy se nedá jít.",
+    "notCarriedMsg": "",
+    "unknownMsg": "Kam chceš jít?"
+  },
+  {
+    "id": "vezmi",
+    "patterns": ["vezmi %1", "seber %1", "zvedni %1", "chyť %1"],
+    "notHereMsg": "Žádný takový předmět tady není.",
+    "notCarriedMsg": "",
+    "unknownMsg": "Co chceš vzít?"
+  },
+  {
+    "id": "poloz",
+    "patterns": ["polož $1", "odlož $1", "nech $1", "dej dolů $1"],
+    "notHereMsg": "",
+    "notCarriedMsg": "To u sebe nemáš.",
+    "unknownMsg": "Co chceš položit?"
+  },
+  {
+    "id": "prozkoumej",
+    "patterns": [
+      "prozkoumej @1",
+      "podívej se na @1",
+      "prohlédni @1",
+      "pohlédni na @1",
+      "co je @1"
+    ],
+    "notHereMsg": "Žádný takový předmět tady není.",
+    "notCarriedMsg": "",
+    "unknownMsg": "Co chceš prozkoumat?"
+  },
+  {
+    "id": "inventar",
+    "patterns": ["inventář", "i", "co mám", "kapsy"],
+    "notHereMsg": "",
+    "notCarriedMsg": "",
+    "unknownMsg": ""
+  },
+  {
+    "id": "mluv",
+    "patterns": [
+      "mluv s #1",
+      "hovor s #1",
+      "promluv s #1",
+      "osloví #1",
+      "řekni #1"
+    ],
+    "notHereMsg": "Tady nikdo takový není.",
+    "notCarriedMsg": "",
+    "unknownMsg": "S kým chceš mluvit?"
+  },
+  {
+    "id": "otevri",
+    "patterns": ["otevři @1", "prohledej @1", "odkryj @1"],
+    "notHereMsg": "Žádný takový předmět tady není.",
+    "notCarriedMsg": "",
+    "unknownMsg": "Co chceš otevřít?"
+  },
+  {
+    "id": "vezmi_z",
+    "patterns": ["vezmi &1", "vytáhni &1", "sáhni pro &1"],
+    "notHereMsg": "Nic takového v bedně není.",
+    "notCarriedMsg": "",
+    "unknownMsg": "Co chceš vytáhnout z bedny?"
+  },
+  {
+    "id": "dej",
+    "patterns": ["dej $1 #2", "předej $1 #2", "odevzdej $1 #2"],
+    "notHereMsg": "Tady nikdo takový není.",
+    "notCarriedMsg": "To u sebe nemáš.",
+    "unknownMsg": "Komu chceš co dát?"
+  },
+  {
+    "id": "pouzij",
+    "patterns": ["použij $1", "použij $1 na @2", "otevři $1 na @2"],
+    "notHereMsg": "Žádný takový předmět tady není.",
+    "notCarriedMsg": "To u sebe nemáš.",
+    "unknownMsg": "Co chceš použít?"
+  },
+  {
+    "id": "uloz",
+    "patterns": ["ulož *", "uložit *", "save *"],
+    "notHereMsg": "",
+    "notCarriedMsg": "",
+    "unknownMsg": "Uložit do slotu (1-9)?"
+  },
+  {
+    "id": "nacti",
+    "patterns": ["načti *", "načíst *", "load *"],
+    "notHereMsg": "",
+    "notCarriedMsg": "",
+    "unknownMsg": "Načíst ze slotu (1-9)?"
+  },
+  {
+    "id": "napoveda",
+    "patterns": ["nápověda", "pomoc", "help", "?"],
+    "notHereMsg": "",
+    "notCarriedMsg": "",
+    "unknownMsg": ""
+  }
+]

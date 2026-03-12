@@ -1,0 +1,66 @@
+[
+  {
+    "id": "klic",
+    "name": "klíč-,e,i,,i,em",
+    "adj": null,
+    "desc": "Rezavý železný klíč. Vypadá jako od dveří domu.",
+    "attrs": ["movable", "shadow"],
+    "location": "dvur"
+  },
+  {
+    "id": "vidly",
+    "name": "vidle-,í,ím,e,ích,emi",
+    "adj": null,
+    "desc": "Dřevěné vidle se třemi hroty. Jsou opřené o zeď.",
+    "attrs": ["movable"],
+    "location": "stodola"
+  },
+  {
+    "id": "bedna",
+    "name": "bedn-a,y,ě,u,ě,ou",
+    "adj": null,
+    "desc": "Masivní dřevěná bedna s víkem. Určitě je v ní něco uvnitř.",
+    "attrs": ["nonmovable", "crate"],
+    "location": "stodola"
+  },
+  {
+    "id": "semena",
+    "name": "semíšk-o,a,u,o,u,em",
+    "adj": null,
+    "desc": "Malý sáček osiva. Gordon ho asi bude potřebovat.",
+    "attrs": ["movable"],
+    "location": "bedna"
+  },
+  {
+    "id": "jablko",
+    "name": "jablk-o,a,u,o,u,em",
+    "adj": "červen-é,ého,ému,é,ém,ým",
+    "desc": "Velké červené jablko, čerstvě utrhnuté ze stromu. Voní skvěle.",
+    "attrs": ["movable"],
+    "location": "zahrada"
+  },
+  {
+    "id": "lampa",
+    "name": "lamp-a,y,ě,u,ě,ou",
+    "adj": null,
+    "desc": "Stará petrolejová lampa. Bude se hodit v temných místech.",
+    "attrs": ["movable"],
+    "location": "dum"
+  },
+  {
+    "id": "dopis",
+    "name": "dopis-,u,u,,u,em",
+    "adj": null,
+    "desc": "Zapečetěný dopis. Na obálce stojí: 'Pro přítele od Gordona.'",
+    "attrs": ["movable"],
+    "location": null
+  },
+  {
+    "id": "mapa",
+    "name": "map-a,y,ě,u,ě,ou",
+    "adj": null,
+    "desc": "Ručně kreslená mapa farmy. Jsou na ní zaznačeny všechny místnosti — i dům se skrytou cestou.",
+    "attrs": ["movable"],
+    "location": "*"
+  }
+]
