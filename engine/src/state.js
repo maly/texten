@@ -206,7 +206,7 @@ export const getExitsMatching = (gameData, state, labelInput) => {
 
   return room.exits
     .filter((exit) => {
-      if (exit.hidden) return false
+      if (exit.hidden && !state._revealedExits?.[state.where + ":" + exit.to]) return false
       const labelNoDia = noDia((exit.label ?? "").toLowerCase())
       return labelNoDia.includes(inputNoDia)
     })

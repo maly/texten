@@ -4,7 +4,7 @@
 //   NPC (schedule/dialog/inventory/mood), timer, save/load
 
 import { createDisplay }    from "../../engine/src/display.js"
-import { noDia }            from "../../engine/src/language.js"
+import { noDia, flex }      from "../../engine/src/language.js"
 import { createKeyboard }   from "../../engine/src/keyboard.js"
 import { createFSM }        from "../../engine/src/fsm.js"
 import { createTimerSystem } from "../../engine/src/timer.js"
@@ -55,6 +55,7 @@ const npc  = (id) => gameData.npcs.find((n) => n.id === id)
 
 const p = (text, color) => display.printLine(text, color)
 const pt = (text, color) => display.printText(text, color)
+const nom = (flexStr) => flexStr ? flex(flexStr)[0] : ""
 
 function currentRoom() {
   return room(state.where)
@@ -87,8 +88,8 @@ function describeRoom() {
   if (visibleItems.length > 0) {
     p("")
     for (const it of visibleItems) {
-      const adjForm = it.adj ? `${it.adj.split("-")[0]} ` : ""
-      const nomForm = it.name.split("-")[0]
+      const adjForm = it.adj ? `${nom(it.adj)} ` : ""
+      const nomForm = nom(it.name)
       p(`Vidíš: ${adjForm}${nomForm}.`, "green")
     }
   }
@@ -116,8 +117,7 @@ function describeInventory() {
   } else {
     p("U sebe máš:")
     for (const it of carried) {
-      const nom = it.name.split("-")[0]
-      p(`  · ${nom}`)
+      p(`  · ${nom(it.name)}`)
     }
   }
 }
@@ -160,8 +160,8 @@ const HANDLERS = {
     if (movable.length === 0) { p("Co chceš vzít?", "red"); return }
     const target = movable[0]
     state = takeItem(state, target.itemId)
-    const nom = item(target.itemId)?.name.split("-")[0] ?? target.itemId
-    p(`Vzal jsi: ${nom}.`, "green")
+    const itemName = nom(item(target.itemId)?.name) || target.itemId
+    p(`Vzal jsi: ${itemName}.`, "green")
 
     // Timer demo: after picking up apple, 3 ticks later print aroma message
     if (target.itemId === "jablko") {
@@ -181,8 +181,8 @@ const HANDLERS = {
     if (carried.length === 0) { p("Co chceš položit?", "red"); return }
     const target = carried[0]
     state = dropItem(state, target.itemId)
-    const nom = item(target.itemId)?.name.split("-")[0] ?? target.itemId
-    p(`Položil jsi: ${nom}.`)
+    const itemName = nom(item(target.itemId)?.name) || target.itemId
+    p(`Položil jsi: ${itemName}.`)
   },
 
   prozkoumej({ params }) {
@@ -195,7 +195,7 @@ const HANDLERS = {
     if (def.attrs.includes("crate")) {
       const inside = gameData.items.filter((i) => state.items[i.id] === def.id)
       if (inside.length > 0) {
-        p(`Uvnitř vidíš: ${inside.map((i) => i.name.split("-")[0]).join(", ")}.`, "green")
+        p(`Uvnitř vidíš: ${inside.map((i) => nom(i.name)).join(", ")}.`, "green")
       } else {
         p("Uvnitř je prázdno.")
       }
@@ -244,7 +244,7 @@ const HANDLERS = {
       p("Bedna je prázdná.")
     } else {
       p("Otevřel jsi bednu. Uvnitř je:")
-      for (const i of inside) p(`  · ${i.name.split("-")[0]}`, "green")
+      for (const i of inside) p(`  · ${nom(i.name)}`, "green")
     }
   },
 
@@ -253,8 +253,8 @@ const HANDLERS = {
     if (cratedItems.length === 0) { p("Co chceš vytáhnout?", "red"); return }
     const target = cratedItems[0]
     state = takeItem(state, target.itemId)
-    const nom = item(target.itemId)?.name.split("-")[0] ?? target.itemId
-    p(`Vytáhl jsi z bedny: ${nom}.`, "green")
+    const itemName = nom(item(target.itemId)?.name) || target.itemId
+    p(`Vytáhl jsi z bedny: ${itemName}.`, "green")
   },
 
   dej({ params }) {
@@ -266,7 +266,7 @@ const HANDLERS = {
     }
     state = takeItem(state, itemParam.itemId)
     npcState = giveItemToNpc(npcState, npcParam.itemId, itemParam.itemId)
-    const nom = item(itemParam.itemId)?.name.split("-")[0] ?? itemParam.itemId
+    const itemName = nom(item(itemParam.itemId)?.name) || itemParam.itemId
 
     // Special: give apple to Gordon → mood change, get letter
     if (npcParam.itemId === "gordon" && itemParam.itemId === "jablko") {
@@ -274,7 +274,7 @@ const HANDLERS = {
       if (npcHasItem(npcState, "gordon", "dopis")) {
         npcState = takeItemFromNpc(npcState, "gordon", "dopis")
         state = { ...state, items: { ...state.items, dopis: "*" } }
-        p(`Předal jsi ${nom} Gordonovi.`, "green")
+        p(`Předal jsi ${itemName} Gordonovi.`, "green")
         p("Gordon se usmívá. \"Přesně takové jsem chtěl! Tady máš ten dopis.\"", "cyan")
         p("Dostal jsi: dopis.", "yellow")
         // Switch to special dialog
@@ -285,7 +285,7 @@ const HANDLERS = {
         return
       }
     }
-    p(`Předal jsi ${nom}.`, "green")
+    p(`Předal jsi ${itemName}.`, "green")
   },
 
   pouzij({ params }) {
