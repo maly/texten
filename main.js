@@ -293,7 +293,7 @@ $(window).bind("load", function () {
 
 //-----
 $("body").bind("keydown", function (e) {
-  //console.log("KD", e.keyCode);
+  console.log("KD keyCode=" + e.keyCode + " key=" + e.key);
   if (e.keyCode == 8) {
     e.preventDefault();
     keyboard.key(8);
@@ -303,6 +303,11 @@ $("body").bind("keydown", function (e) {
     keyboard.key(7);
     return e;
   } else if (e.keyCode == 13) {
+    e.preventDefault();
+    keyboard.key(13);
+    return e;
+  } else if (e.keyCode == 32 && keyboard.isBufferEmpty()) {
+    // Space jako Enter jen kdyz uzivatel nic nepsal
     e.preventDefault();
     keyboard.key(13);
     return e;

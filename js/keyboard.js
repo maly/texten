@@ -60,5 +60,8 @@ module.exports = {
     window.doOutput = d;
   },
   waitForLine,
-  wasEnterPressed
+  wasEnterPressed,
+  isBufferEmpty() {
+    return eline.length <= 2;
+  }
 };
