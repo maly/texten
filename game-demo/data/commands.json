@@ -76,7 +76,7 @@
   },
   {
     "id": "dej",
-    "patterns": ["dej $1 #2", "předej $1 #2", "odevzdej $1 #2"],
+    "patterns": ["dej $1 *", "předej $1 *", "odevzdej $1 *"],
     "notHereMsg": "Tady nikdo takový není.",
     "notCarriedMsg": "To u sebe nemáš.",
     "unknownMsg": "Komu chceš co dát?"

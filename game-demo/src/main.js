@@ -258,18 +258,21 @@ const HANDLERS = {
   },
 
   dej({ params }) {
-    const itemParam = params.filter((p) => p.type === "item" && state.items[p.itemId] === "*")[0]
-    const npcParam  = params.filter((p) => p.type === "item" && npc(p.itemId))[0]
-    if (!itemParam || !npcParam) { p("Komu chceš co dát?", "red"); return }
-    if (getNpcLocation(npcState, npcParam.itemId) !== state.where) {
+    const itemParam = params.find((p) => p.type === "item" && state.items[p.itemId] === "*")
+    const raw       = params.find((p) => p.type === "string")
+    if (!itemParam || !raw) { p("Komu chceš co dát?", "red"); return }
+    const npcInput = noDia(raw.value.toLowerCase()).split(/\s+/).pop()
+    const npcDef = gameData.npcs.find((n) => noDia(n.name.toLowerCase()).startsWith(npcInput))
+    if (!npcDef) { p("Nikoho takového tady nevidím.", "red"); return }
+    if (getNpcLocation(npcState, npcDef.id) !== state.where) {
       p("Tady nikdo takový není.", "red"); return
     }
     state = takeItem(state, itemParam.itemId)
-    npcState = giveItemToNpc(npcState, npcParam.itemId, itemParam.itemId)
+    npcState = giveItemToNpc(npcState, npcDef.id, itemParam.itemId)
     const itemName = nom(item(itemParam.itemId)?.name) || itemParam.itemId
 
     // Special: give apple to Gordon → mood change, get letter
-    if (npcParam.itemId === "gordon" && itemParam.itemId === "jablko") {
+    if (npcDef.id === "gordon" && itemParam.itemId === "jablko") {
       npcState = setNpcMood(npcState, "gordon", "happy")
       if (npcHasItem(npcState, "gordon", "dopis")) {
         npcState = takeItemFromNpc(npcState, "gordon", "dopis")
@@ -277,7 +280,6 @@ const HANDLERS = {
         p(`Předal jsi ${itemName} Gordonovi.`, "green")
         p("Gordon se usmívá. \"Přesně takové jsem chtěl! Tady máš ten dopis.\"", "cyan")
         p("Dostal jsi: dopis.", "yellow")
-        // Switch to special dialog
         dialogSession = startDialogSession(npc("gordon"), "daroval")
         dialogNpc = npc("gordon")
         fsm.transition("dialog")
@@ -285,7 +287,7 @@ const HANDLERS = {
         return
       }
     }
-    p(`Předal jsi ${itemName}.`, "green")
+    p(`Předal jsi ${itemName} ${npcDef.name}.`, "green")
   },
 
   pouzij({ params }) {
