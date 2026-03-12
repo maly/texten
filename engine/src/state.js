@@ -90,6 +90,10 @@ export const removeAttr = (state, itemId, attr) => {
 export const takeItem = (state, itemId) => ({
   ...state,
   items: { ...state.items, [itemId]: "*" },
+  itemAttrs: {
+    ...state.itemAttrs,
+    [itemId]: (state.itemAttrs[itemId] ?? []).filter((a) => a !== "shadow"),
+  },
 })
 
 export const dropItem = (state, itemId) => ({

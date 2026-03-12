@@ -144,6 +144,29 @@ describe("predmety", () => {
   })
 })
 
+// ─── Prozkoumej ──────────────────────────────────────────────────────────────
+
+describe("prozkoumej", () => {
+  it("prozkoumej klic v inventari", () => {
+    const game = createGame()
+    game.send("vezmi klíč")
+    game.send("prozkoumej klíč")
+    expect(game.hasOutput("Rezavý")).toBe(true)
+  })
+
+  it("prozkoumej dopis po obdrzeni od gordona", () => {
+    const game = createGame()
+    game.send("jdi do zahrady")
+    game.send("vezmi jablko")
+    game.send("jdi na dvur")
+    game.send("jdi do stodoly")
+    game.send("dej jablko gordon")
+    game.send("1") // ukončit dialog
+    game.send("prozkoumej dopis")
+    expect(game.hasOutput("Zapečetěný")).toBe(true)
+  })
+})
+
 // ─── Gordon a dialog ──────────────────────────────────────────────────────────
 
 describe("gordon", () => {

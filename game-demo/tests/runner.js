@@ -235,7 +235,7 @@ export function createGame() {
         npcState = setNpcMood(npcState, "gordon", "happy")
         if (npcHasItem(npcState, "gordon", "dopis")) {
           npcState = takeItemFromNpc(npcState, "gordon", "dopis")
-          state = { ...state, items: { ...state.items, dopis: "*" } }
+          state = takeItem(state, "dopis")
           p(`Předal jsi ${itemName} Gordonovi.`)
           p("Gordon se usmívá. \"Přesně takové jsem chtěl! Tady máš ten dopis.\"")
           p("Dostal jsi: dopis.")
