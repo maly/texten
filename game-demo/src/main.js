@@ -73,7 +73,7 @@ function describeRoom() {
 
   // Dark room warning
   if (hasAttr(state, r.id, "dark") || r.attrs?.includes("dark")) {
-    const hasLamp = state.items["lampa"]?.location === "*"
+    const hasLamp = state.items["lampa"] === "*"
     if (!hasLamp) {
       p("")
       p("Je tu tma. Potřebuješ lampu.", "red")
@@ -82,7 +82,7 @@ function describeRoom() {
 
   // Items visible here
   const visibleItems = gameData.items.filter(
-    (it) => isVisible(state, it.id) && state.items[it.id]?.location === state.where
+    (it) => isVisible(state, it.id) && state.items[it.id] === state.where
   )
   if (visibleItems.length > 0) {
     p("")
@@ -110,7 +110,7 @@ function describeRoom() {
 }
 
 function describeInventory() {
-  const carried = gameData.items.filter((it) => state.items[it.id]?.location === "*")
+  const carried = gameData.items.filter((it) => state.items[it.id] === "*")
   if (carried.length === 0) {
     p("Nic u sebe nemáš.")
   } else {
@@ -142,13 +142,13 @@ const HANDLERS = {
     if (exits.length === 0) { p("Kam chceš jít?", "red"); return }
     const exit = exits[0]
     // Key check: entering house requires key
-    if (exit.to === "dum" && state.items["klic"]?.location !== "*") {
+    if (exit.to === "dum" && state.items["klic"] !== "*") {
       p("Dveře jsou zamčené. Potřebuješ klíč.", "red"); return
     }
     state = movePlayer(state, exit.to)
     // Reveal hidden exit to house if player has map
     if (exit.to === "dvur" || state.where === "dvur") {
-      if (state.items["mapa"]?.location === "*") {
+      if (state.items["mapa"] === "*") {
         state = { ...state, _revealedExits: { ...state._revealedExits, "dvur:dum": true } }
       }
     }
@@ -159,18 +159,18 @@ const HANDLERS = {
     const movable = params.filter((p) => p.type === "item")
     if (movable.length === 0) { p("Co chceš vzít?", "red"); return }
     const target = movable[0]
-    state = takeItem(state, target.id)
-    const nom = item(target.id)?.name.split("-")[0] ?? target.id
+    state = takeItem(state, target.itemId)
+    const nom = item(target.itemId)?.name.split("-")[0] ?? target.itemId
     p(`Vzal jsi: ${nom}.`, "green")
 
     // Timer demo: after picking up apple, 3 ticks later print aroma message
-    if (target.id === "jablko") {
+    if (target.itemId === "jablko") {
       timers.add("jablko_aroma", 3, () => {
         p("Jablko v tašce stále voní — příjemná vůně jablek.", "dim")
       })
     }
     // Revealing house exit via map
-    if (target.id === "mapa") {
+    if (target.itemId === "mapa") {
       state = { ...state, _revealedExits: { ...state._revealedExits, "dvur:dum": true } }
       p("Mapa ukazuje skryté dveře do domu na dvoře!", "yellow")
     }
@@ -180,8 +180,8 @@ const HANDLERS = {
     const carried = params.filter((p) => p.type === "item")
     if (carried.length === 0) { p("Co chceš položit?", "red"); return }
     const target = carried[0]
-    state = dropItem(state, target.id)
-    const nom = item(target.id)?.name.split("-")[0] ?? target.id
+    state = dropItem(state, target.itemId)
+    const nom = item(target.itemId)?.name.split("-")[0] ?? target.itemId
     p(`Položil jsi: ${nom}.`)
   },
 
@@ -189,11 +189,11 @@ const HANDLERS = {
     const items = params.filter((p) => p.type === "item")
     if (items.length === 0) { p("Co chceš prozkoumat?", "red"); return }
     const target = items[0]
-    const def = item(target.id)
+    const def = item(target.itemId)
     if (!def) { p("Nic takového tady není.", "red"); return }
     pt(def.desc)
     if (def.attrs.includes("crate")) {
-      const inside = gameData.items.filter((i) => state.items[i.id]?.location === def.id)
+      const inside = gameData.items.filter((i) => state.items[i.id] === def.id)
       if (inside.length > 0) {
         p(`Uvnitř vidíš: ${inside.map((i) => i.name.split("-")[0]).join(", ")}.`, "green")
       } else {
@@ -235,11 +235,11 @@ const HANDLERS = {
     const items = params.filter((p) => p.type === "item")
     if (items.length === 0) { p("Co chceš otevřít?", "red"); return }
     const target = items[0]
-    const def = item(target.id)
+    const def = item(target.itemId)
     if (!def?.attrs.includes("crate")) {
       p("To nejde otevřít.", "red"); return
     }
-    const inside = gameData.items.filter((i) => state.items[i.id]?.location === def.id)
+    const inside = gameData.items.filter((i) => state.items[i.id] === def.id)
     if (inside.length === 0) {
       p("Bedna je prázdná.")
     } else {
@@ -252,28 +252,28 @@ const HANDLERS = {
     const cratedItems = params.filter((p) => p.type === "item")
     if (cratedItems.length === 0) { p("Co chceš vytáhnout?", "red"); return }
     const target = cratedItems[0]
-    state = takeItem(state, target.id)
-    const nom = item(target.id)?.name.split("-")[0] ?? target.id
+    state = takeItem(state, target.itemId)
+    const nom = item(target.itemId)?.name.split("-")[0] ?? target.itemId
     p(`Vytáhl jsi z bedny: ${nom}.`, "green")
   },
 
   dej({ params }) {
-    const itemParam = params.filter((p) => p.type === "item" && state.items[p.id]?.location === "*")[0]
-    const npcParam  = params.filter((p) => p.type === "item" && npc(p.id))[0]
+    const itemParam = params.filter((p) => p.type === "item" && state.items[p.itemId] === "*")[0]
+    const npcParam  = params.filter((p) => p.type === "item" && npc(p.itemId))[0]
     if (!itemParam || !npcParam) { p("Komu chceš co dát?", "red"); return }
-    if (getNpcLocation(npcState, npcParam.id) !== state.where) {
+    if (getNpcLocation(npcState, npcParam.itemId) !== state.where) {
       p("Tady nikdo takový není.", "red"); return
     }
-    state = takeItem(state, itemParam.id)
-    npcState = giveItemToNpc(npcState, npcParam.id, itemParam.id)
-    const nom = item(itemParam.id)?.name.split("-")[0] ?? itemParam.id
+    state = takeItem(state, itemParam.itemId)
+    npcState = giveItemToNpc(npcState, npcParam.itemId, itemParam.itemId)
+    const nom = item(itemParam.itemId)?.name.split("-")[0] ?? itemParam.itemId
 
     // Special: give apple to Gordon → mood change, get letter
-    if (npcParam.id === "gordon" && itemParam.id === "jablko") {
+    if (npcParam.itemId === "gordon" && itemParam.itemId === "jablko") {
       npcState = setNpcMood(npcState, "gordon", "happy")
       if (npcHasItem(npcState, "gordon", "dopis")) {
         npcState = takeItemFromNpc(npcState, "gordon", "dopis")
-        state = { ...state, items: { ...state.items, dopis: { location: "*" } } }
+        state = { ...state, items: { ...state.items, dopis: "*" } }
         p(`Předal jsi ${nom} Gordonovi.`, "green")
         p("Gordon se usmívá. \"Přesně takové jsem chtěl! Tady máš ten dopis.\"", "cyan")
         p("Dostal jsi: dopis.", "yellow")
@@ -289,10 +289,10 @@ const HANDLERS = {
   },
 
   pouzij({ params }) {
-    const carried = params.filter((p) => p.type === "item" && state.items[p.id]?.location === "*")[0]
+    const carried = params.filter((p) => p.type === "item" && state.items[p.itemId] === "*")[0]
     if (!carried) { p("To u sebe nemáš.", "red"); return }
     // Use key on house door
-    if (carried.id === "klic" && state.where === "dvur") {
+    if (carried.itemId === "klic" && state.where === "dvur") {
       state = { ...state, _revealedExits: { ...state._revealedExits, "dvur:dum": true } }
       // Remove hidden flag effect
       p("Otočil jsi klíčem. Dveře do domu se odemkly!", "yellow")
