@@ -208,6 +208,7 @@ const HANDLERS = {
 
   mluv({ params }) {
     // * param: raw string — match against NPC names
+    console.log("[mluv] params:", JSON.stringify(params))
     const raw = params.find((p) => p.type === "string")
     if (!raw) { p("S kým chceš mluvit?", "red"); return }
     const input = noDia(raw.value.toLowerCase())
@@ -469,6 +470,7 @@ keyboard.onSubmit((input) => {
 
   // Parse and execute
   const results = parser.parse(trimmed, gameData, state)
+  console.log("[parse]", JSON.stringify(trimmed), "→", JSON.stringify(results))
 
   if (results.length === 0) {
     p(`Nerozumím příkazu: "${trimmed}".`, "red")
