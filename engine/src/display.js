@@ -99,12 +99,15 @@ export const createDisplay = (terminalEl, options = {}) => {
     })
 
   // Resolve any pending waitForEnter Promise. Called by keyboard on Enter.
+  // Returns true if a waiter was resolved, false if there was nothing to resolve.
   const resolveEnter = () => {
     if (enterWaiter) {
       const fn = enterWaiter
       enterWaiter = null
       fn()
+      return true
     }
+    return false
   }
 
   const getLineCount = () => lineEls.length

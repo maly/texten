@@ -177,19 +177,19 @@ describe("waitForEnter() / resolveEnter()", () => {
     d.resolveEnter() // clean up
   })
 
-  it("Promise resolves when resolveEnter is called", async () => {
+  it("Promise resolves when resolveEnter is called, returns true", async () => {
     const d = createDisplay(makeTerminal())
     let resolved = false
     const p = d.waitForEnter().then(() => { resolved = true })
     expect(resolved).toBe(false)
-    d.resolveEnter()
+    expect(d.resolveEnter()).toBe(true)
     await p
     expect(resolved).toBe(true)
   })
 
-  it("resolveEnter with no pending waiter is a no-op", () => {
+  it("resolveEnter with no pending waiter is a no-op and returns false", () => {
     const d = createDisplay(makeTerminal())
-    expect(() => d.resolveEnter()).not.toThrow()
+    expect(d.resolveEnter()).toBe(false)
   })
 
   it("second waitForEnter after resolution works", async () => {
