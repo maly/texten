@@ -444,8 +444,8 @@ const fsm = createFSM(
 // ─── Input handling ───────────────────────────────────────────────────────────
 
 keyboard.onSubmit((input) => {
-  const trimmed = input.trim()
-  if (!trimmed) return
+  // Resolve any pending waitForEnter first (intro screen, etc.)
+  if (display.resolveEnter()) return
 
   const currentState = fsm.getState()
 
@@ -453,6 +453,9 @@ keyboard.onSubmit((input) => {
     fsm.transition("intro")
     return
   }
+
+  const trimmed = input.trim()
+  if (!trimmed) return
 
   if (currentState === "dialog") {
     handleDialogInput(trimmed)
