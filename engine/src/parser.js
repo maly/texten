@@ -32,7 +32,7 @@ const buildPatternInfo = (pattern) => {
 
   const regexParts = words.map((w) => {
     if (isMarker(w)) return "(.*?)"
-    const prefix = w.slice(0, Math.min(3, w.length))
+    const prefix = w.slice(0, Math.min(3, w.length)).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
     return prefix + "\\S*?"
   })
 
