@@ -8,8 +8,8 @@
     "inventory": ["dopis"],
     "schedule": [
       { "tick": 0,  "location": "stodola" },
-      { "tick": 5,  "location": "pole" },
-      { "tick": 10, "location": "stodola" }
+      { "tick": 30, "location": "pole" },
+      { "tick": 60, "location": "stodola" }
     ],
     "dialogs": {
       "start": {
