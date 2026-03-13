@@ -119,7 +119,15 @@ export const deleteCommand = (id) => {
 
 // ─── Import / Export ─────────────────────────────────────────────────────────
 
+const CATEGORIES = ["rooms", "items", "npcs", "commands"]
+
 export const exportJson = () => JSON.stringify(game, null, 2)
+
+export const exportIndividualFiles = () =>
+  CATEGORIES.map((cat) => ({
+    filename: `${cat}.json`,
+    content: JSON.stringify(game[cat], null, 2),
+  }))
 
 export const importJson = (jsonStr) => {
   const parsed = JSON.parse(jsonStr)
@@ -127,4 +135,37 @@ export const importJson = (jsonStr) => {
   game.items = parsed.items ?? []
   game.npcs = parsed.npcs ?? []
   game.commands = parsed.commands ?? []
+}
+
+export const importPartial = (partial) => {
+  for (const key of CATEGORIES) {
+    if (Array.isArray(partial[key])) {
+      game[key] = partial[key]
+    }
+  }
+}
+
+export const parseImportFiles = (files) => {
+  const result = {}
+  for (const f of files) {
+    const parsed = JSON.parse(f.text)
+    if (Array.isArray(parsed)) {
+      const base = f.name.replace(/\.json$/i, "").toLowerCase()
+      if (CATEGORIES.includes(base)) {
+        result[base] = parsed
+      } else {
+        throw new Error(`Neznámý soubor: ${f.name}`)
+      }
+    } else if (typeof parsed === "object" && parsed !== null) {
+      for (const key of CATEGORIES) {
+        if (Array.isArray(parsed[key])) {
+          result[key] = parsed[key]
+        }
+      }
+    }
+  }
+  if (Object.keys(result).length === 0) {
+    throw new Error("Žádná platná data nenalezena.")
+  }
+  return result
 }

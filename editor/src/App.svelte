@@ -4,34 +4,47 @@
   import ItemEditor from "./panels/ItemEditor.svelte"
   import NpcEditor from "./panels/NpcEditor.svelte"
   import CommandEditor from "./panels/CommandEditor.svelte"
-  import { exportJson, importJson } from "./lib/store.svelte.js"
+  import { exportJson, importPartial, parseImportFiles, exportIndividualFiles } from "./lib/store.svelte.js"
 
   let tab = $state("map") // map | items | npcs | commands
   let selectedRoomId = $state(null)
 
   // ── Import / Export ─────────────────────────────────────────────────────
 
-  function handleExport() {
-    const json = exportJson()
-    const blob = new Blob([json], { type: "application/json" })
+  function downloadBlob(content, filename) {
+    const blob = new Blob([content], { type: "application/json" })
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
-    a.download = "game.json"
+    a.download = filename
     a.click()
     URL.revokeObjectURL(url)
+  }
+
+  function handleExportSingle() {
+    downloadBlob(exportJson(), "game.json")
+  }
+
+  function handleExportIndividual() {
+    for (const { filename, content } of exportIndividualFiles()) {
+      downloadBlob(content, filename)
+    }
   }
 
   function handleImport() {
     const input = document.createElement("input")
     input.type = "file"
     input.accept = ".json,application/json"
+    input.multiple = true
     input.onchange = async () => {
-      const file = input.files[0]
-      if (!file) return
-      const text = await file.text()
+      const fileList = Array.from(input.files)
+      if (!fileList.length) return
       try {
-        importJson(text)
+        const entries = await Promise.all(
+          fileList.map(async (f) => ({ name: f.name, text: await f.text() }))
+        )
+        const partial = parseImportFiles(entries)
+        importPartial(partial)
         selectedRoomId = null
       } catch (e) {
         alert("Chyba při načítání: " + e.message)
@@ -53,8 +66,9 @@
     </nav>
 
     <div class="io-btns">
-      <button class="io-btn import" onclick={handleImport}>⬆ Import</button>
-      <button class="io-btn export" onclick={handleExport}>⬇ Export</button>
+      <button class="io-btn import" onclick={handleImport}>Import</button>
+      <button class="io-btn export" onclick={handleExportSingle}>Export .json</button>
+      <button class="io-btn export" onclick={handleExportIndividual}>Export 4 soubory</button>
     </div>
   </header>
 
